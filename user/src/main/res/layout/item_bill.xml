@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="12dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_bill_avatar"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/CircleImageStyle" />
+    <TextView
+        android:id="@+id/tv_bill_merchant"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="书亦烧仙草(万达店)"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toTopOf="@+id/tv_bill_time"
+        app:layout_constraintEnd_toStartOf="@+id/tv_bill_amount"
+        app:layout_constraintStart_toEndOf="@+id/iv_bill_avatar"
+        app:layout_constraintTop_toTopOf="@+id/iv_bill_avatar"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tv_bill_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="2026-02-10 14:30"
+        android:textColor="#999999"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bill_avatar"
+        app:layout_constraintEnd_toEndOf="@+id/tv_bill_merchant"
+        app:layout_constraintStart_toStartOf="@+id/tv_bill_merchant"
+        app:layout_constraintTop_toBottomOf="@+id/tv_bill_merchant" />
+
+    <TextView
+        android:id="@+id/tv_bill_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-28.00"
+        android:textColor="#333333"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

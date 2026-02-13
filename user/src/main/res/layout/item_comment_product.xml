@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="12dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_product_img"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/pic_no_drink"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_product_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="杨枝甘露(大杯/少糖)"
+        android:textColor="#333333"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/tv_rating_desc"
+        app:layout_constraintStart_toEndOf="@+id/iv_product_img"
+        app:layout_constraintTop_toTopOf="@+id/iv_product_img" />
+
+    <RatingBar
+        android:id="@+id/rating_bar"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:isIndicator="false"
+        android:numStars="5"
+        android:progressTint="#FFD100"
+        android:rating="5"
+        android:scaleX="1.4"
+        android:scaleY="1.4"
+        android:secondaryProgressTint="@android:color/transparent"
+        android:stepSize="1.0"
+        android:transformPivotX="0dp"
+        app:layout_constraintStart_toStartOf="@+id/tv_product_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_product_name" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

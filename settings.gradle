@@ -1,0 +1,45 @@
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        // 1. Google 官方仓库 (Android 核心库)
+        google()
+
+        // 2. Maven Central (绝大多数第三方库)
+        mavenCentral()
+
+        // 3. 【关键位置】JitPack 仓库
+        // 必须确保它在列表中，且建议放在阿里云之前。
+        // RxPermissions 以及所有 com.github 开头的库都在这里。
+        maven { url 'https://jitpack.io' }
+
+        // 4. 阿里云镜像 (国内加速)
+        // 这些镜像主要代理 Google 和 MavenCentral，找不到 github 的库是正常的
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/google/' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+
+        // 5. 你本地的私有仓库
+        maven { url = uri("D:\\Maven\\SupconByLeben") }
+    }
+}
+
+rootProject.name = "DrinkShop"
+include ':app'
+include ':base'
+include ':user'
+include ':shop'
+include ':common'

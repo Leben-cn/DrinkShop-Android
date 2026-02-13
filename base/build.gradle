@@ -1,0 +1,70 @@
+plugins {
+    alias(libs.plugins.android.library)
+}
+
+android {
+    namespace 'com.leben.base'
+    compileSdk {
+        version = release(36)
+    }
+
+    defaultConfig {
+        minSdk 24
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: "base"]
+            }
+        }
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    implementation libs.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+
+    // OkHttp + 日志拦截器
+    api 'com.squareup.okhttp3:okhttp:4.9.3'
+    api 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+    // 网络请求核心
+    api 'com.squareup.retrofit2:retrofit:2.9.0'
+    api 'com.squareup.retrofit2:converter-gson:2.9.0'
+    api 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+    // 图片加载库 Glide
+    api 'com.github.bumptech.glide:glide:4.15.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
+    // 沉浸式状态栏
+    api 'com.geyifeng.immersionbar:immersionbar:3.2.2'
+    //ARouter
+    api 'com.alibaba:arouter-api:1.5.2'
+    annotationProcessor 'com.alibaba:arouter-compiler:1.5.2'
+    // SwipeRefreshLayout
+    api "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    // RxJava
+    api "io.reactivex.rxjava2:rxjava:2.2.21"
+    api "io.reactivex.rxjava2:rxandroid:2.1.1"
+    api 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
+
+    api 'com.github.tbruyelle:rxpermissions:0.10.2'
+
+
+
+}

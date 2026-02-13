@@ -1,0 +1,50 @@
+plugins {
+    alias(libs.plugins.android.library)
+}
+
+android {
+    namespace 'com.leben.common'
+    compileSdk {
+        version = release(36)
+    }
+
+    defaultConfig {
+        minSdk 24
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    implementation libs.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+
+    api project(':base')
+
+    // EventBus 核心库
+    api 'org.greenrobot:eventbus:3.3.1'
+
+    // 【高德地图依赖】
+    // 3D地图 (包含 MapView)
+    api 'com.amap.api:3dmap:9.8.3'
+    // 搜索功能 (用于把经纬度变成文字地址)
+    api 'com.amap.api:search:9.7.1'
+
+    api 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+
+}
