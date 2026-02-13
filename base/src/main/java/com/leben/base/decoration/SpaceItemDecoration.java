@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class SpaceItemDecoration extends RecyclerView.ItemDecoration{
 
-    private int space;//间距大小（px）
+    private final int space;//间距大小（px）
 
     public SpaceItemDecoration(int spaceDp){
         this.space=spaceDp;
@@ -17,9 +17,10 @@ public class SpaceItemDecoration extends RecyclerView.ItemDecoration{
     @Override
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
 
-        //不是第一个 Item 时，给顶部添加间距
-        if (parent.getChildAdapterPosition(view) > 0) {
-            outRect.top=space;
-        }
+//        //不是第一个 Item 时，给顶部添加间距
+//        if (parent.getChildAdapterPosition(view) > 0) {
+//            outRect.top=space;
+//        }
+        outRect.top=space;
     }
 }

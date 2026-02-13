@@ -4,81 +4,97 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginBottom="6dp"
     app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="12dp"
+    android:layout_marginStart="6dp"
+    android:layout_marginEnd="8dp"
+    app:cardElevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp">
+        android:padding="10dp">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_drink_img"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@drawable/img_round"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="#F5F5F5"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/RoundedCornerImage" />
         <TextView
             android:id="@+id/tv_drink_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="8dp"
             android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="@color/black"
-            android:textSize="18sp"
+            android:maxLines="1"
+            android:textColor="#333333"
+            android:textSize="16sp"
             android:textStyle="bold"
-            tools:text="这是非常好喝的饮料名字，如果不小心很长它会自动换行并且最多显示两行"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_distance"
             app:layout_constraintStart_toEndOf="@id/iv_drink_img"
-            app:layout_constraintTop_toTopOf="@id/iv_drink_img" />
+            app:layout_constraintTop_toTopOf="@id/iv_drink_img"
+            tools:text="招牌珍珠奶茶" />
 
-        <TextView
-            android:id="@+id/tv_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:drawablePadding="4dp"
-            android:gravity="center_vertical"
-            android:textColor="#FFA000"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            tools:text="4.8"
-            app:layout_constraintStart_toStartOf="@id/tv_drink_name"
-            app:layout_constraintTop_toBottomOf="@id/tv_drink_name" />
         <TextView
             android:id="@+id/tv_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#999999"
             android:textSize="12sp"
-            tools:text="2.5km"
-            app:layout_constraintBaseline_toBaselineOf="@id/tv_rating"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_drink_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="2.5km" />
+
+        <LinearLayout
+            android:id="@+id/ll_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_drink_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_drink_name">
+
+            <TextView
+                android:id="@+id/tv_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.8分"
+                android:textColor="#FF6600"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_sales"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="月售 500+"
+                android:textColor="#666666"
+                android:textSize="12sp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_drink_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
+            android:text="¥ 28.00"
             android:textColor="#FF0000"
             android:textSize="18sp"
             android:textStyle="bold"
-            tools:text="¥ 28.00"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_drink_name"
-            app:layout_constraintTop_toBottomOf="@id/tv_rating"
+            app:layout_constraintTop_toBottomOf="@id/ll_info"
             app:layout_constraintVertical_bias="1.0" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

@@ -77,6 +77,7 @@ public class PlatFormClassifyActivity extends BaseRecyclerActivity<DrinkEntity> 
 
     @Override
     public void onRefresh() {
+        page=0;
         Double userLat= LocationManager.getInstance().getLatitude();
         Double userLon=LocationManager.getInstance().getLongitude();
 

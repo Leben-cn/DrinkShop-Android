@@ -41,7 +41,6 @@
                     android:background="#F5F5F5"
                     android:orientation="horizontal"
                     android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
                     app:layout_collapseMode="none">
 
                     <LinearLayout

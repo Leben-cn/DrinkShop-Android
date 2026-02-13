@@ -43,7 +43,6 @@ public class DrinksSearchActivity extends BaseSearchActivity<DrinkEntity> implem
     @Override
     protected void doSearch(String keyword) {
         page = 0;
-        showLoading("正在搜索...");
 
         DrinkQueryEntity entity = new DrinkQueryEntity();
         entity.setName(keyword);
@@ -63,7 +62,6 @@ public class DrinksSearchActivity extends BaseSearchActivity<DrinkEntity> implem
 
     @Override
     public void onQueryDrinkSuccess(PageEntity<DrinkEntity> data) {
-        hideLoading();
         if (data == null) {
             refreshListSuccess(null);
             return;

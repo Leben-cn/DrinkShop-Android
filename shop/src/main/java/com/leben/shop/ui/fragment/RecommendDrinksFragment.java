@@ -68,8 +68,6 @@ public class RecommendDrinksFragment extends BaseRecyclerFragment<ShopEntity> im
         llCoffee=root.findViewById(R.id.ll_cat_coffee);
 
         if (titleBar != null) {
-            // 这里根据你的 TitleBar API 进行设置
-            // 例如设置搜索热词：
             List<String> hints = new ArrayList<>();
             hints.add("搜索好喝的奶茶");
             hints.add("低卡果茶推荐");
@@ -77,8 +75,6 @@ public class RecommendDrinksFragment extends BaseRecyclerFragment<ShopEntity> im
 
             // 开启轮播
             titleBar.startRoll();
-
-            // 如果这个页面不需要返回键（比如是首页 Tab），可以隐藏
             titleBar.setBackVisible(false);
         }
     }
