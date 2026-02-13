@@ -1,7 +1,6 @@
 package com.leben.user.ui.adapter;
 
 import android.content.Context;
-
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.ui.adapter.holder.BaseViewHolder;
 import com.leben.user.R;

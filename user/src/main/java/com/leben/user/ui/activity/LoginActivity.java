@@ -22,9 +22,9 @@ import com.leben.user.contract.LoginContract;
 import com.leben.common.model.bean.LoginEntity;
 import com.leben.user.presenter.LoginPresenter;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 @Route(path = UserConstant.Router.USER_LOGIN)
@@ -75,10 +75,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
                     return true;
                 })
                 .subscribe(unit -> {
-                    // 这里的事件都是已经通过校验的
                     String username = mEtUsername.getText().toString().trim();
                     String password = mEtPassword.getText().toString().trim();
-                    // 2. 显示 Loading (BaseActivity 方法)
                     showLoading("正在登录...");
 
                     loginPresenter.login(username,password);
@@ -88,6 +86,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
                 });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void initData() {
         // 初始化 RxPermissions
@@ -111,20 +110,28 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
      * 获取需要申请的权限列表（兼容 Android 13）
      */
     private String[] getNeedPermissions() {
+        List<String> permissions = new ArrayList<>();
+
+        permissions.add(Manifest.permission.CAMERA);
+
+        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        // 3. 存储/相册权限 (根据版本区分)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            // Android 13+ (API 33+)
-            return new String[]{
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_MEDIA_IMAGES
-            };
+            // Android 13 (API 33) 及以上
+            permissions.add(Manifest.permission.READ_MEDIA_IMAGES);
+            permissions.add(Manifest.permission.READ_MEDIA_VIDEO);
+
+            if (Build.VERSION.SDK_INT >= 34) {
+                permissions.add(Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED);
+            }
         } else {
-            // Android 12及以下
-            return new String[]{
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            };
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
+
+        return permissions.toArray(new String[0]);
     }
 
     @Override

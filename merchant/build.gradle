@@ -33,12 +33,4 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
-
-    implementation project(':common')
-
-    //ARouter
-    annotationProcessor 'com.alibaba:arouter-compiler:1.5.2'
-    //一行放不下自动换行
-    implementation 'com.google.android.flexbox:flexbox:3.0.0'
-
 }
