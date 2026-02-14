@@ -50,6 +50,7 @@ dependencies {
     implementation project(':common')
     implementation project(':user')
     implementation project(':shop')
+    implementation project(':merchant')
     //ARouter
     annotationProcessor 'com.alibaba:arouter-compiler:1.5.2'
     

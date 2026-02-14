@@ -51,8 +51,7 @@
         android:background="@drawable/bg_btn_yellow"
         android:text="登  录"
         android:textColor="@color/text_color3"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textSize="18sp" />
 
     <RelativeLayout
         android:layout_width="match_parent"

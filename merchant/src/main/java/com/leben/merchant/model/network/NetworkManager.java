@@ -1,4 +1,4 @@
-package com.leben.shop.model.network;
+package com.leben.merchant.model.network;
 
 import android.text.TextUtils;
 import com.leben.base.BaseApplication;
@@ -34,7 +34,7 @@ public class NetworkManager {
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         // 将日志拦截器添加到 builder
         builder.addInterceptor(loggingInterceptor);
-        // 添加 Token 拦截器
+        // 2. 添加 Token 拦截器
         builder.addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {

@@ -16,6 +16,7 @@ import com.leben.base.ui.activity.BaseActivity;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.SharedPreferencesUtils;
 import com.leben.base.util.ToastUtils;
+import com.leben.common.Constant.CommonConstant;
 import com.leben.user.R;
 import com.leben.user.constant.UserConstant;
 import com.leben.user.contract.LoginContract;
@@ -82,6 +83,17 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
                     loginPresenter.login(username,password);
 
                 }, throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+
+        RxView.clicks(mTvMerchantLogin)
+                .throttleFirst(500,TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result->{
+                    ARouter.getInstance()
+                            .build(UserConstant.Router.MERCHANT_LOGIN)
+                            .navigation();
+                },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
     }
@@ -155,5 +167,10 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     public void onLoginFailed(String errorMsg) {
         hideLoading();
         ToastUtils.show(this,"登录失败");
+    }
+
+    @Override
+    protected int getStatusBarColor() {
+        return com.leben.base.R.color.white;
     }
 }

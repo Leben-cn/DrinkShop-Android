@@ -1,12 +1,15 @@
-package com.leben.user.ui.activity;
+package com.leben.merchant.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.maps.AMap;
@@ -22,31 +25,24 @@ import com.amap.api.services.geocoder.RegeocodeAddress;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.activity.BaseActivity;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.titleBar.TitleBar;
-import com.leben.common.Constant.CommonConstant;
-import com.leben.user.R;
-import com.leben.user.constant.UserConstant;
-import com.leben.user.contract.SaveAddressContract;
 import com.leben.common.model.bean.AddressEntity;
-import com.leben.user.presenter.SaveAddressPresenter;
+import com.leben.merchant.R;
+import com.leben.merchant.constant.MerchantConstant;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-@Route(path = UserConstant.Router.ADD_ADDRESS)
+@Route(path = MerchantConstant.Router.ADD_ADDRESS)
 public class AddAddressActivity extends BaseActivity implements AMap.OnCameraChangeListener,
-        GeocodeSearch.OnGeocodeSearchListener, SaveAddressContract.View {
-
-    @InjectPresenter
-    SaveAddressPresenter saveAddressPresenter;
+        GeocodeSearch.OnGeocodeSearchListener{
 
     // UI
     private MapView mMapView; // 高德的 MapView
     private TextView mTvPoiAddress;
-    private EditText etDetail, etName, etPhone;
+    private EditText etDetail;
     private Button btnSave;
 
     // 高德核心对象
@@ -59,10 +55,11 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
     private double currentLat = 0.0;
     private double currentLng = 0.0;
     private String currentPoiAddress = "";
+    private RegeocodeAddress address;
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_add_address;
+        return R.layout.ac_merchant_add_address;
     }
 
     @Override
@@ -74,21 +71,21 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
 
     @Override
     public void initView() {
+        TitleBar titleBar=findViewById(R.id.title_bar);
+        titleBar.setTitle("店铺地址");
         mMapView = findViewById(R.id.map_view);
-        // 【注意】高德地图必须在 onCreate 调用此方法，否则地图不显示
+        // 高德地图必须在 onCreate 调用此方法，否则地图不显示
         mMapView.onCreate(null);
 
         mTvPoiAddress = findViewById(R.id.tv_poi_address);
         etDetail = findViewById(R.id.et_detail);
-        etName = findViewById(R.id.et_name);
-        etPhone = findViewById(R.id.et_phone);
         btnSave = findViewById(R.id.btn_save);
 
         if (aMap == null) {
             aMap = mMapView.getMap();
         }
 
-        // 初始化搜索模块 (用于 坐标转地址)
+        // 初始化搜索模块 (用于坐标转地址)
         try {
             geocoderSearch = new GeocodeSearch(this);
             geocoderSearch.setOnGeocodeSearchListener(this);
@@ -105,47 +102,46 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
         aMap.setOnCameraChangeListener(this);
 
         RxView.clicks(btnSave)
-                .throttleFirst(1000, TimeUnit.MILLISECONDS) // 防抖：1秒内只响应一次
-                .observeOn(AndroidSchedulers.mainThread())  // 确保校验和UI操作在主线程
+                .throttleFirst(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
                 .filter(unit -> {
 
                     String detail = etDetail.getText().toString().trim();
-                    String name = etName.getText().toString().trim();
-                    String phone = etPhone.getText().toString().trim();
-
                     if (TextUtils.isEmpty(detail)) {
-                        ToastUtils.show(this, "请输入详细地址");
+                        ToastUtils.show(this, "请输入门牌号");
                         return false;
                     }
-                    if (TextUtils.isEmpty(name)) {
-                        ToastUtils.show(this, "请输入收货人");
-                        return false;
-                    }
-                    if (TextUtils.isEmpty(phone)) {
-                        ToastUtils.show(this, "请输入联系方式");
-                        return false;
-                    }
-                    // 校验定位数据是否获取成功
+
                     if (currentLat == 0.0 || currentLng == 0.0) {
                         ToastUtils.show(this, "定位信息获取失败，请移动地图重新定位");
                         return false;
                     }
-                    return true; // 校验通过，放行
+                    return true;
                 })
-                .subscribe(unit -> {
-                    // --- 校验通过，执行业务逻辑 ---
-                    // 1. 构造实体对象
-                    AddressEntity data = new AddressEntity();
-                    data.setContactName(etName.getText().toString().trim());
-                    data.setContactPhone(etPhone.getText().toString().trim());
-                    data.setAddressDetail(etDetail.getText().toString().trim());
-                    data.setAddressPoi(currentPoiAddress); // 此时已有值
-                    data.setLatitude(currentLat);
-                    data.setLongitude(currentLng);
+                .subscribe(result -> {
 
-                    // 2. 调用 Presenter 发起异步请求
-                    // 这里不需要关心它是异步还是同步，结果会通过 onSaveAddressSuccess 回调回来
-                        saveAddressPresenter.saveAddress(data);
+                    String finalAddress = currentPoiAddress;
+
+                    if (!TextUtils.isEmpty(address.getProvince())) {
+                        finalAddress = finalAddress.replace(address.getProvince(), "");
+                    }
+                    if (!TextUtils.isEmpty(address.getCity())) {
+                        finalAddress = finalAddress.replace(address.getCity(), "");
+                    }
+                    if (!TextUtils.isEmpty(address.getDistrict())) {
+                        finalAddress = finalAddress.replace(address.getDistrict(), "");
+                    }
+
+                    // 3. 创建 Intent 回传数据
+                    Intent intent = new Intent();
+                    intent.putExtra("latitude", currentLat);
+                    intent.putExtra("longitude", currentLng);
+                    intent.putExtra("address", finalAddress); // 使用清理后的地址
+                    intent.putExtra("detailAddress", etDetail.getText().toString().trim());
+
+                    // 2. 设置结果并关闭页面
+                    setResult(RESULT_OK, intent);
+                    finish();
 
                 }, throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
@@ -211,7 +207,7 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
         if (i == 1000) { // 1000 代表成功
             if (regeocodeResult != null && regeocodeResult.getRegeocodeAddress() != null) {
-                RegeocodeAddress address = regeocodeResult.getRegeocodeAddress();
+                address = regeocodeResult.getRegeocodeAddress();
                 // 优先显示 POI 名称 (例如 "浦翠景庭")，如果没有则显示格式化地址
                 String formatAddress = address.getFormatAddress();
                 // 如果周围有POI，取第一个POI的名字会更像 "地点"
@@ -270,16 +266,13 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
         if(mMapView != null) mMapView.onDestroy();
     }
 
-
     @Override
-    public void onSaveAddressSuccess(String data) {
-        ToastUtils.show(this, "保存成功");
-        finish();
+    protected View getTitleBarView() {
+        return findViewById(R.id.title_bar);
     }
 
     @Override
-    public void onSaveAddressFailed(String errorMsg) {
-        ToastUtils.show(this,"保存地址失败");
-        LogUtils.error(errorMsg);
+    protected int getStatusBarColor() {
+        return com.leben.base.R.color.white;
     }
 }

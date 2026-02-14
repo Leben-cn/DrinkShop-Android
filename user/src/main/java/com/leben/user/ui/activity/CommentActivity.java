@@ -94,8 +94,13 @@ public class CommentActivity extends BaseRecyclerActivity<OrderItemEntity> imple
         }
 
         imagePickerHelper=new ImagePickerHelper(this,path -> {
-           this.currentPhotoPath=path;
-           displayImage(path);
+
+            this.currentPhotoPath = path; // 更新当前路径
+            ivSelectedPhoto.setVisibility(View.VISIBLE);
+            ivDelPhoto.setVisibility(View.VISIBLE);
+            ivAddBtn.setVisibility(View.GONE); // 隐藏加号按钮
+
+            Glide.with(this).load(path).into(ivSelectedPhoto);
         });
 
         refreshListSuccess(order.getItems());
@@ -203,17 +208,5 @@ public class CommentActivity extends BaseRecyclerActivity<OrderItemEntity> imple
         ToastUtils.show(this,"评论失败");
         LogUtils.error("评论失败："+errorMsg);
     }
-
-    // 3. 统一显示图片的方法
-    private void displayImage(String path) {
-        this.currentPhotoPath = path; // 更新当前路径
-
-        ivSelectedPhoto.setVisibility(View.VISIBLE);
-        ivDelPhoto.setVisibility(View.VISIBLE);
-        ivAddBtn.setVisibility(View.GONE); // 隐藏加号按钮
-
-        Glide.with(this).load(path).into(ivSelectedPhoto);
-    }
-
 
 }
