@@ -56,16 +56,9 @@
             android:name="com.amap.api.v2.apikey"
             android:value="1b0509f5d66d9a2c80d0be7dfe630aff" />
 
-
         <service
             android:name="com.amap.api.location.APSService"
             android:exported="false" />
-
-        <activity
-            android:name=".ui.activity.CustomerActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
-        </activity>
 
         <activity
             android:name=".ui.activity.SplashActivity"

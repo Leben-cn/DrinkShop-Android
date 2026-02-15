@@ -1,16 +1,16 @@
-package com.leben.user.ui.fragment;
+package com.leben.merchant.ui.fragment;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.ui.fragment.BaseRecyclerFragment;
-import com.leben.user.constant.UserConstant;
-import com.leben.common.model.bean.MessageEntity;
+import com.leben.common.Constant.CommonConstant;
+import com.leben.merchant.model.bean.GoodsEntity;
 
-@Route(path = UserConstant.Router.MESSAGE)
-public class MessageFragment extends BaseRecyclerFragment<MessageEntity> {
+@Route(path = CommonConstant.Router.GOODS)
+public class GoodsFragment extends BaseRecyclerFragment<GoodsEntity> {
 
     @Override
-    protected BaseRecyclerAdapter<MessageEntity> createAdapter() {
+    protected BaseRecyclerAdapter<GoodsEntity> createAdapter() {
         return null;
     }
 

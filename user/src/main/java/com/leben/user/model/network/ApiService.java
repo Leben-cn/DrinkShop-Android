@@ -6,7 +6,7 @@ import com.leben.common.model.bean.CommonEntity;
 import com.leben.common.model.bean.ShopEntity;
 import com.leben.user.model.bean.BillEntity;
 import com.leben.user.model.bean.CommentSubmitEntity;
-import com.leben.common.model.bean.LoginEntity;
+import com.leben.user.model.bean.LoginEntity;
 import com.leben.user.model.bean.UserInfoEntity;
 
 import java.util.List;

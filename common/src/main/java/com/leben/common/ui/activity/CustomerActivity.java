@@ -1,31 +1,29 @@
-package com.leben.drinkshop.ui.activity;
+package com.leben.common.ui.activity;
 
 import androidx.fragment.app.Fragment;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.leben.base.ui.activity.BaseTabActivity;
 import com.leben.common.Constant.CommonConstant;
-import com.leben.drinkshop.R;
-import com.leben.drinkshop.constant.AppConstant;
-import com.leben.shop.constant.ShopConstant;
-import com.leben.user.constant.UserConstant;
+import com.leben.common.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by youjiahui on 2026/1/30.
  */
-@Route(path = AppConstant.Router.CUSTOMER)
+@Route(path = CommonConstant.Router.CUSTOMER_TAB)
 public class CustomerActivity extends BaseTabActivity {
 
     @Override
     protected List<Fragment> getFragments() {
         List<Fragment> fragmentList = new ArrayList<>();
         //使用 ARouter 获取实例
-        Fragment recommendDrinksFragment = (Fragment) ARouter.getInstance().build(ShopConstant.Router.RECOMMEND_DRINKS).navigation();
-        Fragment orderFragment = (Fragment) ARouter.getInstance().build(ShopConstant.Router.ORDER).navigation();
-        Fragment messageFragment = (Fragment) ARouter.getInstance().build(UserConstant.Router.MESSAGE).navigation();
-        Fragment userCenterFragment = (Fragment) ARouter.getInstance().build(UserConstant.Router.USER_CENTER).navigation();
+        Fragment recommendDrinksFragment = (Fragment) ARouter.getInstance().build(CommonConstant.Router.RECOMMEND_DRINKS).navigation();
+        Fragment orderFragment = (Fragment) ARouter.getInstance().build(CommonConstant.Router.ORDER).navigation();
+        Fragment messageFragment = (Fragment) ARouter.getInstance().build(CommonConstant.Router.MESSAGE).navigation();
+        Fragment userCenterFragment = (Fragment) ARouter.getInstance().build(CommonConstant.Router.USER_CENTER).navigation();
 
         if (recommendDrinksFragment != null) {
             fragmentList.add(recommendDrinksFragment);

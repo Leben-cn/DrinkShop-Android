@@ -12,15 +12,16 @@ import com.leben.base.ui.fragment.BaseFragment;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.SharedPreferencesUtils;
 import com.leben.base.widget.dialog.CommonDialog;
-import com.leben.common.model.bean.LoginEntity;
-import com.leben.common.util.UserUtils;
+import com.leben.common.Constant.CommonConstant;
+import com.leben.user.model.bean.LoginEntity;
+import com.leben.user.util.UserUtils;
 import com.leben.user.R;
 import com.leben.user.constant.UserConstant;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-@Route(path = UserConstant.Router.USER_CENTER)
+@Route(path = CommonConstant.Router.USER_CENTER)
 public class UserCenterFragment extends BaseFragment {
 
     private TextView tvLogout;
@@ -80,7 +81,20 @@ public class UserCenterFragment extends BaseFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result->{
 
-                    performLogout();
+                    // 1. 清除用户数据
+                    SharedPreferencesUtils.removeParam(getContext(), CommonConstant.Key.TOKEN);
+                    SharedPreferencesUtils.removeParam(getContext(), CommonConstant.Key.USER_INFO);
+                    SharedPreferencesUtils.removeParam(getContext(), CommonConstant.Key.ROLE);
+
+                    // 2. 跳转到登录页
+                    ARouter.getInstance()
+                            .build(CommonConstant.Router.USER_LOGIN)
+                            .navigation();
+
+                    // 3. 结束当前页面
+                    if (getActivity() != null) {
+                        getActivity().finish();
+                    }
 
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
@@ -167,23 +181,6 @@ public class UserCenterFragment extends BaseFragment {
     @Override
     public void initData() {
 
-    }
-
-    private void performLogout() {
-        // 1. 清除用户数据
-        SharedPreferencesUtils.removeParam(getContext(), UserConstant.Key.TOKEN);
-        SharedPreferencesUtils.removeParam(getContext(), UserConstant.Key.USER_INFO);
-        SharedPreferencesUtils.removeParam(getContext(), UserConstant.Key.ROLE);
-
-        // 2. 跳转到登录页
-        ARouter.getInstance()
-                .build(UserConstant.Router.USER_LOGIN)
-                .navigation();
-
-        // 3. 结束当前页面
-        if (getActivity() != null) {
-            getActivity().finish();
-        }
     }
 
     private void loadUserInfo(){

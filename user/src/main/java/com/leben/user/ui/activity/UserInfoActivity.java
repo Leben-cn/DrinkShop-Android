@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.constraintlayout.solver.state.State;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -18,10 +17,10 @@ import com.leben.base.ui.activity.BaseActivity;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.titleBar.TitleBar;
-import com.leben.common.model.bean.LoginEntity;
+import com.leben.user.model.bean.LoginEntity;
 import com.leben.common.util.ImagePickerHelper;
 import com.leben.common.util.PermissionDialogHelper;
-import com.leben.common.util.UserUtils;
+import com.leben.user.util.UserUtils;
 import com.leben.user.R;
 import com.leben.user.constant.UserConstant;
 import com.leben.user.contract.SubmitUserInfoContract;

@@ -13,6 +13,7 @@ import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.ui.fragment.BaseRecyclerFragment;
 import com.leben.base.util.LogUtils;
 import com.leben.base.widget.titleBar.TitleBar;
+import com.leben.common.Constant.CommonConstant;
 import com.leben.common.LocationManager;
 import com.leben.shop.R;
 import com.leben.shop.constant.ShopConstant;
@@ -29,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-@Route(path = ShopConstant.Router.RECOMMEND_DRINKS)
+@Route(path = CommonConstant.Router.RECOMMEND_DRINKS)
 public class RecommendDrinksFragment extends BaseRecyclerFragment<ShopEntity> implements RecommendShopsContract.View {
 
     @InjectPresenter

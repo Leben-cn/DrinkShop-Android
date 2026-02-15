@@ -7,9 +7,11 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.leben.base.ui.activity.BaseActivity;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.SharedPreferencesUtils;
+import com.leben.common.Constant.CommonConstant;
 import com.leben.drinkshop.App;
 import com.leben.drinkshop.R;
 import com.leben.drinkshop.constant.AppConstant;
+import com.leben.user.constant.UserConstant;
 
 /**
  * 启动页
@@ -46,7 +48,7 @@ public class SplashActivity extends BaseActivity {
             // ---> 没 Token，说明没登录，去登录页
             LogUtils.info("无Token");
             ARouter.getInstance()
-                    .build(AppConstant.Router.USER_LOGIN)
+                    .build(CommonConstant.Router.USER_LOGIN)
                     .navigation();
         } else {
             LogUtils.info("有Token："+token);
@@ -55,12 +57,15 @@ public class SplashActivity extends BaseActivity {
             String role = SharedPreferencesUtils.getParam(this,AppConstant.Key.ROLE, "");
 
             if ("MERCHANT".equals(role)) {
-
-            } else {
-                // ---> 是普通用户 (或者默认)，去顾客首页
                 ARouter.getInstance()
-                        .build(AppConstant.Router.CUSTOMER)
+                        .build(CommonConstant.Router.MERCHANT_TAB)
                         .navigation();
+            } else if("USER".equals(role)){
+                ARouter.getInstance()
+                        .build(CommonConstant.Router.CUSTOMER_TAB)
+                        .navigation();
+            }else{
+                showError("Token 解析出错");
             }
         }
 

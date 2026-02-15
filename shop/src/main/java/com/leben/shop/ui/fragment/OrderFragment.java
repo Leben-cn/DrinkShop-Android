@@ -14,7 +14,7 @@ import com.leben.shop.constant.ShopConstant;
 import java.util.ArrayList;
 import java.util.List;
 
-@Route(path = ShopConstant.Router.ORDER)
+@Route(path = CommonConstant.Router.ORDER)
 public class OrderFragment extends BaseTabFragment {
     private TitleBar titleBar;
     private ImageView searchIcon;

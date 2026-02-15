@@ -1,7 +1,7 @@
-package com.leben.user.contract;
+package com.leben.merchant.contract;
 
 import com.leben.base.contract.IBaseView;
-import com.leben.user.model.bean.LoginEntity;
+import com.leben.merchant.model.bean.LoginEntity;
 
 public interface LoginContract {
     interface View extends IBaseView {

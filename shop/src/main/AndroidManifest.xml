@@ -6,7 +6,8 @@
         <activity
             android:name=".ui.activity.ShopActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTask"/>
 
         <activity
             android:name=".ui.activity.PayActivity"
@@ -21,7 +22,8 @@
         <activity
             android:name=".ui.activity.DrinksSearchActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTop"/>
 
         <activity
             android:name=".ui.activity.PlatFormClassifyActivity"

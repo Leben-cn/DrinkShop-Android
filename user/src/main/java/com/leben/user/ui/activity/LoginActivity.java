@@ -20,7 +20,7 @@ import com.leben.common.Constant.CommonConstant;
 import com.leben.user.R;
 import com.leben.user.constant.UserConstant;
 import com.leben.user.contract.LoginContract;
-import com.leben.common.model.bean.LoginEntity;
+import com.leben.user.model.bean.LoginEntity;
 import com.leben.user.presenter.LoginPresenter;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-@Route(path = UserConstant.Router.USER_LOGIN)
+@Route(path = CommonConstant.Router.USER_LOGIN)
 public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     @InjectPresenter
@@ -149,16 +149,16 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public void onLoginSuccess(LoginEntity data) {
         // 1. 保存 Token (给 NetworkManager 用)
-        SharedPreferencesUtils.setParam(this, UserConstant.Key.TOKEN, data.getToken());
+        SharedPreferencesUtils.setParam(this, CommonConstant.Key.TOKEN, data.getToken());
 
-        SharedPreferencesUtils.setParam(this, UserConstant.Key.ROLE, "USER");
+        SharedPreferencesUtils.setParam(this, CommonConstant.Key.ROLE, "USER");
         //存角色，给我的页面用
         String userInfoJson = new Gson().toJson(data.getUserInfo());
-        SharedPreferencesUtils.setParam(this, UserConstant.Key.USER_INFO, userInfoJson);
+        SharedPreferencesUtils.setParam(this, CommonConstant.Key.USER_INFO, userInfoJson);
         hideLoading();
         ToastUtils.show(this,"登录成功");
         ARouter.getInstance()
-                .build(UserConstant.Router.CUSTOMER)
+                .build(CommonConstant.Router.CUSTOMER_TAB)
                 .navigation();
         finish();
     }
@@ -166,7 +166,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public void onLoginFailed(String errorMsg) {
         hideLoading();
-        ToastUtils.show(this,"登录失败");
+        ToastUtils.show(this,errorMsg);
     }
 
     @Override
