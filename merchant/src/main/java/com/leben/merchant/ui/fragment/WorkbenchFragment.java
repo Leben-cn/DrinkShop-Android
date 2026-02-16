@@ -1,7 +1,9 @@
 package com.leben.merchant.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -29,6 +31,10 @@ public class WorkbenchFragment extends BaseRefreshFragment {
     private TextView mTvShopName;
     private ImageView mIvShopAvatar;
     private TextView mTvLogout;
+    private LinearLayout llAllOrder;
+    private LinearLayout llCancelOrder;
+    private LinearLayout llDoneOrder;
+    private LinearLayout llPendingOrder;
 
     @Override
     protected int getLayoutId() {
@@ -40,10 +46,15 @@ public class WorkbenchFragment extends BaseRefreshFragment {
         mTvShopName=root.findViewById(R.id.tv_shop_name);
         mIvShopAvatar=root.findViewById(R.id.iv_shop_avatar);
         mTvLogout=root.findViewById(R.id.item_logout);
+        llAllOrder=root.findViewById(R.id.iv_all_order);
+        llCancelOrder=root.findViewById(R.id.ll_refund);
+        llDoneOrder=root.findViewById(R.id.ll_done);
+        llPendingOrder=root.findViewById(R.id.iv_pending);
 
         loadMerchantInfo();
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void initListener() {
         RxView.clicks(mTvLogout)
@@ -86,6 +97,47 @@ public class WorkbenchFragment extends BaseRefreshFragment {
                         getActivity().finish();
                     }
 
+                },throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+
+        RxView.clicks(llAllOrder)
+                .throttleFirst(500,TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result->{
+                    ARouter.getInstance()
+                            .build(MerchantConstant.Router.ORDER_ALL)
+                            .navigation();
+                },throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+        RxView.clicks(llCancelOrder)
+                .throttleFirst(500,TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result->{
+                    ARouter.getInstance()
+                            .build(MerchantConstant.Router.ORDER_CANCEL)
+                            .navigation();
+                },throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+        RxView.clicks(llDoneOrder)
+                .throttleFirst(500,TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result->{
+                    ARouter.getInstance()
+                            .build(MerchantConstant.Router.ORDER_DONE)
+                            .navigation();
+                },throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+        RxView.clicks(llPendingOrder)
+                .throttleFirst(500,TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result->{
+                    ARouter.getInstance()
+                            .build(MerchantConstant.Router.ORDER_PENDING)
+                            .navigation();
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });

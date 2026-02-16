@@ -1,29 +1,23 @@
-package com.leben.shop.ui.adapter;
+package com.leben.merchant.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.ui.adapter.holder.BaseViewHolder;
-import com.leben.base.util.LogUtils;
-import com.leben.common.ui.adapter.PreviewOrderDrinksAdapter;
-import com.leben.shop.R;
-import com.leben.shop.constant.ShopConstant;
 import com.leben.common.model.bean.DrinkSimpleEntity;
 import com.leben.common.model.bean.OrderEntity;
 import com.leben.common.model.bean.OrderItemEntity;
-
+import com.leben.common.ui.adapter.PreviewOrderDrinksAdapter;
+import com.leben.merchant.R;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.subjects.PublishSubject;
 
 public class OrderAdapter extends BaseRecyclerAdapter<OrderEntity> {
@@ -66,36 +60,24 @@ public class OrderAdapter extends BaseRecyclerAdapter<OrderEntity> {
     @SuppressLint("CheckResult")
     @Override
     protected void bindData(BaseViewHolder holder, OrderEntity data, int position) {
+
         DecimalFormat df=new DecimalFormat("#.##");
         TextView btnAction = holder.getView(R.id.tv_action_btn);
-
-        holder.setImageUrl(R.id.iv_shop_logo, data.getShopLogo(), R.drawable.pic_no_drink)
-                .setText(R.id.tv_shop_name, data.getShopName())
-                .setText(R.id.tv_total_price,"￥"+df.format(data.getPayAmount()));
+        holder.setText(R.id.tv_total_price,"￥"+df.format(data.getPayAmount()));
 
 
         switch (data.getStatus()){
             case 0:
-                holder.setText(R.id.tv_status,"待制作");
                 holder.getView(R.id.tv_action_btn).setVisibility(View.VISIBLE);
-                holder.setText(R.id.tv_action_btn,"取消订单");
+                holder.setText(R.id.tv_action_btn,"已出餐");
                 break;
             case 1:
                 holder.setText(R.id.tv_status,"已完成");
-                if(!data.getComment()){
-                    holder.getView(R.id.tv_action_btn).setVisibility(View.VISIBLE);
-                    holder.setText(R.id.tv_action_btn,"去评价");
-                }else{
-                    holder.getView(R.id.tv_action_btn).setVisibility(View.GONE);
-                }
                 break;
             case 2:
-                holder.setText(R.id.tv_status,"已取消");
-                holder.getView(R.id.tv_action_btn).setVisibility(View.GONE);
+                holder.getView(R.id.tv_action_btn).setVisibility(View.VISIBLE);
+                holder.setText(R.id.tv_action_btn,"查看详情");
                 break;
-            case 404:holder.setText(R.id.tv_order_info,"已下架");break;
-            case 500:holder.setText(R.id.tv_order_info,"暂停营业");break;
-            case 1000:holder.setText(R.id.tv_order_info,"超出配送范围");break;
         }
 
         RecyclerView rvProducts = holder.getView(R.id.rv_horizontal_items);
@@ -118,17 +100,6 @@ public class OrderAdapter extends BaseRecyclerAdapter<OrderEntity> {
                 .map(o -> new OrderClickEvent(data))
                 .subscribe(clickSubject);
 
-        RxView.clicks(holder.getView(R.id.tv_right_arrow))
-                .throttleFirst(500, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(unit->{
-                    ARouter.getInstance()
-                            .build(ShopConstant.Router.SHOP)
-                            .withLong("shopId", data.getShopId())
-                            .navigation();
-                },throwable -> {
-                    LogUtils.error("点击事件流出错: " + throwable.getMessage());
-                });
         btnAction.setOnClickListener(v -> {
             if (actionListener == null) {
                 return;

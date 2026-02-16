@@ -12,7 +12,6 @@ public interface UserConstant {
         String FAVORITE="/user/favorite";
         String USER_INFO="/user/info";
         String MERCHANT_LOGIN="/merchant/login";
-
     }
 
 }

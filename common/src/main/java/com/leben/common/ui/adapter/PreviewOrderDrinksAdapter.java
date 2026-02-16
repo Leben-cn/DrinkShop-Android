@@ -1,16 +1,13 @@
-package com.leben.shop.ui.adapter;
+package com.leben.common.ui.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.leben.base.ui.adapter.holder.BaseViewHolder;
-import com.leben.shop.R;
+import com.leben.common.R;
 import com.leben.common.model.bean.DrinkSimpleEntity;
-
 import java.util.List;
 
 public class PreviewOrderDrinksAdapter extends RecyclerView.Adapter<BaseViewHolder>{
