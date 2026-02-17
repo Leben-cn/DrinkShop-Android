@@ -1,10 +1,10 @@
-package com.leben.shop.ui.adapter;
+package com.leben.merchant.ui.adapter;
 
 import android.content.Context;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.ui.adapter.holder.BaseViewHolder;
-import com.leben.shop.R;
 import com.leben.common.model.bean.DrinkEntity;
+import com.leben.merchant.R;
 import java.text.DecimalFormat;
 
 public class DrinkAdapter extends BaseRecyclerAdapter<DrinkEntity> {

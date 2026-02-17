@@ -1,4 +1,4 @@
-package com.leben.shop.model.bean;
+package com.leben.common.model.bean;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -34,7 +34,7 @@ public class DrinkEntity implements Serializable {
 
     private String distance;
 
-    public List<SpecGroupEntity> specs;
+    public List<SpecOptionEntity> specs;
 
     private BigDecimal packingFee;
 
@@ -87,10 +87,11 @@ public class DrinkEntity implements Serializable {
     }
 
     @SerializedName("specs")
-    public List<SpecGroupEntity> getSpecs() {
+    public List<SpecOptionEntity> getSpecs() {
         // 如果是 null 就返回一个空的 List，防止崩溃
         return Objects.requireNonNullElseGet(specs, ArrayList::new);
     }
+
 
     public BigDecimal getPackingFee() {
         return packingFee;

@@ -1,5 +1,8 @@
 package com.leben.shop.model.bean;
 
+import com.leben.common.model.bean.DrinkEntity;
+import com.leben.common.model.bean.SpecOptionEntity;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;

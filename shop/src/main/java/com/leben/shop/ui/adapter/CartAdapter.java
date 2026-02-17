@@ -25,7 +25,7 @@ public class CartAdapter extends BaseRecyclerAdapter<CartEntity> {
         DecimalFormat df=new DecimalFormat("#.##");
         holder.setImageUrl(R.id.iv_product_img,data.getDrink().getImg(),R.drawable.pic_no_drink)
                 .setText(R.id.tv_product_name,data.getDrink().getName())
-                .setText(R.id.tv_product_price, df.format(data.getCurrentPrice()))
+                .setText(R.id.tv_product_price, "￥"+df.format(data.getCurrentPrice()))
                 .setText(R.id.tv_count,String.valueOf(data.getQuantity()));
 
         if (data.getSpecDesc() != null && !data.getSpecDesc().isEmpty()) {

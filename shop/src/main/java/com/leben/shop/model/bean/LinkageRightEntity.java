@@ -2,6 +2,7 @@ package com.leben.shop.model.bean;
 
 
 import com.leben.base.widget.linkage.ILinkageItem;
+import com.leben.common.model.bean.DrinkEntity;
 
 public class LinkageRightEntity implements ILinkageItem {
 

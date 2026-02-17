@@ -9,7 +9,7 @@ import com.leben.base.util.LogUtils;
 import com.leben.common.LocationManager;
 import com.leben.shop.constant.ShopConstant;
 import com.leben.shop.contract.QueryDrinkContract;
-import com.leben.shop.model.bean.DrinkEntity;
+import com.leben.common.model.bean.DrinkEntity;
 import com.leben.shop.model.bean.DrinkQueryEntity;
 import com.leben.shop.model.bean.PageEntity;
 import com.leben.shop.presenter.QueryDrinkPresenter;

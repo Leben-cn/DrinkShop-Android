@@ -12,7 +12,7 @@ import com.leben.base.ui.adapter.holder.BaseViewHolder;
 import com.leben.base.util.LogUtils;
 import com.leben.shop.controller.CartController; // 1. 引入控制器
 import com.leben.shop.R;
-import com.leben.shop.model.bean.DrinkEntity;
+import com.leben.common.model.bean.DrinkEntity;
 import com.leben.shop.model.bean.LinkageRightEntity;
 
 import java.text.DecimalFormat;

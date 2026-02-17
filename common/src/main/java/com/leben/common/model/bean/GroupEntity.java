@@ -1,4 +1,4 @@
-package com.leben.shop.model.bean;
+package com.leben.common.model.bean;
 
 import java.util.List;
 

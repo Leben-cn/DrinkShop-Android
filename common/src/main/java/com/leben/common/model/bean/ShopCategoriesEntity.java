@@ -1,4 +1,4 @@
-package com.leben.shop.model.bean;
+package com.leben.common.model.bean;
 
 import com.leben.base.widget.linkage.ILinkageCategory;
 

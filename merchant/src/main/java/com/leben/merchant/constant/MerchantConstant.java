@@ -9,5 +9,6 @@ public interface MerchantConstant {
         String ORDER_CANCEL="/merchant/cancel/order";
         String ORDER_DONE="/merchant/done/order";
         String ORDER_PENDING="/merchant/pending/order";
+        String ADD_DRINK="/merchant/add/drink";
     }
 }

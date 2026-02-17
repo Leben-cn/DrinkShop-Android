@@ -1,11 +1,9 @@
 package com.leben.shop.contract;
 
 import com.leben.base.contract.IBaseView;
-import com.leben.shop.model.bean.DrinkEntity;
+import com.leben.common.model.bean.DrinkEntity;
 import com.leben.shop.model.bean.DrinkQueryEntity;
 import com.leben.shop.model.bean.PageEntity;
-
-import java.util.List;
 
 public interface QueryDrinkContract {
     interface View extends IBaseView{

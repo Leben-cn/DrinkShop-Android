@@ -1,7 +1,6 @@
 package com.leben.merchant.ui.activity;
 
 import android.view.View;
-
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.activity.BaseRecyclerActivity;

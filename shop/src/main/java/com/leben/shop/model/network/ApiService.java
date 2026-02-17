@@ -2,7 +2,7 @@ package com.leben.shop.model.network;
 
 import com.leben.common.model.bean.CommentEntity;
 import com.leben.common.model.bean.CommonEntity;
-import com.leben.shop.model.bean.DrinkEntity;
+import com.leben.common.model.bean.DrinkEntity;
 import com.leben.common.model.bean.OrderEntity;
 import com.leben.shop.model.bean.DrinkQueryEntity;
 import com.leben.shop.model.bean.PageEntity;

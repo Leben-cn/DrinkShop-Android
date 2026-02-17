@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.leben.base.ui.adapter.holder.BaseViewHolder;
 import com.leben.shop.R;
-import com.leben.shop.model.bean.ShopCategoriesEntity;
+import com.leben.common.model.bean.ShopCategoriesEntity;
 import java.util.List;
 
 public class LinkageLeftAdapter extends com.leben.base.widget.linkage.LinkageLeftAdapter<ShopCategoriesEntity, BaseViewHolder> {

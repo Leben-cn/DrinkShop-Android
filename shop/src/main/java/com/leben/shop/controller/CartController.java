@@ -1,9 +1,9 @@
 package com.leben.shop.controller;
 
 import com.leben.shop.model.bean.CartEntity;
-import com.leben.shop.model.bean.DrinkEntity;
+import com.leben.common.model.bean.DrinkEntity;
 import com.leben.common.model.bean.OrderItemEntity;
-import com.leben.shop.model.bean.SpecOptionEntity;
+import com.leben.common.model.bean.SpecOptionEntity;
 import com.leben.shop.model.event.CartEvent;
 import org.greenrobot.eventbus.EventBus;
 import java.math.BigDecimal;
@@ -188,23 +188,27 @@ public class CartController {
 
     /**
      * 【核心算法】生成唯一 Key
-     * 逻辑：商品ID + "_" + 排序后的规格ID
+     * 逻辑：商品ID + 排序后的所有规格ID拼接字符串
      */
     private String generateKey(DrinkEntity drink, List<SpecOptionEntity> specs) {
         StringBuilder sb = new StringBuilder();
-        sb.append(drink.getId());
+        sb.append(drink.getId()); // 这一步生成如 "101"
 
         if (specs != null && !specs.isEmpty()) {
-            // 1. 复制列表防止影响原数据
+            // 1. 复制一份列表，防止排序打乱原数据顺序 (浅拷贝即可)
             List<SpecOptionEntity> sortedSpecs = new ArrayList<>(specs);
-            // 2. 排序 (依赖 SpecOptionEntity 实现 Comparable)
-            Collections.sort(sortedSpecs);
+
+            // 2. 【核心修改】直接传入 Comparator 进行排序
+            // 按照 optionId 从小到大排序，确保 [少冰,大杯] 和 [大杯,少冰] 生成同一个 Key
+            sortedSpecs.sort((o1, o2) -> Long.compare(o1.getId(), o2.getId()));
 
             // 3. 拼接 ID
             for (SpecOptionEntity spec : sortedSpecs) {
                 sb.append("_").append(spec.getId());
             }
         }
+
+        // 最终返回如 "101_1_5" 这样的唯一字符串
         return sb.toString();
     }
 

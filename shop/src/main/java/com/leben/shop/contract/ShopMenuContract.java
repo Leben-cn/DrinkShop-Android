@@ -1,7 +1,7 @@
 package com.leben.shop.contract;
 
 import com.leben.base.contract.IBaseView;
-import com.leben.shop.model.bean.DrinkEntity;
+import com.leben.common.model.bean.DrinkEntity;
 import java.util.List;
 
 public interface ShopMenuContract {

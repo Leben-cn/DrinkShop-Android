@@ -8,11 +8,13 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.leben.base.widget.dialog.BaseBottomSheetDialog;
+import com.leben.common.model.bean.GroupEntity;
+import com.leben.common.model.bean.SpecGroupEntity;
 import com.leben.shop.R;
-import com.leben.shop.model.bean.DrinkEntity;
-import com.leben.shop.model.bean.SpecGroupEntity;
-import com.leben.shop.model.bean.SpecOptionEntity;
+import com.leben.common.model.bean.DrinkEntity;
+import com.leben.common.model.bean.SpecOptionEntity;
 import com.leben.shop.ui.adapter.SpecGroupAdapter;
+import com.leben.shop.util.ListGroupUtils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ public class ProductSpecDialog extends BaseBottomSheetDialog {
     private DrinkEntity mDrink;
     private TextView tvTitle, tvPrice, tvSummary;
     private SpecGroupAdapter mAdapter;
+    private List<GroupEntity<SpecGroupEntity, SpecOptionEntity>> mGroupList;
     // 回调接口
     private OnAddToCartListener mListener;
 
@@ -45,7 +48,19 @@ public class ProductSpecDialog extends BaseBottomSheetDialog {
     @Override
     protected void initView(View root) {
         mDrink = (DrinkEntity) getArguments().getSerializable("data");
-        if(mDrink == null) return;
+        if(mDrink == null) {
+            return;
+        }
+
+        if (mDrink.specs != null) {
+            mGroupList = ListGroupUtils.groupList(
+                    mDrink.specs,
+                    // Lambda: 告诉工具类如何生成 Key
+                    item -> new SpecGroupEntity(item.groupId, item.groupName, item.isMultiple)
+            );
+        } else {
+            mGroupList = new ArrayList<>();
+        }
 
         // 初始化默认选中：如果还没选中，默认选每组的第一个
         initDefaultSelection();
@@ -62,7 +77,7 @@ public class ProductSpecDialog extends BaseBottomSheetDialog {
 
         // 设置 Adapter
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new SpecGroupAdapter(mDrink.specs, this::updateUI);
+        mAdapter = new SpecGroupAdapter(mGroupList, this::updateUI);
         rv.setAdapter(mAdapter);
 
         // 首次计算
@@ -71,17 +86,18 @@ public class ProductSpecDialog extends BaseBottomSheetDialog {
         // 加入购物车事件
         btnAdd.setOnClickListener(v -> {
             if (mListener != null) {
-                // 收集选中的 specs
                 List<SpecOptionEntity> selected = new ArrayList<>();
-                BigDecimal total = mDrink.getPrice(); // 基础价
+                BigDecimal total = mDrink.getPrice();
                 StringBuilder sb = new StringBuilder();
 
-                for (SpecGroupEntity group : mDrink.specs) {
-                    for (SpecOptionEntity opt : group.options) {
-                        if (opt.isSelected) {
-                            selected.add(opt);
-                            if (opt.price != null) total = total.add(opt.price);
-                            sb.append(opt.name).append(" ");
+                if (mGroupList != null) {
+                    for (GroupEntity<SpecGroupEntity, SpecOptionEntity> group : mGroupList) {
+                        for (SpecOptionEntity opt : group.getChildren()) {
+                            if (opt.isSelected) {
+                                selected.add(opt);
+                                if (opt.price != null) total = total.add(opt.price);
+                                sb.append(opt.optionName).append(" ");
+                            }
                         }
                     }
                 }
@@ -93,19 +109,23 @@ public class ProductSpecDialog extends BaseBottomSheetDialog {
 
     // 默认选中逻辑：每组单选必须默认选中第一个
     private void initDefaultSelection() {
-        if (mDrink.specs == null) return;
-        for (SpecGroupEntity group : mDrink.specs) {
-            if (!group.isMultiple && group.options != null && !group.options.isEmpty()) {
+        if (mGroupList == null) return;
+        // 遍历分组列表
+        for (GroupEntity<SpecGroupEntity, SpecOptionEntity> group : mGroupList) {
+            SpecGroupEntity key = group.getHeader();
+            List<SpecOptionEntity> options = group.getChildren();
+
+            // 如果是单选 (!isMultiple) 且没有选中项，默认选中第一个
+            if (!key.isMultiple && options != null && !options.isEmpty()) {
                 boolean hasSelected = false;
-                for (SpecOptionEntity opt : group.options) {
+                for (SpecOptionEntity opt : options) {
                     if (opt.isSelected) {
                         hasSelected = true;
                         break;
                     }
                 }
-                // 如果单选组一个都没选，强制选中第一个
                 if (!hasSelected) {
-                    group.options.get(0).isSelected = true;
+                    options.get(0).setSelected(true);
                 }
             }
         }
@@ -113,17 +133,18 @@ public class ProductSpecDialog extends BaseBottomSheetDialog {
 
     // 更新价格和描述 UI
     private void updateUI() {
-        BigDecimal total = mDrink.getPrice(); // 起始为基础价
+        BigDecimal total = mDrink.getPrice();
         StringBuilder summary = new StringBuilder("已选：");
 
-        if (mDrink.specs != null) {
-            for (SpecGroupEntity group : mDrink.specs) {
-                for (SpecOptionEntity opt : group.options) {
+        if (mGroupList != null) {
+            // 遍历分组数据来计算
+            for (GroupEntity<SpecGroupEntity, SpecOptionEntity> group : mGroupList) {
+                for (SpecOptionEntity opt : group.getChildren()) {
                     if (opt.isSelected) {
                         if (opt.price != null) {
                             total = total.add(opt.price);
                         }
-                        summary.append(opt.name).append(" ");
+                        summary.append(opt.optionName).append(" ");
                     }
                 }
             }

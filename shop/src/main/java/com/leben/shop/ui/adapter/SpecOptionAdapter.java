@@ -1,17 +1,22 @@
 package com.leben.shop.ui.adapter;
 
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import com.leben.base.ui.adapter.holder.BaseViewHolder;
+import com.leben.common.model.bean.SpecOptionEntity;
 import com.leben.shop.R;
-import com.leben.shop.model.bean.SpecOptionEntity;
+
 import java.util.List;
 
-// 这里用原生 Adapter 写法演示，方便复制
-public class SpecOptionAdapter extends androidx.recyclerview.widget.RecyclerView.Adapter<com.leben.base.ui.adapter.holder.BaseViewHolder> {
+public class SpecOptionAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private List<SpecOptionEntity> data;
-    private boolean isMultiple; // 是否多选
-    private Runnable onUpdateListener; // 通知外部刷新价格
+    private boolean isMultiple; // 是否支持多选
+    private Runnable onUpdateListener; // 回调给外部计算价格
 
     public SpecOptionAdapter(List<SpecOptionEntity> data, boolean isMultiple, Runnable onUpdateListener) {
         this.data = data;
@@ -19,44 +24,54 @@ public class SpecOptionAdapter extends androidx.recyclerview.widget.RecyclerView
         this.onUpdateListener = onUpdateListener;
     }
 
+    @NonNull
     @Override
-    public com.leben.base.ui.adapter.holder.BaseViewHolder onCreateViewHolder(android.view.ViewGroup parent, int viewType) {
-        View view = android.view.LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spec_option, parent, false);
-        return new com.leben.base.ui.adapter.holder.BaseViewHolder(view);
+    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_spec_option, parent, false);
+        return new BaseViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(com.leben.base.ui.adapter.holder.BaseViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
         SpecOptionEntity item = data.get(position);
         TextView tv = holder.getView(R.id.tv_name);
-        tv.setText(item.name);
+        tv.setText(item.optionName); // 注意：确保这里取的是 optionName
 
-        // 【核心】设置 View 的选中状态，触发 XML selector 变色
+        // 设置选中状态
         tv.setSelected(item.isSelected);
-        if(item.isSelected) {
-            tv.setTextColor(0xFFFF0000); // 选中红字 (可用资源色代替)
-        } else {
-            tv.setTextColor(0xFF333333); // 未选中黑字
-        }
 
         holder.itemView.setOnClickListener(v -> {
             if (isMultiple) {
-                // 多选：取反
+                // --- 多选逻辑 ---
                 item.isSelected = !item.isSelected;
             } else {
-                // 单选：其他的全灭，我亮
-                if (!item.isSelected) { // 如果已经选中了就不重复操作
+                // --- 单选逻辑 ---
+                if (!item.isSelected) {
+                    // 1. 先把同组其他的都取消选中
                     for (SpecOptionEntity entity : data) {
                         entity.isSelected = false;
                     }
+                    // 2. 选中当前点击的
                     item.isSelected = true;
+                } else {
+                    // 如果已经是选中状态，单选模式下通常不允许取消(必选一项)，所以啥也不做
+                    // 如果允许反选（变成都不选），可以在这里写 item.isSelected = false;
+                    return;
                 }
             }
+
             notifyDataSetChanged();
-            if (onUpdateListener != null) onUpdateListener.run();
+
+            // 通知外部 Dialog 重新计算总价
+            if (onUpdateListener != null) {
+                onUpdateListener.run();
+            }
         });
     }
 
     @Override
-    public int getItemCount() { return data == null ? 0 : data.size(); }
+    public int getItemCount() {
+        return data == null ? 0 : data.size();
+    }
 }
