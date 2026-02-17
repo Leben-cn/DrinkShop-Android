@@ -3,14 +3,13 @@ package com.leben.shop.ui.fragment;
 import android.view.View;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.leben.base.ui.fragment.BaseTabFragment;
 import com.leben.base.widget.titleBar.TitleBar;
 import com.leben.common.Constant.CommonConstant;
 import com.leben.shop.R;
-import com.leben.shop.constant.ShopConstant;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class OrderFragment extends BaseTabFragment {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.frag_order;
+        return R.layout.shop_frag_order;
     }
 
     @Override

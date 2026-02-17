@@ -66,7 +66,7 @@ public class ShopCommentFragment extends BaseRecyclerFragment<CommentEntity> imp
 
     @Override
     public void onGetShopCommentFailed(String errorMsg) {
-        ToastUtils.show(getContext(),"加载评论失败");
+        refreshListFailed("加载评论失败");
         LogUtils.error("加载评论失败："+errorMsg);
     }
 

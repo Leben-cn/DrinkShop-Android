@@ -47,7 +47,7 @@ public class FavoriteAdapter extends BaseRecyclerAdapter<ShopEntity> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.item_favorite;
+        return R.layout.user_item_favorite;
     }
 
     @Override

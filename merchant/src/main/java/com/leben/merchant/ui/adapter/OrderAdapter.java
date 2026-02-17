@@ -54,7 +54,7 @@ public class OrderAdapter extends BaseRecyclerAdapter<OrderEntity> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.item_order;
+        return R.layout.merchant_item_order;
     }
 
     @SuppressLint("CheckResult")

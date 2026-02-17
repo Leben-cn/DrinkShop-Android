@@ -53,9 +53,9 @@ public class LinkageRightAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == 0) {
-            return new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_menu_header, parent, false));
+            return new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.shop_item_menu_header, parent, false));
         } else {
-            return new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_menu_drink, parent, false));
+            return new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.shop_item_menu_drink, parent, false));
         }
     }
 

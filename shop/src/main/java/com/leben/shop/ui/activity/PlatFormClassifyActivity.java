@@ -44,7 +44,7 @@ public class PlatFormClassifyActivity extends BaseRecyclerActivity<DrinkEntity> 
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_platform_classify;
+        return R.layout.shop_ac_platform_classify;
     }
 
     @Override

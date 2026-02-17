@@ -22,7 +22,7 @@ public class LinkageLeftAdapter extends com.leben.base.widget.linkage.LinkageLef
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_linkage_left,parent,false));
+        return new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.shop_item_linkage_left,parent,false));
     }
 
     @Override

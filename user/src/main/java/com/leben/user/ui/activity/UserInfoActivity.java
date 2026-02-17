@@ -54,7 +54,7 @@ public class UserInfoActivity extends BaseActivity implements SubmitUserInfoCont
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_user_info;
+        return R.layout.user_ac_info;
     }
 
     @Override

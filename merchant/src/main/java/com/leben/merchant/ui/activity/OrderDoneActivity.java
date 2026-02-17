@@ -28,7 +28,7 @@ public class OrderDoneActivity extends BaseRecyclerActivity<OrderEntity> impleme
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_order;
+        return R.layout.merchant_ac_order;
     }
 
     @Override
@@ -82,8 +82,7 @@ public class OrderDoneActivity extends BaseRecyclerActivity<OrderEntity> impleme
 
     @Override
     public void onGetDoneOrderFailed(String errorMsg) {
-        refreshListFailed(errorMsg);
-        showError("获取订单失败");
+        refreshListFailed("获取订单失败");
         LogUtils.error("获取订单失败："+errorMsg);
     }
 }

@@ -7,6 +7,9 @@ import com.leben.common.model.bean.DrinkEntity;
 import com.leben.merchant.R;
 import java.text.DecimalFormat;
 
+/**
+ * Created by youjiahui on 2026/2/17.
+ */
 public class DrinkAdapter extends BaseRecyclerAdapter<DrinkEntity> {
 
     public DrinkAdapter(Context context) {
@@ -15,7 +18,7 @@ public class DrinkAdapter extends BaseRecyclerAdapter<DrinkEntity> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.item_drink;
+        return R.layout.merchant_item_drink;
     }
 
     @Override
@@ -24,7 +27,7 @@ public class DrinkAdapter extends BaseRecyclerAdapter<DrinkEntity> {
         holder.setImageUrl(R.id.iv_drink_img,data.getImg())
                 .setText(R.id.tv_drink_name,data.getName())
                 .setText(R.id.tv_rating,data.getMark()+"分")
-                .setText(R.id.tv_distance,data.getDistance());
+                .setText(R.id.tv_edit,data.getDistance());
         if (data.getSpecs().isEmpty()) {
             holder.setText(R.id.tv_drink_price,"￥"+df.format(data.getPrice()));
         }else{

@@ -48,7 +48,7 @@ public class OrderNoCommentFragment extends BaseRecyclerFragment<OrderEntity> im
 
     @Override
     public void onGetNoCommentOrderFailed(String errorMsg) {
-        refreshListFailed(errorMsg);
-        showError(errorMsg);
+        refreshListFailed("获取订单失败");
+        showError("获取订单失败："+errorMsg);
     }
 }

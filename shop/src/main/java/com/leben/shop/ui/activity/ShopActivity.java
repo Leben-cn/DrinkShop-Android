@@ -87,7 +87,7 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_shop;
+        return R.layout.shop_ac_shop;
     }
 
     @Override

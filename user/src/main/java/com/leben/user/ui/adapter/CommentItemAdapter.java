@@ -22,7 +22,7 @@ public class CommentItemAdapter extends BaseRecyclerAdapter<OrderItemEntity> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.item_comment_product;
+        return R.layout.user_item_comment_drink;
     }
 
     @Override

@@ -27,7 +27,7 @@ public class CartDialog extends BaseBottomSheetDialog {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.dialog_cart_list;
+        return R.layout.shop_dialog_cart_list;
     }
 
     // 1. 不需要传参数，数据直接找 Controller 要

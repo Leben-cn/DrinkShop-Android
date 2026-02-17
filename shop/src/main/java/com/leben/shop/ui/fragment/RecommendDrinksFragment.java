@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -22,7 +21,6 @@ import com.leben.shop.model.bean.PageEntity;
 import com.leben.common.model.bean.ShopEntity;
 import com.leben.shop.presenter.RecommendShopsPresenter;
 import com.leben.shop.ui.adapter.RecommendShopsAdapter;
-import com.leben.shop.ui.dialog.RemarkDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +54,7 @@ public class RecommendDrinksFragment extends BaseRecyclerFragment<ShopEntity> im
 
     @Override
     protected int getLayoutId() {
-        return R.layout.frag_recommend_drinks;
+        return R.layout.shop_frag_recommend_drinks;
     }
 
     @Override

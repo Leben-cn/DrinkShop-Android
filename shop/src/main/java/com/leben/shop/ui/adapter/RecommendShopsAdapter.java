@@ -50,7 +50,7 @@ public class RecommendShopsAdapter extends BaseRecyclerAdapter<ShopEntity> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.item_recommend_shop;
+        return R.layout.shop_item_recommend_shop;
     }
 
     @Override

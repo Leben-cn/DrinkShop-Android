@@ -35,7 +35,7 @@ public class RemarkDialog extends BaseBottomSheetDialog {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.dialog_remark;
+        return R.layout.shop_dialog_remark;
     }
 
     @Override

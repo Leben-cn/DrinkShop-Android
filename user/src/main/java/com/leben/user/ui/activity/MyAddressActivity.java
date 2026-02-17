@@ -13,7 +13,6 @@ import com.leben.base.ui.activity.BaseRecyclerActivity;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.util.LogUtils;
 import com.leben.base.widget.titleBar.TitleBar;
-import com.leben.common.Constant.CommonConstant;
 import com.leben.user.R;
 import com.leben.user.constant.UserConstant;
 import com.leben.user.contract.GetMyAddressContract;
@@ -44,7 +43,7 @@ public class MyAddressActivity extends BaseRecyclerActivity<AddressEntity> imple
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_address_list;
+        return R.layout.user_ac_address_list;
     }
 
     @Override
@@ -112,8 +111,8 @@ public class MyAddressActivity extends BaseRecyclerActivity<AddressEntity> imple
 
     @Override
     public void onGetMyAddressFailed(String errorMsg) {
-        refreshListFailed(errorMsg);
-        showError(errorMsg);
+        refreshListFailed("获取地址失败");
+        showError("获取地址失败："+errorMsg);
     }
 
     @Override

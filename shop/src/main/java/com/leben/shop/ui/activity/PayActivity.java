@@ -35,7 +35,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
@@ -62,7 +61,7 @@ public class PayActivity extends BaseActivity implements SubmitOrderContract.Vie
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_pay;
+        return R.layout.shop_ac_pay;
     }
 
     @Override

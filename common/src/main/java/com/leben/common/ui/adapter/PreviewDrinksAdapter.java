@@ -34,7 +34,7 @@ public class PreviewDrinksAdapter extends RecyclerView.Adapter<BaseViewHolder>{
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_drink_simple, parent, false);
+                .inflate(R.layout.common_item_drink_simple, parent, false);
         return new BaseViewHolder(view);
     }
 

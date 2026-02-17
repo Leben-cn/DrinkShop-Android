@@ -1,6 +1,5 @@
 package com.leben.user.ui.activity;
 
-import android.icu.text.CaseMap;
 import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -8,7 +7,6 @@ import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.activity.BaseRecyclerActivity;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.util.LogUtils;
-import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.titleBar.TitleBar;
 import com.leben.common.model.bean.CommentEntity;
 import com.leben.common.ui.adapter.CommentAdapter;
@@ -34,7 +32,7 @@ public class MyCommentActivity extends BaseRecyclerActivity<CommentEntity> imple
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_my_comment;
+        return R.layout.user_ac_comment_list;
     }
 
     @Override
@@ -69,7 +67,7 @@ public class MyCommentActivity extends BaseRecyclerActivity<CommentEntity> imple
 
     @Override
     public void onGetMyCommentFailed(String errorMsg) {
-        ToastUtils.show(this,"获取我的评价失败");
+        refreshListFailed("获取我的评价失败");
         LogUtils.error("获取我的评价失败："+errorMsg);
     }
 

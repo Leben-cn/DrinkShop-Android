@@ -17,7 +17,7 @@ public class CartAdapter extends BaseRecyclerAdapter<CartEntity> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.item_cart_product;
+        return R.layout.shop_item_cart_product;
     }
 
     @Override

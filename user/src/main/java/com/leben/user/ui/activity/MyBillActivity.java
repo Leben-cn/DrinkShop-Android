@@ -6,7 +6,6 @@ import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.activity.BaseRecyclerActivity;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.util.LogUtils;
-import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.titleBar.TitleBar;
 import com.leben.user.R;
 import com.leben.user.constant.UserConstant;
@@ -31,7 +30,7 @@ public class MyBillActivity extends BaseRecyclerActivity<BillEntity> implements 
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_my_bill;
+        return R.layout.user_ac_bill_list;
     }
 
     @Override
@@ -70,7 +69,7 @@ public class MyBillActivity extends BaseRecyclerActivity<BillEntity> implements 
 
     @Override
     public void onGetMyBillFailed(String errorMsg) {
-        ToastUtils.show(this,"获取账单数据失败");
+        refreshListFailed("获取账单数据失败");
         LogUtils.error("获取账单数据失败："+errorMsg);
     }
 }

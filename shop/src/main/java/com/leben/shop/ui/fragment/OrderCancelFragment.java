@@ -85,7 +85,7 @@ public class OrderCancelFragment extends BaseRecyclerFragment<OrderEntity> imple
 
     @Override
     public void onGetCancelOrderFailed(String errorMsg) {
-        refreshListFailed(errorMsg);
-        showError(errorMsg);
+        refreshListFailed("获取订单失败");
+        showError("获取订单失败"+errorMsg);
     }
 }

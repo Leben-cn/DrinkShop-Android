@@ -50,7 +50,7 @@ public class ShopMenuFragment extends BaseFragment implements ShopMenuContract.V
 
     @Override
     protected int getLayoutId() {
-        return R.layout.frag_shop_menu;
+        return R.layout.shop_frag_shop_menu;
     }
 
 

@@ -34,21 +34,23 @@ public class MerchantUtils {
     /**
      * 获取当前用户ID (快捷方法)
      */
-    public static Long getUserId(Context context) {
-        LoginEntity.ShopInfo userInfo = getMerchantInfo(context);
-        return userInfo != null ? userInfo.getId() : null;
+    public static Long getMerchantId(Context context) {
+        LoginEntity.ShopInfo shopInfo = getMerchantInfo(context);
+        return shopInfo != null ? shopInfo.getId() : null;
     }
     /**
-     * 【新增】更新用户信息到 SharedPreferences
+     * 更新用户信息到 SharedPreferences
      */
-    public static void saveUserInfo(Context context, LoginEntity.ShopInfo userInfo) {
-        if (userInfo == null) return;
+    public static void saveMerchantInfo(Context context, LoginEntity.ShopInfo shopInfo) {
+        if (shopInfo == null) {
+            return;
+        }
 
         // 1. 转成 JSON 字符串
-        String json = new Gson().toJson(userInfo);
+        String json = new Gson().toJson(shopInfo);
 
         // 2. 存入 SP
-        SharedPreferencesUtils.setParam(context, CommonConstant.Key.USER_INFO, json);
+        SharedPreferencesUtils.setParam(context, CommonConstant.Key.MERCHANT_INFO, json);
     }
 
 }

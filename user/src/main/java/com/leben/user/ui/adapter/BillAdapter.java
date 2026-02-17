@@ -14,7 +14,7 @@ public class BillAdapter extends BaseRecyclerAdapter<BillEntity> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.item_bill;
+        return R.layout.user_item_bill;
     }
 
     @Override

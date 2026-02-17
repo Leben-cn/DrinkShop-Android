@@ -37,7 +37,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_merchant_login;
+        return R.layout.merchant_ac_login;
     }
 
     @Override

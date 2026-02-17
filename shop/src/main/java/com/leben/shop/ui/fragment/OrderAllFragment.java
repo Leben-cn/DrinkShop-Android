@@ -105,8 +105,7 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
 
     @Override
     public void onGetAllOrderFailed(String errorMsg) {
-        refreshListFailed(errorMsg);
-        showError("获取订单失败");
+        refreshListFailed("获取订单失败");
         LogUtils.error("获取订单失败："+errorMsg);
     }
 

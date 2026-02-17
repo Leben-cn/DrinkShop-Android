@@ -30,7 +30,7 @@ public class SpecGroupAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = android.view.LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_spec_group, parent, false);
+                .inflate(R.layout.shop_item_spec_group, parent, false);
         return new BaseViewHolder(view);
     }
 

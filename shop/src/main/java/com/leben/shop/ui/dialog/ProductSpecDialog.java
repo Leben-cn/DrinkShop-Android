@@ -42,7 +42,7 @@ public class ProductSpecDialog extends BaseBottomSheetDialog {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.dialog_product_spec;
+        return R.layout.shop_dialog_product_spec;
     }
 
     @Override

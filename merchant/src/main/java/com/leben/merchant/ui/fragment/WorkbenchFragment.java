@@ -38,7 +38,7 @@ public class WorkbenchFragment extends BaseRefreshFragment {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.frag_workbench;
+        return R.layout.merchant_frag_workbench;
     }
 
     @Override

@@ -34,7 +34,7 @@ public class OrderDetailActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_order_detail;
+        return R.layout.shop_ac_order_detail;
     }
 
     @Override

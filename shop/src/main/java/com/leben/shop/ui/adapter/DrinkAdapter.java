@@ -15,7 +15,7 @@ public class DrinkAdapter extends BaseRecyclerAdapter<DrinkEntity> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.item_drink;
+        return R.layout.shop_item_drink;
     }
 
     @Override

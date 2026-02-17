@@ -17,7 +17,7 @@ public class OrderItemAdapter extends BaseRecyclerAdapter<OrderItemEntity> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.item_pay_product;
+        return R.layout.shop_item_pay_product;
     }
 
     @Override

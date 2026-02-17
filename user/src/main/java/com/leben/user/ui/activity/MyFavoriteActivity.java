@@ -7,7 +7,6 @@ import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.activity.BaseRecyclerActivity;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.util.LogUtils;
-import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.titleBar.TitleBar;
 import com.leben.common.LocationManager;
 import com.leben.common.model.bean.ShopEntity;
@@ -32,7 +31,7 @@ public class MyFavoriteActivity extends BaseRecyclerActivity<ShopEntity> impleme
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_favorite;
+        return R.layout.user_ac_favorite_list;
     }
 
     @Override
@@ -88,8 +87,8 @@ public class MyFavoriteActivity extends BaseRecyclerActivity<ShopEntity> impleme
 
     @Override
     public void onGetMyFavoriteFailed(String errorMsg) {
-        ToastUtils.show(this,"获取收藏店铺失败");
-        LogUtils.error("获取收藏店铺失败"+errorMsg);
+        refreshListFailed("获取收藏店铺失败");
+        LogUtils.error("获取收藏店铺失败："+errorMsg);
     }
 
     @Override

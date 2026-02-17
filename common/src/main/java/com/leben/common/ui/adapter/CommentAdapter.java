@@ -27,7 +27,7 @@ public class CommentAdapter extends BaseRecyclerAdapter<CommentEntity> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.item_comment;
+        return R.layout.common_item_comment;
     }
 
     @Override

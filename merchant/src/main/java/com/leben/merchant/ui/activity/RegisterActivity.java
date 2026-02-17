@@ -20,7 +20,6 @@ import com.leben.base.ui.activity.BaseActivity;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.titleBar.TitleBar;
-import com.leben.common.model.bean.ShopEntity;
 import com.leben.common.util.ImagePickerHelper;
 import com.leben.common.util.PermissionDialogHelper;
 import com.leben.merchant.R;
@@ -63,7 +62,7 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_merchant_register;
+        return R.layout.merchant_ac_register;
     }
 
     @Override

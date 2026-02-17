@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.maps.AMap;
@@ -29,7 +28,6 @@ import com.leben.base.ui.activity.BaseActivity;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.titleBar.TitleBar;
-import com.leben.common.model.bean.AddressEntity;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
 import java.util.concurrent.TimeUnit;
@@ -59,7 +57,7 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_merchant_add_address;
+        return R.layout.merchant_ac_add_address;
     }
 
     @Override

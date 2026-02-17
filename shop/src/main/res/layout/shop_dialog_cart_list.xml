@@ -65,6 +65,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:minHeight="100dp"
-        tools:listitem="@layout/item_cart_product" />
+        tools:listitem="@layout/shop_item_cart_product" />
 
 </LinearLayout>

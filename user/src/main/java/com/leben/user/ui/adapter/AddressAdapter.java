@@ -25,7 +25,7 @@ public class AddressAdapter extends BaseRecyclerAdapter<AddressEntity> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.item_address;
+        return R.layout.user_item_address;
     }
 
     @Override

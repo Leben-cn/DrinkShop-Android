@@ -26,8 +26,6 @@ import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.activity.BaseActivity;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
-import com.leben.base.widget.titleBar.TitleBar;
-import com.leben.common.Constant.CommonConstant;
 import com.leben.user.R;
 import com.leben.user.constant.UserConstant;
 import com.leben.user.contract.SaveAddressContract;
@@ -62,7 +60,7 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ac_add_address;
+        return R.layout.user_ac_add_address;
     }
 
     @Override

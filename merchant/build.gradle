@@ -3,6 +3,9 @@ plugins {
 }
 
 android {
+
+    resourcePrefix "merchant_"
+
     namespace 'com.leben.merchant'
     compileSdk {
         version = release(36)
@@ -43,4 +46,6 @@ dependencies {
     implementation project(':common')
     //ARouter
     annotationProcessor 'com.alibaba:arouter-compiler:1.5.2'
+
+
 }

@@ -65,7 +65,7 @@ public class EditInfoDialog extends BaseBottomSheetDialog {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.dialog_edit_info;
+        return R.layout.user_dialog_edit_info;
     }
 
     @Override

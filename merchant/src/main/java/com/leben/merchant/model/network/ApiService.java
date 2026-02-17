@@ -1,6 +1,7 @@
 package com.leben.merchant.model.network;
 
 import com.leben.common.model.bean.CommonEntity;
+import com.leben.common.model.bean.DrinkEntity;
 import com.leben.common.model.bean.OrderEntity;
 import com.leben.merchant.model.bean.LoginEntity;
 import com.leben.merchant.model.bean.MerchantRegisterEntity;
@@ -11,6 +12,7 @@ import io.reactivex.Flowable;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
@@ -42,5 +44,9 @@ public interface ApiService {
     Flowable<CommonEntity<List<OrderEntity>>> getRefundOrder(
     );
 
+    @GET("/shops/{shopId}/menu")
+    Flowable<CommonEntity<List<DrinkEntity>>> getShopDrink(
+            @Path("shopId") Long shopId
+    );
 
 }
