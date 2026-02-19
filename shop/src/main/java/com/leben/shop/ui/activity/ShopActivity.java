@@ -45,7 +45,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 @Route(path = ShopConstant.Router.SHOP)
 public class ShopActivity extends BaseTabActivity implements CheckFavoriteContract.View,
         GetShopInfoContract.View , ToggleFavoriteContract.View {
-    //为什么购物车要写在这？因为 CoordinatorLayout 会把 fragment 向下挤压，导致需要上滑才能看见购物车
+    //为什么购物车要写在这？因为 CoordinatorLayout 会把 fragment 向下挤压，导致需要上滑才能看见购物车,在外层 Activity 就不会有这个问题
     private View mCartView;
     private TextView badgeCount;
     private TextView totalPrice;
@@ -76,12 +76,11 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
     @Override
     public void onInit() {
         super.onInit();
-        // 1. 注册
+
         EventBus.getDefault().register(this);
 
         shopId= getIntent().getLongExtra("shopId",-1);
-
-        // 【关键】进店时检查：如果是新店，控制器内部会自动清空上一家店的数据
+        // 进店时检查：如果是新店，控制器内部会自动清空上一家店的数据
         CartController.getInstance().checkShopId(shopId);
     }
 

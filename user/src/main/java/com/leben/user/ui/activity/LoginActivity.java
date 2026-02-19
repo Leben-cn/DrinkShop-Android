@@ -166,7 +166,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public void onLoginFailed(String errorMsg) {
         hideLoading();
-        ToastUtils.show(this,errorMsg);
+        showError("登录失败");
+        LogUtils.error("登录失败："+errorMsg);
     }
 
     @Override

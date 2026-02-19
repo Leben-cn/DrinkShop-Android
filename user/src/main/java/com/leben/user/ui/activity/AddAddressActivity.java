@@ -66,8 +66,18 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
     @Override
     public void onInit() {
         super.onInit();
+        // 管地图显示和搜索
         MapsInitializer.updatePrivacyShow(this,true,true);
         MapsInitializer.updatePrivacyAgree(this,true);
+
+        // 管 AMapLocationClient
+        try {
+            AMapLocationClient.updatePrivacyShow(this, true, true);
+            AMapLocationClient.updatePrivacyAgree(this, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

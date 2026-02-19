@@ -1,5 +1,6 @@
 package com.leben.merchant.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.ImageView;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -58,6 +59,7 @@ public class GoodsFragment extends BaseRecyclerFragment<DrinkEntity> implements 
         shopDrinkPresenter.getShopDrinks(MerchantUtils.getMerchantId(getContext()));
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void initListener() {
         RxView.clicks(mIvAddDrink)
@@ -65,7 +67,8 @@ public class GoodsFragment extends BaseRecyclerFragment<DrinkEntity> implements 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result->{
                     ARouter.getInstance()
-                            .build(MerchantConstant.Router.ADD_DRINK)
+                            .build(MerchantConstant.Router.DRINK_EDIT)
+                            .withString("TAG","GOOS_FRAGMENT")
                             .navigation();
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());

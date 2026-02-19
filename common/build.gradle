@@ -4,8 +4,6 @@ plugins {
 
 android {
 
-    resourcePrefix "common_"
-
     namespace 'com.leben.common'
     compileSdk {
         version = release(36)

@@ -4,8 +4,6 @@ plugins {
 
 android {
 
-    resourcePrefix "shop_"
-
     namespace 'com.leben.shop'
     compileSdk {
         version = release(36)

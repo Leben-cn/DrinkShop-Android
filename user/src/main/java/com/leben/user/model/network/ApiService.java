@@ -24,7 +24,7 @@ public interface ApiService {
             @Query("password") String password
     );
 
-    @POST("/address/save")
+    @POST("/users/save")
     Flowable<CommonEntity<String>> saveAddress(
             @Body AddressEntity addressEntity
     );

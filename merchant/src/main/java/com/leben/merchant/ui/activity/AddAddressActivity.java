@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -30,7 +31,9 @@ import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.titleBar.TitleBar;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
+
 import java.util.concurrent.TimeUnit;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 @Route(path = MerchantConstant.Router.ADD_ADDRESS)

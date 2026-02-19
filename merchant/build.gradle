@@ -4,8 +4,6 @@ plugins {
 
 android {
 
-    resourcePrefix "merchant_"
-
     namespace 'com.leben.merchant'
     compileSdk {
         version = release(36)

@@ -35,6 +35,12 @@
             android:name=".ui.activity.OrderPendingActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.activity.DrinkEditActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+
     </application>
 
 </manifest>
