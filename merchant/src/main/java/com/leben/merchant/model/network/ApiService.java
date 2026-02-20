@@ -3,11 +3,11 @@ package com.leben.merchant.model.network;
 import com.leben.common.model.bean.CommonEntity;
 import com.leben.common.model.bean.DrinkEntity;
 import com.leben.common.model.bean.OrderEntity;
+import com.leben.common.model.bean.ShopCategoriesEntity;
+import com.leben.common.model.bean.SpecOptionEntity;
 import com.leben.merchant.model.bean.LoginEntity;
 import com.leben.merchant.model.bean.MerchantRegisterEntity;
-
 import java.util.List;
-
 import io.reactivex.Flowable;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -47,6 +47,14 @@ public interface ApiService {
     @GET("/shops/{shopId}/menu")
     Flowable<CommonEntity<List<DrinkEntity>>> getShopDrink(
             @Path("shopId") Long shopId
+    );
+
+    @GET("/merchant/spec/all")
+    Flowable<CommonEntity<List<SpecOptionEntity>>> getAllSpec(
+    );
+
+    @GET("/merchant/category/all")
+    Flowable<CommonEntity<List<ShopCategoriesEntity>>> getShopCategory(
     );
 
 }

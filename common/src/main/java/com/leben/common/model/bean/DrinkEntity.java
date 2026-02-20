@@ -38,6 +38,8 @@ public class DrinkEntity implements Serializable {
 
     private BigDecimal packingFee;
 
+    private Integer stock;
+
     public Long getId() {
         return id;
     }
@@ -95,5 +97,69 @@ public class DrinkEntity implements Serializable {
 
     public BigDecimal getPackingFee() {
         return packingFee;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public void setMark(Double mark) {
+        this.mark = mark;
+    }
+
+    public void setSalesVolume(Integer salesVolume) {
+        this.salesVolume = salesVolume;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public void setCategories(CategoriesEntity categories) {
+        this.categories = categories;
+    }
+
+    public void setShopCategories(ShopCategoriesEntity shopCategories) {
+        this.shopCategories = shopCategories;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
+
+    public void setSpecs(List<SpecOptionEntity> specs) {
+        this.specs = specs;
+    }
+
+    public void setPackingFee(BigDecimal packingFee) {
+        this.packingFee = packingFee;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 }

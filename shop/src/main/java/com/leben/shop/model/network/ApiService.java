@@ -43,24 +43,24 @@ public interface ApiService {
             @Query("shopId") long shopId
     );
 
-    @POST("/orders/submit")
+    @POST("/users/order/submit")
     Flowable<CommonEntity<Long>> submitOrder(
             @Body OrderEntity orderEntity
     );
 
-    @GET("/orders/list/all")
+    @GET("/users/order/list/all")
     Flowable<CommonEntity<List<OrderEntity>>> getAllOrder(
             @Query("userLat") Double userLat,
             @Query("userLon") Double userLon
     );
 
-    @GET("/orders/list/comment")
+    @GET("/users/order/list/toComment")
     Flowable<CommonEntity<List<OrderEntity>>> getNoCommentOrder(
             @Query("userLat") Double userLat,
             @Query("userLon") Double userLon
     );
 
-    @GET("/orders/list/cancel")
+    @GET("/users/order/list/cancel")
     Flowable<CommonEntity<List<OrderEntity>>> getCancelOrder(
             @Query("userLat") Double userLat,
             @Query("userLon") Double userLon
@@ -78,7 +78,7 @@ public interface ApiService {
             @Query("shopId") Long shopId
     );
 
-    @POST("/orders/cancel")
+    @POST("/users/order/cancel")
     Flowable<CommonEntity<String>> cancelOrder(
             @Query("orderId") Long orderId
     );

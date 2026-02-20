@@ -8,6 +8,7 @@ import java.util.Objects;
  * 用来保存组的元数据：组ID、组名、单选/多选状态
  */
 public class SpecGroupEntity implements Serializable {
+
     public Long groupId;
     public String groupName;
     public boolean isMultiple; // 1=true, 0/null=false
@@ -20,7 +21,7 @@ public class SpecGroupEntity implements Serializable {
         this.isMultiple = (isMultiple != null && isMultiple == 1);
     }
 
-    // 【核心】必须重写 equals 和 hashCode，仅比较 groupId
+    // 必须重写 equals 和 hashCode，仅比较 groupId
     // 只要 groupId 相同，就认为是同一组
     @Override
     public boolean equals(Object o) {
@@ -33,5 +34,29 @@ public class SpecGroupEntity implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(groupId);
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public boolean isMultiple() {
+        return isMultiple;
+    }
+
+    public void setMultiple(boolean multiple) {
+        isMultiple = multiple;
     }
 }

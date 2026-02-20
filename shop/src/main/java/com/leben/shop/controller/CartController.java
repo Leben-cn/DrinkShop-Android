@@ -200,11 +200,11 @@ public class CartController {
 
             // 2. 【核心修改】直接传入 Comparator 进行排序
             // 按照 optionId 从小到大排序，确保 [少冰,大杯] 和 [大杯,少冰] 生成同一个 Key
-            sortedSpecs.sort((o1, o2) -> Long.compare(o1.getId(), o2.getId()));
+            sortedSpecs.sort((o1, o2) -> Long.compare(o1.getOptionId(), o2.getOptionId()));
 
             // 3. 拼接 ID
             for (SpecOptionEntity spec : sortedSpecs) {
-                sb.append("_").append(spec.getId());
+                sb.append("_").append(spec.getOptionId());
             }
         }
 

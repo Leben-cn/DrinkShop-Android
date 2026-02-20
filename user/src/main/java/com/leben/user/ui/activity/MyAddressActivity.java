@@ -126,4 +126,9 @@ public class MyAddressActivity extends BaseRecyclerActivity<AddressEntity> imple
         return findViewById(R.id.title_bar);
     }
 
+    @Override
+    protected boolean isSupportLoadMore() {
+        return false;
+    }
+
 }

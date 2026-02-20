@@ -1,7 +1,6 @@
-package com.leben.shop.util;
+package com.leben.common.util;
 
 import com.leben.common.model.bean.GroupEntity;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;

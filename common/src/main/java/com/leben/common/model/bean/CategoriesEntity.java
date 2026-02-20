@@ -2,7 +2,9 @@ package com.leben.common.model.bean;
 
 import com.leben.base.widget.linkage.ILinkageCategory;
 
-public class CategoriesEntity implements ILinkageCategory {
+import java.io.Serializable;
+
+public class CategoriesEntity implements ILinkageCategory, Serializable {
 
     private Long id;
     private String name;

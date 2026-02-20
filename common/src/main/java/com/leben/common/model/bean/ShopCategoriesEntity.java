@@ -1,10 +1,10 @@
 package com.leben.common.model.bean;
 
 import com.leben.base.widget.linkage.ILinkageCategory;
-
+import java.io.Serializable;
 import java.util.Objects;
 
-public class ShopCategoriesEntity implements ILinkageCategory {
+public class ShopCategoriesEntity implements ILinkageCategory, Serializable {
 
     private Long id;
     private Long shopId;
@@ -14,6 +14,7 @@ public class ShopCategoriesEntity implements ILinkageCategory {
     private Boolean isShow;
     private String createTime;
     private String updateTime;
+    private Integer drinkNum;
 
     public Long getId() {
         return id;
@@ -67,5 +68,9 @@ public class ShopCategoriesEntity implements ILinkageCategory {
     @Override
     public String getCategoryName() {
         return getName();
+    }
+
+    public Integer getDrinkNum() {
+        return drinkNum;
     }
 }

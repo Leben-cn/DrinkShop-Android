@@ -1,5 +1,9 @@
 package com.leben.shop.ui.adapter;
 
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +14,14 @@ import com.leben.base.ui.adapter.holder.BaseViewHolder;
 import com.leben.common.model.bean.SpecOptionEntity;
 import com.leben.shop.R;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class SpecOptionAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private List<SpecOptionEntity> data;
-    private boolean isMultiple; // 是否支持多选
-    private Runnable onUpdateListener; // 回调给外部计算价格
+    private boolean isMultiple;
+    private Runnable onUpdateListener;
 
     public SpecOptionAdapter(List<SpecOptionEntity> data, boolean isMultiple, Runnable onUpdateListener) {
         this.data = data;
@@ -36,34 +41,46 @@ public class SpecOptionAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
         SpecOptionEntity item = data.get(position);
         TextView tv = holder.getView(R.id.tv_name);
-        tv.setText(item.optionName); // 注意：确保这里取的是 optionName
 
-        // 设置选中状态
-        tv.setSelected(item.isSelected);
+        String name = item.getOptionName();
+
+        if (item.getPrice() != null && item.getPrice().compareTo(BigDecimal.ZERO) > 0) {
+            String priceStr = "¥" + item.getPrice().stripTrailingZeros().toPlainString();
+            String separator = " | ";
+            String fullText = name + separator + priceStr;
+
+            SpannableString spannableString = new SpannableString(fullText);
+
+            // 使用更浅、更柔和的红色
+            ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#FF4D4F"));
+
+            // 核心修改：变色起始位置跳过 " | "
+            int startColorIndex = name.length() + separator.length();
+            spannableString.setSpan(colorSpan, startColorIndex, fullText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            tv.setText(spannableString);
+        } else {
+            tv.setText(name);
+        }
+
+        tv.setSelected(item.isSelected());
 
         holder.itemView.setOnClickListener(v -> {
             if (isMultiple) {
-                // --- 多选逻辑 ---
-                item.isSelected = !item.isSelected;
+                item.setSelected(!item.isSelected());
             } else {
-                // --- 单选逻辑 ---
-                if (!item.isSelected) {
-                    // 1. 先把同组其他的都取消选中
+                if (!item.isSelected()) {
                     for (SpecOptionEntity entity : data) {
-                        entity.isSelected = false;
+                        entity.setSelected(false);
                     }
-                    // 2. 选中当前点击的
-                    item.isSelected = true;
+                    item.setSelected(true);
                 } else {
-                    // 如果已经是选中状态，单选模式下通常不允许取消(必选一项)，所以啥也不做
-                    // 如果允许反选（变成都不选），可以在这里写 item.isSelected = false;
                     return;
                 }
             }
 
             notifyDataSetChanged();
 
-            // 通知外部 Dialog 重新计算总价
             if (onUpdateListener != null) {
                 onUpdateListener.run();
             }

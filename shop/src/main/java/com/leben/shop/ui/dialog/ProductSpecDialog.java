@@ -14,7 +14,7 @@ import com.leben.shop.R;
 import com.leben.common.model.bean.DrinkEntity;
 import com.leben.common.model.bean.SpecOptionEntity;
 import com.leben.shop.ui.adapter.SpecGroupAdapter;
-import com.leben.shop.util.ListGroupUtils;
+import com.leben.common.util.ListGroupUtils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

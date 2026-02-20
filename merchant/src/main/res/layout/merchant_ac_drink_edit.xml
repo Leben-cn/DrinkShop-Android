@@ -218,7 +218,7 @@
                         android:layout_marginTop="4dp"
                         android:background="@drawable/bg_edit_text"
                         android:gravity="center_vertical"
-                        android:hint="请选择平台分类"
+                        android:hint="请选择平台分类 >"
                         android:padding="12dp"
                         android:textColor="#333333"
                         android:textSize="14sp" />
@@ -238,7 +238,7 @@
                         android:layout_marginTop="4dp"
                         android:background="@drawable/bg_edit_text"
                         android:gravity="center_vertical"
-                        android:hint="请选择店铺分类"
+                        android:hint="请选择店铺分类 >"
                         android:padding="12dp"
                         android:textColor="#333333"
                         android:textSize="14sp" />
@@ -258,7 +258,7 @@
                         android:layout_marginTop="4dp"
                         android:background="@drawable/bg_edit_text"
                         android:gravity="center_vertical"
-                        android:hint="请选择该商品支持的规格选项"
+                        android:hint="请设置商品规格 >"
                         android:padding="12dp"
                         android:textColor="#333333"
                         android:textSize="14sp" />

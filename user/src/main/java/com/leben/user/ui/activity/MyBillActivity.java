@@ -72,4 +72,10 @@ public class MyBillActivity extends BaseRecyclerActivity<BillEntity> implements 
         refreshListFailed("获取账单数据失败");
         LogUtils.error("获取账单数据失败："+errorMsg);
     }
+
+    @Override
+    protected boolean isSupportLoadMore() {
+        return false;
+    }
+
 }

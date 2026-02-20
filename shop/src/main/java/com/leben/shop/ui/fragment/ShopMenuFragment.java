@@ -6,7 +6,6 @@ import android.view.View;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.fragment.BaseFragment;
-import com.leben.base.util.LogUtils;
 import com.leben.base.widget.linkage.LinkageView;
 import com.leben.common.LocationManager;
 import com.leben.shop.controller.CartController;
@@ -22,15 +21,12 @@ import com.leben.shop.presenter.ShopMenuPresenter;
 import com.leben.shop.ui.adapter.LinkageLeftAdapter;
 import com.leben.shop.ui.adapter.LinkageRightAdapter;
 import com.leben.shop.ui.dialog.ProductSpecDialog;
-import com.leben.shop.util.ListGroupUtils;
-
+import com.leben.common.util.ListGroupUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Route(path = ShopConstant.Router.SHOP_MENU)
 public class ShopMenuFragment extends BaseFragment implements ShopMenuContract.View {
@@ -57,8 +53,6 @@ public class ShopMenuFragment extends BaseFragment implements ShopMenuContract.V
     @Override
     protected void initView(View root) {
         mLinkageView = root.findViewById(R.id.lv_user_menu);
-
-        // 2. 在这里初始化 Adapter (先给个空数据或者空列表)
         mRightAdapter = new LinkageRightAdapter(rightList);
         mLeftAdapter = new LinkageLeftAdapter(leftList);
     }
@@ -66,7 +60,6 @@ public class ShopMenuFragment extends BaseFragment implements ShopMenuContract.V
     @Override
     public void onStart() {
         super.onStart();
-        // 1. 注册 EventBus
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
@@ -75,7 +68,6 @@ public class ShopMenuFragment extends BaseFragment implements ShopMenuContract.V
     @Override
     public void onStop() {
         super.onStop();
-        // 2. 解除注册
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
@@ -104,13 +96,12 @@ public class ShopMenuFragment extends BaseFragment implements ShopMenuContract.V
             ProductSpecDialog dialog = ProductSpecDialog.newInstance(drink);
             //specDesc:大杯 常温 正常糖
             dialog.setListener((entity, selectedOptions, finalPrice, specDesc) -> {
-                if (selectedOptions != null && !selectedOptions.isEmpty()) {
-                    String optionsSummary = selectedOptions.stream()
-                            .map(opt -> opt.getName() + "(¥" + opt.getPrice() + ")")
-                            .collect(Collectors.joining(", "));
-                    LogUtils.info("规格汇总: " + optionsSummary);
-                }
-                // 3. 调用控制器添加
+//                if (selectedOptions != null && !selectedOptions.isEmpty()) {
+//                    String optionsSummary = selectedOptions.stream()
+//                            .map(opt -> opt.getName() + "(¥" + opt.getPrice() + ")")
+//                            .collect(Collectors.joining(", "));
+//                    LogUtils.info("规格汇总: " + optionsSummary);
+//                }
                 CartController.getInstance().add(
                         entity,
                         selectedOptions,
@@ -118,7 +109,6 @@ public class ShopMenuFragment extends BaseFragment implements ShopMenuContract.V
                         specDesc
                 );
 
-                // 4. 刷新列表显示红点
                 mRightAdapter.notifyDataSetChanged();
             });
             dialog.show(getChildFragmentManager(), "spec_dialog");
@@ -201,7 +191,7 @@ public class ShopMenuFragment extends BaseFragment implements ShopMenuContract.V
 
             // 如果找到了，让 LinkageView 滚过去
             if (targetPosition != -1) {
-                // 这里为了保险，可以用 post 确保 View 测量完成（有时候立即滚动会不准）
+                // 为了保险，可以用 post 确保 View 测量完成（有时候立即滚动会不准）
                 final int pos = targetPosition;
                 mLinkageView.post(() -> {
                     mLinkageView.smoothScrollToPositionAtTop(pos);

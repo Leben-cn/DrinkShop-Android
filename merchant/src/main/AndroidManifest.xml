@@ -41,6 +41,11 @@
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
 
+        <activity
+            android:name=".ui.activity.ShopCategoryEditActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+
     </application>
 
 </manifest>

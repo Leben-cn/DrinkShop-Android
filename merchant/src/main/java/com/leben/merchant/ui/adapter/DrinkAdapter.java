@@ -49,6 +49,7 @@ public class DrinkAdapter extends BaseRecyclerAdapter<DrinkEntity> {
                     ARouter.getInstance()
                             .build(MerchantConstant.Router.DRINK_EDIT)
                             .withString("TAG","DRINK_ADAPTER")
+                            .withSerializable("drink", data)
                             .navigation();
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
