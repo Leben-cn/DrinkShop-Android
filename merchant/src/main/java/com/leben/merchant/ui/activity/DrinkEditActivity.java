@@ -224,7 +224,7 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
                     });
 
                     // 4. 显示弹窗
-                    dialog.show(getSupportFragmentManager(), "SpecDialog");
+                    dialog.show(getSupportFragmentManager(), "dialog_drinkSpec");
 
                 }, throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());

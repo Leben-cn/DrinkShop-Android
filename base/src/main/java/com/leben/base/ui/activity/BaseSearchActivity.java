@@ -112,7 +112,7 @@ public abstract class BaseSearchActivity<T> extends BaseRecyclerActivity<T> {
                 dialog.dismiss();
             });
             dialog.setOnCancelListener(result -> dialog.dismiss());
-            dialog.show(getSupportFragmentManager(), "history_dialog");
+            dialog.show(getSupportFragmentManager(), "dialog_history");
         });
 
         // 4. 搜索框文本监听

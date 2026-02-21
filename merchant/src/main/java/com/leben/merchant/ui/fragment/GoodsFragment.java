@@ -49,7 +49,7 @@ public class GoodsFragment extends BaseRecyclerFragment<DrinkEntity> implements 
         super.initView(root);
         TitleBar titleBar=root.findViewById(R.id.title_bar);
         mIvAddDrink=new ImageView(getContext());
-        mIvAddDrink.setImageResource(R.drawable.pic_add);
+        mIvAddDrink.setImageResource(R.drawable.ic_add_circle);
         titleBar.addRightView(mIvAddDrink);
         titleBar.setBackVisible(false);
     }

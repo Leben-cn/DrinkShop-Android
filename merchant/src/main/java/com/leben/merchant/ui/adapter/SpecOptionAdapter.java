@@ -82,8 +82,8 @@ public class SpecOptionAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                     }
 
                     InputDialog.newInstance()
-                            .setTitle("设置【" + item.getOptionName() + "】加价")
-                            .setHint("输入加价金额(不加价填0)")
+                            .setTitle("设置（" + item.getOptionName() + "）加价")
+                            .setHint("输入加价金额")
                             .setDefaultText(oldPrice)
                             .setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL)
                             .setOnConfirmListener((dialog, inputText) -> {
@@ -99,7 +99,7 @@ public class SpecOptionAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                                     ToastUtils.show(activity, "金额格式有误");
                                 }
                             })
-                            .show(activity.getSupportFragmentManager(), "InputPrice");
+                            .show(activity.getSupportFragmentManager(), "dialog_InputPrice");
                 }
                 return true;
             });

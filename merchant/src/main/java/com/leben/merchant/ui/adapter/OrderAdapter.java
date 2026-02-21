@@ -92,9 +92,6 @@ public class OrderAdapter extends BaseRecyclerAdapter<OrderEntity> {
 
         rvProducts.setAdapter(innerAdapter);
 
-
-        // 4. 【建议】同时给整个 CardView (holder.itemView) 也加上点击
-        // 这样点击商品列表旁边的空白处也能跳转
         RxView.clicks(holder.itemView)
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
                 .map(o -> new OrderClickEvent(data))
@@ -104,15 +101,11 @@ public class OrderAdapter extends BaseRecyclerAdapter<OrderEntity> {
             if (actionListener == null) {
                 return;
             }
-            // 根据状态判断执行哪个回调
             int status = data.getStatus();
 
             if (status == 0) {
-                // 状态 0: 待制作 -> 执行取消逻辑
                 actionListener.onCancelOrder(data);
-
             } else if (status == 1) {
-                // 状态 1: 已完成 -> 执行评价逻辑
                 actionListener.onGoToComment(data);
             }
         });

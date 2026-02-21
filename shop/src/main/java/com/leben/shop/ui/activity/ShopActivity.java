@@ -146,7 +146,7 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
                     // newInstance() 是静态方法，直接用类名调用
                     // show() 需要传入 FragmentManager
                     CartDialog.newInstance()
-                            .show(getSupportFragmentManager(), "cart_dialog");
+                            .show(getSupportFragmentManager(), "dialog_cart");
 
                 }, throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());

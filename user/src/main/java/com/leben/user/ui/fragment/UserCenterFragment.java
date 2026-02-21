@@ -75,7 +75,7 @@ public class UserCenterFragment extends BaseFragment {
                         d.dismiss();
                     });
 
-                    dialog.show(getParentFragmentManager(), "logout_tag");
+                    dialog.show(getParentFragmentManager(), "dialog_logout");
                 }))
                 .filter(result -> result) // 只处理 true（确定）的情况
                 .observeOn(AndroidSchedulers.mainThread())

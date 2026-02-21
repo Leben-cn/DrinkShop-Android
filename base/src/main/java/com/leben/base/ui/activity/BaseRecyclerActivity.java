@@ -145,7 +145,7 @@ public abstract class BaseRecyclerActivity<T> extends BaseRefreshActivity {
     }
 
     /**
-     * 【新增方法】设置默认间距值
+     * 设置默认间距值
      */
     protected void setDefaultSpace(int space) {
         mDefaultSpace = space;

@@ -171,7 +171,7 @@ public class PayActivity extends BaseActivity implements SubmitOrderContract.Vie
                             orderEntity.setRemark(content);
                         }
                     });
-                    dialog.show(getSupportFragmentManager(), "remark_dialog");
+                    dialog.show(getSupportFragmentManager(), "dialog_remark");
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
@@ -219,7 +219,7 @@ public class PayActivity extends BaseActivity implements SubmitOrderContract.Vie
                         d.dismiss();
                     });
 
-                    dialog.show(getSupportFragmentManager(), "logout_tag");
+                    dialog.show(getSupportFragmentManager(), "dialog_logout");
                 }))
                 .filter(unit -> unit) // 只处理 true（确定）的情况
                 .subscribe(unit->{

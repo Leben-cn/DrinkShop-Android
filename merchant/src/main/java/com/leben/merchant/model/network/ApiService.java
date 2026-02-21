@@ -10,6 +10,7 @@ import com.leben.merchant.model.bean.MerchantRegisterEntity;
 import java.util.List;
 import io.reactivex.Flowable;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -55,6 +56,16 @@ public interface ApiService {
 
     @GET("/merchant/category/all")
     Flowable<CommonEntity<List<ShopCategoriesEntity>>> getShopCategory(
+    );
+
+    @POST("/merchant/category/add")
+    Flowable<CommonEntity<String>> addCategory(
+            @Query("name") String name
+    );
+
+    @DELETE("/merchant/category/delete/{id}")
+    Flowable<CommonEntity<String>> deleteCategory(
+            @Path("id") Long categoryId
     );
 
 }

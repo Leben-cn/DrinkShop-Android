@@ -8,6 +8,16 @@ import com.leben.merchant.R;
 
 public class ShopCategoryAdapter extends BaseRecyclerAdapter<ShopCategoriesEntity> {
 
+    private OnItemDeleteListener mDeleteListener;
+
+    public interface OnItemDeleteListener {
+        void onDeleteClick(Long id);
+    }
+
+    public void setOnItemDeleteListener(OnItemDeleteListener listener) {
+        this.mDeleteListener = listener;
+    }
+
     public ShopCategoryAdapter(Context context) {
         super(context);
     }
@@ -23,5 +33,11 @@ public class ShopCategoryAdapter extends BaseRecyclerAdapter<ShopCategoriesEntit
         holder.setText(R.id.tv_category_name, data.getName())
                 .setText(R.id.tv_drink_num, String.valueOf(data.getDrinkNum()));
 
+        // 绑定删除按钮点击事件，传递 ID
+        holder.setOnClickListener(R.id.iv_delete, v -> {
+            if (mDeleteListener != null && data.getId() != null) {
+                mDeleteListener.onDeleteClick(data.getId());
+            }
+        });
     }
 }

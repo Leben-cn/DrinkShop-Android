@@ -64,7 +64,7 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
                         cancelOrderPresenter.cancelOrder(order.getId());
                     });
 
-                    dialog.show(getParentFragmentManager(), "cancelOrder_tag");
+                    dialog.show(getParentFragmentManager(), "dialog_cancelOrder");
                 }
 
                 @Override

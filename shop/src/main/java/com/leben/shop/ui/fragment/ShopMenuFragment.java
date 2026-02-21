@@ -111,7 +111,7 @@ public class ShopMenuFragment extends BaseFragment implements ShopMenuContract.V
 
                 mRightAdapter.notifyDataSetChanged();
             });
-            dialog.show(getChildFragmentManager(), "spec_dialog");
+            dialog.show(getChildFragmentManager(), "dialog_chooseSpec");
         });
     }
 

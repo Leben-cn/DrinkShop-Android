@@ -145,7 +145,7 @@ public class UserInfoActivity extends BaseActivity implements SubmitUserInfoCont
                             entity.setNickName(newContent);
                             submitUserInfoPresenter.submitUserInfo(entity);
                         });
-                        dialog.show(getSupportFragmentManager(), "EditNickName");
+                        dialog.show(getSupportFragmentManager(), "dialog_editNickName");
                     }
 
                 },throwable -> {
@@ -169,7 +169,7 @@ public class UserInfoActivity extends BaseActivity implements SubmitUserInfoCont
                             entity.setPassword(newContent);
                             submitUserInfoPresenter.submitUserInfo(entity);
                         });
-                        dialog.show(getSupportFragmentManager(), "EditPassword");
+                        dialog.show(getSupportFragmentManager(), "dialog_editPassword");
                     }
 
                 },throwable -> {
@@ -192,7 +192,7 @@ public class UserInfoActivity extends BaseActivity implements SubmitUserInfoCont
                             entity.setPhone(newContent);
                             submitUserInfoPresenter.submitUserInfo(entity);
                         });
-                        dialog.show(getSupportFragmentManager(), "EditPhone");
+                        dialog.show(getSupportFragmentManager(), "dialog_editPhone");
                     }
 
                 },throwable -> {
