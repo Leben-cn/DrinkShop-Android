@@ -18,19 +18,28 @@ import com.leben.base.ui.activity.BaseActivity;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.titleBar.TitleBar;
+import com.leben.common.model.bean.AddressEntity;
 import com.leben.common.model.bean.DrinkEntity;
 import com.leben.common.model.bean.GroupEntity;
+import com.leben.common.model.bean.ShopCategoriesEntity;
 import com.leben.common.model.bean.SpecGroupEntity;
 import com.leben.common.model.bean.SpecOptionEntity;
+import com.leben.common.model.event.SelectAddressEvent;
 import com.leben.common.util.ImagePickerHelper;
 import com.leben.common.util.ListGroupUtils;
 import com.leben.common.util.PermissionDialogHelper;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
 import com.leben.merchant.contract.GetAllSpecContract;
+import com.leben.merchant.model.event.SelectShopCategoryEvent;
 import com.leben.merchant.presenter.GetAllSpecPresenter;
 import com.leben.merchant.ui.dialog.DrinkSpecDialog;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +54,7 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
     private String TAG;
 
     private DrinkEntity mDrink;
+
     private List<SpecOptionEntity> mSelectedSpecs = new ArrayList<>();
 
     private ImageView ivAddBtn;
@@ -79,6 +89,9 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
         super.onInit();
         TAG = getIntent().getStringExtra("TAG");
         mDrink = (DrinkEntity) getIntent().getSerializableExtra("drink");
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
@@ -303,6 +316,7 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
 
                     ARouter.getInstance()
                             .build(MerchantConstant.Router.CATEGORY_EDIT)
+                            .withBoolean("isSelectMode", true)
                             .navigation();
 
                 },throwable -> {
@@ -367,5 +381,24 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
     public void onGetAllSpecFailed(String errorMsg) {
         showError("获取商品规格字典失败");
         LogUtils.error("获取商品规格字典失败: " + errorMsg);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    /**
+     * 店铺分类回填
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSelectShopCategoryEvent(SelectShopCategoryEvent event) {
+        if (event != null && event.getCategory() != null) {
+            ShopCategoriesEntity categoryEvent = event.getCategory();
+            mTvShopCategory.setText(categoryEvent.getCategoryName());
+        }
     }
 }

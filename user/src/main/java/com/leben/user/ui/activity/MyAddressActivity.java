@@ -34,6 +34,7 @@ public class MyAddressActivity extends BaseRecyclerActivity<AddressEntity> imple
     GetMyAddressPresenter getMyAddressPresenter;
 
     private TextView tvAddAddress;
+
     private boolean isSelectMode = false;
 
     @Override
@@ -82,7 +83,6 @@ public class MyAddressActivity extends BaseRecyclerActivity<AddressEntity> imple
                     .throttleFirst(500, TimeUnit.MILLISECONDS) // 防止连点
                     .subscribe(data -> {
                         if (isSelectMode) {
-                            // 选择模式
                             EventBus.getDefault().post(new SelectAddressEvent(data));
                             finish();
                         }

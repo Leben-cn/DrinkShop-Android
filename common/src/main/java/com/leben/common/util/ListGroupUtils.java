@@ -2,6 +2,7 @@ package com.leben.common.util;
 
 import com.leben.common.model.bean.GroupEntity;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,21 +16,27 @@ public class ListGroupUtils {
     }
 
     /**
-     * 通用分组方法
-     * @param sourceList 原始扁平数据 (如 List<DrinksEntity>)
-     * @param selector   分组器 (告诉工具类按什么字段分组)
-     * @param <T>        数据类型 (DrinksEntity)
-     * @param <K>        分组Key的类型 (CategoriesEntity 或 String)
-     * @return 分组后的有序列表
+     * 原有的方法：保持插入顺序
      */
     public static <T, K> List<GroupEntity<K, T>> groupList(List<T> sourceList, GroupKeySelector<T, K> selector) {
+        return groupList(sourceList, selector, null);
+    }
+
+    /**
+     * 【新增重载方法】：支持根据 Key 进行排序
+     * @param keyComparator 传入分组 Key 的比较器，如果为 null 则保持原始顺序
+     */
+    public static <T, K> List<GroupEntity<K, T>> groupList(
+            List<T> sourceList,
+            GroupKeySelector<T, K> selector,
+            Comparator<K> keyComparator) {
+
         if (sourceList == null || sourceList.isEmpty()) {
             return new ArrayList<>();
         }
 
-        // 使用 LinkedHashMap 保持插入顺序
+        // 1. 分组逻辑（依然使用 LinkedHashMap 临时存储）
         Map<K, List<T>> map = new LinkedHashMap<>();
-
         for (T item : sourceList) {
             K key = selector.getKey(item);
             if (key == null) continue;
@@ -40,10 +47,16 @@ public class ListGroupUtils {
             map.get(key).add(item);
         }
 
-        // 将 Map 转回 List<GroupBean>
+        // 2. 转换为 List<GroupEntity>
         List<GroupEntity<K, T>> result = new ArrayList<>();
         for (Map.Entry<K, List<T>> entry : map.entrySet()) {
             result.add(new GroupEntity<>(entry.getKey(), entry.getValue()));
+        }
+
+        // 3. 根据传入的比较器对“组”进行排序
+        if (keyComparator != null) {
+            // GroupEntity::getGroup 获取的是 ShopCategoriesEntity 对象
+            result.sort((o1, o2) -> keyComparator.compare(o1.getHeader(), o2.getHeader()));
         }
 
         return result;

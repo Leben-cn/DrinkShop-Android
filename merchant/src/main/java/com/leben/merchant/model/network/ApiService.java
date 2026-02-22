@@ -68,4 +68,9 @@ public interface ApiService {
             @Path("id") Long categoryId
     );
 
+    @POST("/merchant/category/sort/update")
+    Flowable<CommonEntity<String>> updateShopCategory(
+            @Body List<Long> ids
+    );
+
 }

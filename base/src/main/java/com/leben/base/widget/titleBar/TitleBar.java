@@ -58,7 +58,6 @@ public class TitleBar extends ConstraintLayout {
         mSearchGroup = findViewById(R.id.cl_search_group);
         mTvCenterTitle = findViewById(R.id.tv_center_title);
 
-        // 设置 TextSwitcher 工厂
         mTextSwitcher.setFactory(() -> {
             TextView textView = new TextView(getContext());
             textView.setTextSize(13);

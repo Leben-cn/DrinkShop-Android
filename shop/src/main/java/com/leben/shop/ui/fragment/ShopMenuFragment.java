@@ -26,6 +26,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Route(path = ShopConstant.Router.SHOP_MENU)
@@ -146,10 +147,11 @@ public class ShopMenuFragment extends BaseFragment implements ShopMenuContract.V
         //处理扁平化数据
         //既然是按照 ShopCategoriesEntity 对象来分组的（把它作为 Map 的 Key），必须确保 ShopCategoriesEntity 重写了 equals() and hashCode() 方法。
         //否则，即使 ID 相同的两个分类对象，Map 也会认为它们是不同的 Key，导致分组失败（出现重复的分类）。
-        List<GroupEntity<ShopCategoriesEntity, DrinkEntity>> groupList= ListGroupUtils.groupList(
-                data,
-                DrinkEntity::getShopCategories
-        );
+        List<GroupEntity<ShopCategoriesEntity, DrinkEntity>> groupList = ListGroupUtils.groupList(
+         data,
+         DrinkEntity::getShopCategories,
+         Comparator.comparingInt(ShopCategoriesEntity::getSort)
+ );
         List<Integer> headerPositions=new ArrayList<>();
 
         int currentPosition=0;
