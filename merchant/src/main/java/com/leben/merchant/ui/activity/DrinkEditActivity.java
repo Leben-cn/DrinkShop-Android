@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
@@ -17,6 +18,7 @@ import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.activity.BaseActivity;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
+import com.leben.base.widget.dialog.ListSelectDialog;
 import com.leben.base.widget.titleBar.TitleBar;
 import com.leben.common.model.bean.AddressEntity;
 import com.leben.common.model.bean.DrinkEntity;
@@ -41,6 +43,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +74,7 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
     private TextInputEditText mInputStock;
     private TextView mTvDrinkSpec;
     private TextView mTvShopCategory;
+    private TextView mTvCategory;
 
     private TitleBar titleBar;
 
@@ -108,7 +112,8 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
         ivAddBtn = findViewById(R.id.iv_add_btn);
         ivDelPhoto = findViewById(R.id.iv_del_photo);
         ivSelectedPhoto = findViewById(R.id.iv_selected_photo);
-        mTvShopCategory=findViewById(R.id.tv_shop_category);
+        mTvShopCategory = findViewById(R.id.tv_shop_category);
+        mTvCategory=findViewById(R.id.tv_category);
 
         if ("DRINK_ADAPTER".equals(TAG)) {
             titleBar.setTitle("编辑商品");
@@ -138,11 +143,11 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
         if (mDrink.getPrice() != null) {
             mInputPrice.setText(String.valueOf(mDrink.getPrice()));
         }
-        // 回显包装费和库存 (请确保 DrinkEntity 有对应的 getter 方法，如果没有请根据实际修改)
-         mInputPackingFee.setText(String.valueOf(mDrink.getPackingFee()));
-         mInputStock.setText(String.valueOf(mDrink.getStock()));
+        mInputPackingFee.setText(String.valueOf(mDrink.getPackingFee()));
+        mInputStock.setText(String.valueOf(mDrink.getStock()));
+        mTvShopCategory.setText(mDrink.getShopCategories().getCategoryName());
+        mTvCategory.setText(mDrink.getCategories().getName());
 
-        // 回显图片
         if (!TextUtils.isEmpty(mDrink.getImg())) {
             currentPhotoPath = mDrink.getImg();
             ivSelectedPhoto.setVisibility(View.VISIBLE);
@@ -151,12 +156,11 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
             Glide.with(this).load(mDrink.getImg()).into(ivSelectedPhoto);
         }
 
-        // 回显已选规格
         if (mDrink.getSpecs() != null) {
             mSelectedSpecs.addAll(mDrink.getSpecs());
-            if(!mSelectedSpecs.isEmpty()){
+            if (!mSelectedSpecs.isEmpty()) {
                 mTvDrinkSpec.setText("已选 " + mSelectedSpecs.size() + " 项规格");
-            }else{
+            } else {
                 mTvDrinkSpec.setText("");
             }
 
@@ -170,10 +174,11 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(unit -> {
-                    String[] items = {"拍照", "从相册选择"};
-                    new AlertDialog.Builder(this)
-                            .setItems(items, (dialog, which) -> {
-                                if (which == 0) {
+                    List<String> options = Arrays.asList("拍照", "从相册选择");
+                    ListSelectDialog.<String>newInstance()
+                            .setData(options, item -> item) // 直接返回字符串本身
+                            .setOnItemClickListener((item, position) -> {
+                                if (position == 0) {
                                     new RxPermissions(this)
                                             .request(Manifest.permission.CAMERA)
                                             .subscribe(granted -> {
@@ -187,7 +192,7 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
                                     imagePickerHelper.openGallery();
                                 }
                             })
-                            .show();
+                            .show(getSupportFragmentManager(), "select_dialog");
                 }, throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
@@ -220,9 +225,9 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
                     // 3. 监听商家勾选结果
                     dialog.setListener(selectedOptions -> {
                         this.mSelectedSpecs = selectedOptions;
-                        if(!mSelectedSpecs.isEmpty()){
+                        if (!mSelectedSpecs.isEmpty()) {
                             mTvDrinkSpec.setText("已选 " + mSelectedSpecs.size() + " 项规格");
-                        }else{
+                        } else {
                             mTvDrinkSpec.setText("");
                         }
 
@@ -312,14 +317,31 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
         RxView.clicks(mTvShopCategory)
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result->{
+                .subscribe(result -> {
 
                     ARouter.getInstance()
                             .build(MerchantConstant.Router.CATEGORY_EDIT)
                             .withBoolean("isSelectMode", true)
                             .navigation();
 
-                },throwable -> {
+                }, throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+
+        RxView.clicks(mTvCategory)
+                .throttleFirst(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+
+                    List<String> options = Arrays.asList("奶茶", "果茶","果汁","咖啡");
+                    ListSelectDialog.<String>newInstance()
+                            .setData(options, item -> item) // 直接返回字符串本身
+                            .setOnItemClickListener((item, position) -> {
+                                mTvCategory.setText(item);
+                            })
+                            .show(getSupportFragmentManager(), "select_dialog");
+
+                }, throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
 

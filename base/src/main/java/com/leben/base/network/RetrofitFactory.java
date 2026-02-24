@@ -14,12 +14,11 @@ public class RetrofitFactory {
     public static OkHttpClient.Builder getBaseOkHttpBuilder() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-        // 1. 基础配置
         builder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         builder.readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         builder.writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
 
-        // 2. 【核心修改】直接读取 AppConfig.DEBUG_ENABLE
+        // 直接读取 AppConfig.DEBUG_ENABLE
         if (AppConfig.DEBUG_ENABLE) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
                 @Override

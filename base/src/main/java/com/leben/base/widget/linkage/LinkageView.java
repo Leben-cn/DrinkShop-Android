@@ -76,7 +76,7 @@ public class LinkageView extends LinearLayout {
             }
         });
 
-        // 2. 右侧滚动事件 -> 左侧联动 (修改这里)
+        // 2. 右侧滚动事件 -> 左侧联动
         mRvRight.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -84,7 +84,7 @@ public class LinkageView extends LinearLayout {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     if (mIsClickTriggered) {
                         mIsClickTriggered = false;
-                        // 滚动停止后的校准逻辑，同样改为基于中间位置（可选，或者保持基于顶部）
+                        // 滚动停止后的校准逻辑，同样改为基于中间位置
                         // 这里通常建议保持原来的逻辑，或者也改成下面的中间逻辑
                         updateLeftSelectionBasedOnCenter();
                     }
@@ -98,11 +98,9 @@ public class LinkageView extends LinearLayout {
                     return;
                 }
 
-                // ================== 核心修改开始 ==================
-
                 // 1. 计算右侧列表的中心 Y 坐标
                 float centerY = mRvRight.getHeight() / 2f;
-                // X 坐标只要在 View 范围内即可，取中间较稳妥
+                // X 坐标只要在 View 范围内即可
                 float centerX = mRvRight.getWidth() / 2f;
 
                 // 2. 找到中心坐标下的那个 View
@@ -116,13 +114,11 @@ public class LinkageView extends LinearLayout {
                     int categoryIndex = getCategoryIndexByRightPos(centerPos);
 
                     // 5. 更新左侧选中 (防止重复刷新)
-                    // 这里的 mLeftAdapter.getSelectedIndex() 假设你有这个getter，没有的话建议在Adapter里加一个
                     if (categoryIndex != -1 && categoryIndex != mLeftAdapter.getCheckedPosition()) {
                         mLeftAdapter.setSelectedIndex(categoryIndex);
                         mRvLeft.smoothScrollToPosition(categoryIndex);
                     }
                 }
-                // ================== 核心修改结束 ==================
             }
         });
 
@@ -157,7 +153,6 @@ public class LinkageView extends LinearLayout {
             mRightLayoutManager.scrollToPositionWithOffset(position, 0);
 
             // 2. 只有滚动还不够，左侧的高亮也要跟过去
-            // 复用你已有的逻辑，计算这个位置属于哪个分类
             int categoryIndex = getCategoryIndexByRightPos(position);
 
             if (categoryIndex != -1) {
@@ -184,13 +179,12 @@ public class LinkageView extends LinearLayout {
         RecyclerView.SmoothScroller smoothScroller = createSmoothScroller();
         smoothScroller.setTargetPosition(position);
 
-        // 【重要】在开始滚动前，锁住左侧联动，防止滚动过程中左侧乱跳
+        // 在开始滚动前，锁住左侧联动，防止滚动过程中左侧乱跳
         mIsClickTriggered = true;
 
         mRightLayoutManager.startSmoothScroll(smoothScroller);
     }
 
-    //自定义SmoothScroller
     public RecyclerView.SmoothScroller createSmoothScroller() {
         return new LinearSmoothScroller(getContext()) {
             @Override
@@ -205,7 +199,6 @@ public class LinkageView extends LinearLayout {
         };
     }
 
-    // 为了复用，建议把这段逻辑抽离出来（对应上面 onScrollStateChanged 里的调用）
     private void updateLeftSelectionBasedOnCenter() {
         float centerY = mRvRight.getHeight() / 2f;
         float centerX = mRvRight.getWidth() / 2f;

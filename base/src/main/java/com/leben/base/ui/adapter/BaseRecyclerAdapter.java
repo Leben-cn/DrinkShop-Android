@@ -96,7 +96,7 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseVi
     }
 
     /**
-     * 【新增】获取底部视图数量
+     * 获取底部视图数量
      * LoadMoreController 会调用这个方法来判断当前有没有 Footer
      * @return 如果有 Footer 返回 1，否则返回 0
      */

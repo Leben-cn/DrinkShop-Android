@@ -64,13 +64,12 @@ public class TitleBar extends ConstraintLayout {
             textView.setTextColor(Color.parseColor("#999999"));
             textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
             textView.setSingleLine(true);
-            // 【关键点 2】设置 TextView 填满 TextSwitcher 的高度
+            // 设置 TextView 填满 TextSwitcher 的高度
             // 因为 TextSwitcher 本质是 FrameLayout，默认子 View 是 wrap_content 且靠顶部的
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
                     FrameLayout.LayoutParams.MATCH_PARENT
             );
-            // 这里也可以加一个 gravity，双重保险
             params.gravity = Gravity.CENTER_VERTICAL;
 
             textView.setLayoutParams(params);
@@ -86,7 +85,7 @@ public class TitleBar extends ConstraintLayout {
     }
 
     /**
-     * 【关键方法】由子类或外部调用，注入搜索关键词数据
+     * 由子类或外部调用，注入搜索关键词数据
      */
     public void setSearchHints(List<String> hints) {
         if (hints == null || hints.isEmpty()) return;
@@ -99,12 +98,11 @@ public class TitleBar extends ConstraintLayout {
     }
 
     /**
-     * 设置右侧 View
-     * 修改后的版本：优先使用 View 自身的 LayoutParams
+     * 设置右侧 View,优先使用 View 自身的 LayoutParams
      */
     public void addRightView(View view) {
         if (mRightContainer != null) {
-            // 1. 尝试获取 View 现有的 LayoutParams
+            // 尝试获取 View 现有的 LayoutParams
             ViewGroup.LayoutParams existingParams = view.getLayoutParams();
             LinearLayout.LayoutParams targetParams;
 
@@ -119,11 +117,11 @@ public class TitleBar extends ConstraintLayout {
                 );
             }
 
-            // 确保设置了左边距 (如果外部没设置过)
+            // 确保设置了左边距
             if (targetParams.leftMargin == 0) {
                 targetParams.leftMargin = dp2px(10);
             }
-            // 确保垂直居中 (通常标题栏按钮都需要垂直居中)
+            // 确保垂直居中
             targetParams.gravity = Gravity.CENTER_VERTICAL;
 
             mRightContainer.addView(view, targetParams);
@@ -145,7 +143,7 @@ public class TitleBar extends ConstraintLayout {
         mRunnable = new Runnable() {
             @Override
             public void run() {
-                // 安全检查：列表不为空
+
                 if (!mHintList.isEmpty()) {
                     mCurrentIndex = (mCurrentIndex + 1) % mHintList.size();
                     mTextSwitcher.setText(mHintList.get(mCurrentIndex));
@@ -181,7 +179,7 @@ public class TitleBar extends ConstraintLayout {
     }
 
     /**
-     * 如果以后需要切回搜索模式，可以调这个（可选）
+     * 需要切回搜索模式，可以调这个
      */
     public void showSearchMode() {
         if (mTvCenterTitle != null) {
@@ -192,7 +190,6 @@ public class TitleBar extends ConstraintLayout {
         }
     }
 
-    // 在 TitleBar.java 中添加这个方法
     public void setOnBackListener(OnClickListener listener) {
         if (mIvBack != null) {
             // 直接覆盖默认的监听器

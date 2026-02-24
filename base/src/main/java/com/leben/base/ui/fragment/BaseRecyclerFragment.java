@@ -151,7 +151,7 @@ public abstract class BaseRecyclerFragment<T> extends BaseRefreshFragment {
     }
 
     /**
-     * 【新增方法】是否支持加载更多
+     * 是否支持加载更多
      * 默认为 true (支持)，子类不需要分页时重写返回 false
      */
     protected boolean isSupportLoadMore() {
@@ -163,7 +163,7 @@ public abstract class BaseRecyclerFragment<T> extends BaseRefreshFragment {
     }
 
     /**
-     * 【新增方法】设置默认间距值
+     * 设置默认间距值
      */
     protected void setDefaultSpace(int space) {
         mDefaultSpace = space;

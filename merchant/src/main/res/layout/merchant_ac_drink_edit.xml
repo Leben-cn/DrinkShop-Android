@@ -207,7 +207,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="平台分类"
+                        android:text="平台分类（点击更改）"
                         android:textColor="#666666"
                         android:textSize="12sp" />
 
@@ -227,7 +227,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="店铺内分类"
+                        android:text="店铺内分类（点击更改）"
                         android:textColor="#666666"
                         android:textSize="12sp" />
 
@@ -247,7 +247,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="商品规格"
+                        android:text="商品规格（点击更改）"
                         android:textColor="#666666"
                         android:textSize="12sp" />
 

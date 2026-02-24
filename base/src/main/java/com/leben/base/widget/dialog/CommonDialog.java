@@ -36,7 +36,7 @@ public class CommonDialog extends BaseDialog {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.dialog_common; // 对应下面的 XML
+        return R.layout.dialog_common;
     }
 
     @Override
@@ -52,7 +52,6 @@ public class CommonDialog extends BaseDialog {
         btnCancel.setText(cancelText);
         btnConfirm.setText(confirmText);
 
-        // 如果没有标题，隐藏标题栏（可选）
         tvTitle.setVisibility(TextUtils.isEmpty(title) ? View.GONE : View.VISIBLE);
 
         // 2. 设置点击事件
@@ -71,8 +70,6 @@ public class CommonDialog extends BaseDialog {
             dismiss(); // 点击确定通常也关闭
         });
     }
-
-    // --- 链式调用方法 ---
 
     public CommonDialog setTitle(String title) {
         this.title = title;

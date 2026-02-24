@@ -60,16 +60,12 @@ public class BaseViewHolder extends RecyclerView.ViewHolder{
         return this;
     }
 
-    /**
-     * 方法1：默认写法 (如果没传失败图，就用一个通用的默认图，或者什么都不显示)
-     */
     public BaseViewHolder setImageUrl(@IdRes int viewId, String url) {
-        // 这里可以填一个全局默认图，比如 R.drawable.ic_default_gray
         return setImageUrl(viewId, url, R.drawable.ic_launcher_background);
     }
 
     /**
-     * 方法2：【核心修改】支持自定义加载失败的占位图
+     * 支持自定义加载失败的占位图
      * @param errorResId 加载失败时显示的图片资源ID (R.drawable.xxx)
      */
     public BaseViewHolder setImageUrl(@IdRes int viewId, String url, @DrawableRes int errorResId) {
@@ -78,9 +74,9 @@ public class BaseViewHolder extends RecyclerView.ViewHolder{
             Glide.with(iv.getContext())
                     .load(url)
                     .override(300, 300) // 保持性能优化
-                    .placeholder(errorResId) // (可选) 加载过程中显示的图，通常和失败图一样，防止闪烁
-                    .error(errorResId)       // 【关键】加载失败时显示的图
-                    .fallback(errorResId)    // 【关键】url为null时显示的图
+                    .placeholder(errorResId) // 加载过程中显示的图，通常和失败图一样，防止闪烁
+                    .error(errorResId)       // 加载失败时显示的图
+                    .fallback(errorResId)    // url为null时显示的图
                     .into(iv);
         }
         return this;
@@ -98,7 +94,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder{
     }
 
     /**
-     * 【新增】设置 RatingBar 的评分
+     * 设置 RatingBar 的评分
      * 支持 float 或 int
      */
     public BaseViewHolder setRating(@IdRes int viewId, float rating) {

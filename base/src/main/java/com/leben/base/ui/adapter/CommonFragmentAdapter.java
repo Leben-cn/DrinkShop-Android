@@ -20,10 +20,10 @@ public class CommonFragmentAdapter extends FragmentStateAdapter {
         this.mFragmentList = fragmentList;
     }
 
-    // 【新增】构造函数（用于 Fragment 嵌套）
-    // 这里的 fragment 参数就是你的 BaseTabFragment
+    // 构造函数（用于 Fragment 嵌套）
+    // 这里的 fragment 参数就是 BaseTabFragment
     public CommonFragmentAdapter(@NonNull Fragment fragment, List<Fragment> fragmentList) {
-        super(fragment); // 这一步非常关键！它内部会自动使用 getChildFragmentManager()
+        super(fragment); // 内部会自动使用 getChildFragmentManager()
         this.mFragmentList = fragmentList;
     }
 

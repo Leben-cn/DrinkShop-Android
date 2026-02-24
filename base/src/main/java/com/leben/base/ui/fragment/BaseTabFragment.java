@@ -18,12 +18,8 @@ public abstract class BaseTabFragment extends BaseFragment {
     protected ViewPager2 mViewPager;
     protected TabLayout mTabLayout;
 
-    // 如果布局里有通用标题栏，可以在这里获取，没有则忽略
-    // protected TitleBar mTitleBar;
-
     @Override
     protected int getLayoutId() {
-        // 复用之前的布局文件即可
         if (isTabTop()) {
             return R.layout.ac_base_tab_top;
         } else {
@@ -33,7 +29,6 @@ public abstract class BaseTabFragment extends BaseFragment {
 
     @Override
     protected void initView(View root) {
-        // 注意：在 Fragment 中要用 root.findViewById
         mViewPager = root.findViewById(R.id.base_view_pager);
         mTabLayout = root.findViewById(R.id.base_tab_layout);
 
@@ -47,7 +42,7 @@ public abstract class BaseTabFragment extends BaseFragment {
         }
 
         // 2. 设置 Adapter
-        // 【核心修改】：传入 'this' (当前Fragment)，而不是 getActivity()
+        // 传入 'this' (当前Fragment)，而不是 getActivity()
         CommonFragmentAdapter adapter = new CommonFragmentAdapter(this, fragments);
         mViewPager.setAdapter(adapter);
 
@@ -71,11 +66,8 @@ public abstract class BaseTabFragment extends BaseFragment {
         handleTabClickAnimation();
     }
 
-    // --- 下面的代码基本和 BaseTabActivity 一样 ---
-
     @Override
     public void initData() {
-        // 子类按需实现
     }
 
     protected abstract List<Fragment> getFragments();
@@ -98,7 +90,6 @@ public abstract class BaseTabFragment extends BaseFragment {
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                // false 表示无动画切换，视觉更干脆
                 mViewPager.setCurrentItem(tab.getPosition(), false);
             }
 

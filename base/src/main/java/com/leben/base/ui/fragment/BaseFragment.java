@@ -28,7 +28,6 @@ import java.util.Objects;
 
 /**
  * 自动管理 Presenter 和 Controller 生命周期的 Fragment 基类
- * 已与 BaseActivity 逻辑同步：
  * 1. 自动注入 View (@BindView)
  * 2. 自动注入 Presenter (@InjectPresenter)
  * 3. 自动分发生命周期给 Controller (LifecycleManage)
@@ -48,7 +47,7 @@ public abstract class BaseFragment extends Fragment implements IBaseView, Lifecy
     private AlertDialog mLoadingDialog;
     private TextView mTvLoadingMsg;
 
-    //=标志位：是否是第一次初始化
+    //标志位：是否是第一次初始化
     private boolean mIsFirstInit = true;
 
     @Override
@@ -82,7 +81,6 @@ public abstract class BaseFragment extends Fragment implements IBaseView, Lifecy
 
         // 只有第一次加载视图时才进行注入和初始化
         // 如果 mRootView 是复用的，说明已经初始化过了，避免重复注入
-        // (注意：这里通过 tag 或者简单判断是否已经注入过会更严谨，但基于 MVP 简单场景，
         //  如果是复用的 View，通常不需要再次绑定事件，除非你的业务逻辑要求每次 visible 都刷新)
         //  为了简单起见，这里每次 onViewCreated 都走一遍流程，
         //  但在 onCreateView 复用 View 的情况下，onViewCreated 依然会被调用，需要根据实际业务调整。

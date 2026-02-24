@@ -13,7 +13,6 @@ public class ImageUtils {
      *
      * @param context       上下文
      * @param imgView       图片控件
-     * @param pathOrResName 可能是文件绝对路径(如 /data/...)，也可能是资源名(如 shop_logo)
      */
     public static void loadImage(Context context, ImageView imgView, String pathOrResName) {
         if (pathOrResName == null || pathOrResName.isEmpty()) {

@@ -87,8 +87,6 @@ public class InputDialog extends BaseDialog {
         });
     }
 
-    // --- 链式调用方法 ---
-
     public InputDialog setTitle(String title) {
         this.title = title;
         return this;

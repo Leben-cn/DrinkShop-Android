@@ -27,29 +27,23 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 搜索通用基类 (重构版)
- * 继承 BaseRecyclerActivity，复用列表逻辑
+ * 搜索通用基类
  */
 public abstract class BaseSearchActivity<T> extends BaseRecyclerActivity<T> {
 
-    // --- 搜索相关控件 ---
     protected EditText etSearch;
     protected ImageView ivClear;
     protected View mSearchResultLayout; // 搜索结果容器(SwipeRefreshLayout)
 
-    // --- 历史记录相关控件 ---
     protected View mHistoryLayout;
     protected RecyclerView mRvHistory;
     protected View mDeleteHistory;
     protected HistoryAdapter historyAdapter;
 
-    // --- 数据 ---
     protected String mCurrentKeyword = "";
 
     @Override
     protected int getLayoutId() {
-        // 注意：这里仍然使用 ac_base_search.xml
-        // 但要求这个 XML 里包含 BaseRecyclerActivity 需要的 ID (contentView, emptyStub 等)
         return R.layout.ac_base_search;
     }
 
@@ -60,7 +54,7 @@ public abstract class BaseSearchActivity<T> extends BaseRecyclerActivity<T> {
         // 1. 初始化搜索栏控件
         etSearch = findViewById(R.id.et_search);
         ivClear = findViewById(R.id.iv_clear);
-        mSearchResultLayout = findViewById(R.id.swipeRefresh); // 确保 xml 里有这个 ID
+        mSearchResultLayout = findViewById(R.id.swipeRefresh);
 
         // 2. 初始化历史记录模块
         initHistoryView();
@@ -91,10 +85,9 @@ public abstract class BaseSearchActivity<T> extends BaseRecyclerActivity<T> {
 
     @Override
     public void initListener() {
-        // 1. 返回键
+
         findViewById(R.id.iv_back).setOnClickListener(v -> finish());
 
-        // 2. 清除按钮
         ivClear.setOnClickListener(v -> {
             etSearch.setText("");
             showKeyboard(etSearch);
@@ -102,7 +95,6 @@ public abstract class BaseSearchActivity<T> extends BaseRecyclerActivity<T> {
             showHistoryView();
         });
 
-        // 3. 删除历史记录
         mDeleteHistory.setOnClickListener(v -> {
             CommonDialog dialog = new CommonDialog();
             dialog.setContent("确认删除历史记录吗？");
@@ -115,7 +107,7 @@ public abstract class BaseSearchActivity<T> extends BaseRecyclerActivity<T> {
             dialog.show(getSupportFragmentManager(), "dialog_history");
         });
 
-        // 4. 搜索框文本监听
+        // 搜索框文本监听
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -131,7 +123,7 @@ public abstract class BaseSearchActivity<T> extends BaseRecyclerActivity<T> {
             }
         });
 
-        // 5. 软键盘搜索键
+        // 软键盘搜索键
         etSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 performSearch();
@@ -140,13 +132,13 @@ public abstract class BaseSearchActivity<T> extends BaseRecyclerActivity<T> {
             return false;
         });
 
-        // 6. 右侧搜索按钮
+        // 右侧搜索按钮
         View btnSearch = findViewById(R.id.tv_action_search);
         if (btnSearch != null) {
             btnSearch.setOnClickListener(v -> performSearch());
         }
 
-        // 7. 历史记录点击
+        // 历史记录点击
         historyAdapter.setOnItemClickListener((view, position, entity) -> {
             if (TextUtils.isEmpty(entity)) return;
             hideKeyboard();
@@ -265,8 +257,6 @@ public abstract class BaseSearchActivity<T> extends BaseRecyclerActivity<T> {
         if (mHistoryLayout != null) mHistoryLayout.setVisibility(View.GONE);
         if (mSearchResultLayout != null) mSearchResultLayout.setVisibility(View.VISIBLE);
     }
-
-    // --- 工具方法 ---
 
     protected void showKeyboard(EditText view) {
         view.requestFocus();

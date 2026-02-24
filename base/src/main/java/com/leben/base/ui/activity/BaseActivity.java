@@ -46,7 +46,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
     private AlertDialog mLoadingDialog;
     private TextView mTvLoadingMsg;
 
-    // 【新增】管理 Activity 自身的订阅（如 RxView 点击事件）
+    // 管理 Activity 自身的订阅（如 RxView 点击事件）
     private CompositeDisposable mCompositeDisposable;
 
     @Override

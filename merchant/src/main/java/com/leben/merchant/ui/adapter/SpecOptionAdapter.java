@@ -66,6 +66,9 @@ public class SpecOptionAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         // 短按事件
         holder.itemView.setOnClickListener(v -> {
             item.setSelected(!item.isSelected());
+            if(!item.isSelected()){
+                item.setPrice(BigDecimal.ZERO);
+            }
             notifyItemChanged(position);
         });
 
@@ -103,6 +106,9 @@ public class SpecOptionAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 }
                 return true;
             });
+        }else {
+            // 如果变为非选中状态，必须销毁长按监听器
+            holder.itemView.setOnLongClickListener(null);
         }
 
 
