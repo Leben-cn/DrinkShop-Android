@@ -65,14 +65,13 @@ public class NetworkManager {
 
         // 4. 配置 Retrofit
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.94:8080")
+                .baseUrl("http://192.168.3.101:8080")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
 
-    // ... getInstance 和 create 方法保持不变 ...
     public static NetworkManager getInstance() {
         if (instance == null) {
             synchronized (NetworkManager.class) {

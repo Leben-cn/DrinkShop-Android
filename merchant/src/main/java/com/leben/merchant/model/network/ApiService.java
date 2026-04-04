@@ -5,9 +5,12 @@ import com.leben.common.model.bean.DrinkEntity;
 import com.leben.common.model.bean.OrderEntity;
 import com.leben.common.model.bean.ShopCategoriesEntity;
 import com.leben.common.model.bean.SpecOptionEntity;
+import com.leben.merchant.model.bean.DrinkRequestEntity;
 import com.leben.merchant.model.bean.LoginEntity;
 import com.leben.merchant.model.bean.MerchantRegisterEntity;
+
 import java.util.List;
+
 import io.reactivex.Flowable;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -45,7 +48,7 @@ public interface ApiService {
     Flowable<CommonEntity<List<OrderEntity>>> getRefundOrder(
     );
 
-    @GET("/shops/{shopId}/menu")
+    @GET("/merchant/{shopId}/drinks")
     Flowable<CommonEntity<List<DrinkEntity>>> getShopDrink(
             @Path("shopId") Long shopId
     );
@@ -71,6 +74,11 @@ public interface ApiService {
     @POST("/merchant/category/sort/update")
     Flowable<CommonEntity<String>> updateShopCategory(
             @Body List<Long> ids
+    );
+
+    @POST("/merchant/drink/save")
+    Flowable<CommonEntity<String>> saveDrink(
+            @Body DrinkRequestEntity entity
     );
 
 }

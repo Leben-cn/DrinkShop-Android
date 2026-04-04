@@ -2,16 +2,16 @@ package com.leben.merchant.ui.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.leben.base.annotation.InjectPresenter;
@@ -20,39 +20,40 @@ import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.dialog.ListSelectDialog;
 import com.leben.base.widget.titleBar.TitleBar;
-import com.leben.common.model.bean.AddressEntity;
 import com.leben.common.model.bean.DrinkEntity;
 import com.leben.common.model.bean.GroupEntity;
 import com.leben.common.model.bean.ShopCategoriesEntity;
 import com.leben.common.model.bean.SpecGroupEntity;
 import com.leben.common.model.bean.SpecOptionEntity;
-import com.leben.common.model.event.SelectAddressEvent;
 import com.leben.common.util.ImagePickerHelper;
 import com.leben.common.util.ListGroupUtils;
 import com.leben.common.util.PermissionDialogHelper;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
 import com.leben.merchant.contract.GetAllSpecContract;
+import com.leben.merchant.contract.SaveDrinkContract;
+import com.leben.merchant.model.bean.DrinkRequestEntity;
+import com.leben.merchant.model.event.RefreshDrinkListEvent;
 import com.leben.merchant.model.event.SelectShopCategoryEvent;
 import com.leben.merchant.presenter.GetAllSpecPresenter;
+import com.leben.merchant.presenter.SaveDrinkPresenter;
 import com.leben.merchant.ui.dialog.DrinkSpecDialog;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 @Route(path = MerchantConstant.Router.DRINK_EDIT)
-public class DrinkEditActivity extends BaseActivity implements GetAllSpecContract.View {
+public class DrinkEditActivity extends BaseActivity implements GetAllSpecContract.View, SaveDrinkContract.View {
 
     private String TAG;
 
@@ -76,12 +77,20 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
     private TextView mTvShopCategory;
     private TextView mTvCategory;
 
+    private SwitchMaterial mSwitchStatus;
+
     private TitleBar titleBar;
+
+    private long categoryId;
+    private long shopCategoryId;
 
     private List<GroupEntity<SpecGroupEntity, SpecOptionEntity>> allSystemGroups = new ArrayList<>();
 
     @InjectPresenter
     GetAllSpecPresenter getAllSpecPresenter;
+
+    @InjectPresenter
+    SaveDrinkPresenter saveDrinkPresenter;
 
     @Override
     protected int getLayoutId() {
@@ -113,7 +122,8 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
         ivDelPhoto = findViewById(R.id.iv_del_photo);
         ivSelectedPhoto = findViewById(R.id.iv_selected_photo);
         mTvShopCategory = findViewById(R.id.tv_shop_category);
-        mTvCategory=findViewById(R.id.tv_category);
+        mTvCategory = findViewById(R.id.tv_category);
+        mSwitchStatus = findViewById(R.id.switch_status);
 
         if ("DRINK_ADAPTER".equals(TAG)) {
             titleBar.setTitle("编辑商品");
@@ -146,7 +156,10 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
         mInputPackingFee.setText(String.valueOf(mDrink.getPackingFee()));
         mInputStock.setText(String.valueOf(mDrink.getStock()));
         mTvShopCategory.setText(mDrink.getShopCategories().getCategoryName());
+        shopCategoryId=mDrink.getShopCategories().getId();
         mTvCategory.setText(mDrink.getCategories().getName());
+        categoryId=mDrink.getCategories().getId();
+        mSwitchStatus.setChecked(mDrink.getStatus() == 1);
 
         if (!TextUtils.isEmpty(mDrink.getImg())) {
             currentPhotoPath = mDrink.getImg();
@@ -248,68 +261,98 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
 
-        // 【核心修复】：组装表单提交数据
         RxView.clicks(mBtnSubmit)
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .filter(unit -> {
-                    String name = mInputName.getText() != null ? mInputName.getText().toString().trim() : "";
-                    String desc = mInputDesc.getText() != null ? mInputDesc.getText().toString().trim() : "";
-                    String price = mInputPrice.getText() != null ? mInputPrice.getText().toString().trim() : "";
-                    String packingFee = mInputPackingFee.getText() != null ? mInputPackingFee.getText().toString().trim() : "";
-                    String stock = mInputStock.getText() != null ? mInputStock.getText().toString().trim() : "";
-
+                .flatMap(unit -> {
+                    String name = getText(mInputName);
+                    String desc = getText(mInputDesc);
+                    String price = getText(mInputPrice);
+                    String packingFee = getText(mInputPackingFee);
+                    String stock = getText(mInputStock);
                     if (TextUtils.isEmpty(currentPhotoPath)) {
                         showError("请设置商品照片");
-                        return false;
+                        return Observable.error(new Throwable("请设置商品照片"));
                     }
                     if (TextUtils.isEmpty(name)) {
                         showError("请输入商品名称");
-                        return false;
+                        return Observable.error(new Throwable("请输入商品名称"));
                     }
                     if (TextUtils.isEmpty(desc)) {
                         showError("请输入商品描述");
-                        return false;
+                        return Observable.error(new Throwable("请输入商品描述"));
                     }
                     if (TextUtils.isEmpty(price)) {
                         showError("请输入商品价格");
-                        return false;
+                        return Observable.error(new Throwable("请输入商品价格"));
+                    }
+                    if (TextUtils.isEmpty(packingFee)) {
+                        showError("请输入包装费");
+                        return Observable.error(new Throwable("请输入包装费"));
                     }
                     if (TextUtils.isEmpty(stock)) {
                         showError("请输入商品库存");
-                        return false;
+                        return Observable.error(new Throwable("请输入商品库存"));
                     }
-                    // 根据业务需要，可以增加 packingFee 判空
-                    return true;
+                    if (categoryId <= 0) {
+                        showError("请选择商品分类");
+                        return Observable.error(new Throwable("请选择商品分类"));
+                    }
+                    BigDecimal priceValue;
+                    BigDecimal packingFeeValue;
+                    Integer stockValue;
+
+                    try {
+                        priceValue = new BigDecimal(price);
+                    } catch (NumberFormatException e) {
+                        return Observable.error(new Throwable("金额格式错误"));
+                    }
+
+                    try {
+                        packingFeeValue = new BigDecimal(packingFee);
+                    } catch (NumberFormatException e) {
+                        return Observable.error(new Throwable("包装费格式错误"));
+                    }
+
+                    try {
+                        stockValue = Integer.parseInt(stock);
+                    } catch (NumberFormatException e) {
+                        return Observable.error(new Throwable("库存格式错误"));
+                    }
+
+                    // 转换 mSelectedSpecs 从 common 包到 merchant 包
+                    List<com.leben.merchant.model.bean.SpecOptionEntity> merchantSpecs = new ArrayList<>();
+                    for (SpecOptionEntity commonSpec : mSelectedSpecs) {
+                        com.leben.merchant.model.bean.SpecOptionEntity merchantSpec =
+                                new com.leben.merchant.model.bean.SpecOptionEntity();
+
+                        merchantSpec.setSpecOptionId(commonSpec.getOptionId());
+                        merchantSpec.setPriceAdjust(commonSpec.getPrice());
+                        merchantSpec.setIsDefault(0);
+
+                        merchantSpecs.add(merchantSpec);
+                    }
+
+                    DrinkRequestEntity requestData = new DrinkRequestEntity();
+                    requestData.setId(mDrink.getId());
+                    requestData.setName(name);
+                    requestData.setDescription(desc);
+                    requestData.setPrice(priceValue);
+                    requestData.setPackingFee(packingFeeValue);
+                    requestData.setStock(stockValue);
+                    requestData.setImg(currentPhotoPath);
+                    requestData.setCategoryId(categoryId);
+                    requestData.setShopCategoryId(shopCategoryId);
+                    requestData.setStatus(mSwitchStatus.isChecked() ? 1 : 2);
+                    requestData.setSpecs(merchantSpecs);
+
+                    return Observable.just(requestData);
                 })
-                .subscribe(result -> {
-//                    try {
-//                        // 1. 组装要提交的 DrinkEntity 对象
-//                        DrinkEntity requestData = new DrinkEntity();
-//                        if (mDrink != null) {
-//                            requestData.setId(mDrink.getId()); // 编辑模式：必须带上原本的商品 ID
-//                        }
-//
-//                        requestData.setName(mInputName.getText().toString().trim());
-//                        requestData.setDesc(mInputDesc.getText().toString().trim());
-//                        requestData.setImg(currentPhotoPath);
-//                        requestData.setPrice(new BigDecimal(mInputPrice.getText().toString().trim()));
-//
-//                        // 根据你的 DrinkEntity 实体定义，如果有对应字段，请放开下面注释
-//                        // requestData.setPackingFee(new BigDecimal(mInputPackingFee.getText().toString().trim()));
-//                        // requestData.setStock(Integer.parseInt(mInputStock.getText().toString().trim()));
-//
-//                        // 将最终勾选的规格绑定到商品上
-//                        requestData.setSpecs(mSelectedSpecs);
-//
-//                        // 2. 发起网络请求
-//                        showLoading("正在保存...");
-//                        // TODO: 替换成你实际的 Presenter 方法，例如：
-//                        // saveDrinkPresenter.saveOrUpdateDrink(requestData);
-//
-//                    } catch (NumberFormatException e) {
-//                        showError("价格或库存金额格式错误");
-//                    }
+                .subscribe(requestData -> {
+
+                    showLoading("正在保存...");
+                    saveDrinkPresenter.saveDrink(requestData);
+
                 }, throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
@@ -333,10 +376,11 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
 
-                    List<String> options = Arrays.asList("奶茶", "果茶","果汁","咖啡");
+                    List<String> options = Arrays.asList("奶茶", "果茶", "果汁", "咖啡");
                     ListSelectDialog.<String>newInstance()
                             .setData(options, item -> item) // 直接返回字符串本身
                             .setOnItemClickListener((item, position) -> {
+                                categoryId = (long) position+1L;
                                 mTvCategory.setText(item);
                             })
                             .show(getSupportFragmentManager(), "select_dialog");
@@ -359,10 +403,10 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
 
     @Override
     public void onGetAllSpecSuccess(List<SpecOptionEntity> data) {
-        // 1. 获取当前饮品已经设置的规格（如果有的话）
+        // 获取当前饮品已经设置的规格（如果有的话）
         List<SpecOptionEntity> drinkSpecs = (mDrink != null) ? mDrink.getSpecs() : null;
 
-        // 2. 数据预处理：用饮品实际的加价和选中状态 覆盖 系统默认字典
+        // 数据预处理：用饮品实际的加价和选中状态 覆盖系统默认字典
         if (drinkSpecs != null && !drinkSpecs.isEmpty()) {
             // 为了提高效率，先把饮品规格转成 Map
             Map<Long, SpecOptionEntity> drinkSpecMap = new HashMap<>();
@@ -374,7 +418,7 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
             for (SpecOptionEntity systemItem : data) {
                 SpecOptionEntity savedItem = drinkSpecMap.get(systemItem.getOptionId());
                 if (savedItem != null) {
-                    // 【关键点】：用保存的价格覆盖系统默认价格
+                    // 用保存的价格覆盖系统默认价格
                     systemItem.setPrice(savedItem.getPrice());
                     // 设置为选中状态，这样弹窗打开时就是勾选上的
                     systemItem.setSelected(true);
@@ -385,14 +429,14 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
             }
         }
 
-        // 3. 执行分组操作（此时 data 已经是合并后的“完全体”数据了）
+        // 执行分组操作（此时 data 已经是合并后的“完全体”数据了）
         this.allSystemGroups = ListGroupUtils.groupList(data, item -> new SpecGroupEntity(
                 item.getGroupId(),
                 item.getGroupName(),
                 item.getIsMultiple()
         ));
 
-        // 4. (可选) 更新已选列表，确保 Activity 里的 mSelectedSpecs 同步
+        // 更新已选列表，确保 Activity 里的 mSelectedSpecs 同步
         if (drinkSpecs != null) {
             this.mSelectedSpecs.clear();
             this.mSelectedSpecs.addAll(drinkSpecs);
@@ -421,6 +465,26 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
         if (event != null && event.getCategory() != null) {
             ShopCategoriesEntity categoryEvent = event.getCategory();
             mTvShopCategory.setText(categoryEvent.getCategoryName());
+            shopCategoryId=categoryEvent.getId();
         }
+    }
+
+    private String getText(EditText editText) {
+        return editText.getText() != null ? editText.getText().toString().trim() : "";
+    }
+
+    @Override
+    public void onSaveDrinkSuccess(String data) {
+        hideLoading();
+        ToastUtils.show(this,"修改成功");
+        EventBus.getDefault().post(new RefreshDrinkListEvent());
+        finish();
+    }
+
+    @Override
+    public void onSaveDrinkFailed(String errorMsg) {
+        hideLoading();
+        showError("修改失败");
+        LogUtils.error("修改失败"+errorMsg);
     }
 }

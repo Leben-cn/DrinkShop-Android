@@ -2,6 +2,8 @@ package com.leben.merchant.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.view.View;
+
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
@@ -34,15 +36,21 @@ public class DrinkAdapter extends BaseRecyclerAdapter<DrinkEntity> {
         DecimalFormat df=new DecimalFormat("#.##");
         holder.setImageUrl(R.id.iv_drink_img,data.getImg())
                 .setText(R.id.tv_drink_name,data.getName())
-                .setText(R.id.tv_rating,data.getMark()+"分")
-                .setText(R.id.tv_edit,"编辑");
+                .setText(R.id.tv_rating,data.getMark()+"分");
         if (data.getSpecs().isEmpty()) {
             holder.setText(R.id.tv_drink_price,"￥"+df.format(data.getPrice()));
         }else{
             holder.setText(R.id.tv_drink_price,"￥"+df.format(data.getPrice())+" 起");
         }
+        if (data.getStatus() == 1) {
+            holder.setText(R.id.tv_drink_status,"已上架");
+            holder.getView(R.id.tv_drink_status).setBackgroundResource(R.drawable.bg_tv_green); // 绿色背景表示正常
+        } else {
+            holder.setText(R.id.tv_drink_status,"已下架");
+            holder.getView(R.id.tv_drink_status).setBackgroundResource(R.drawable.bg_tv_grey);
+        }
 
-        RxView.clicks(holder.getView(R.id.tv_edit))
+        RxView.clicks(holder.getView(R.id.iv_edit))
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result->{

@@ -27,18 +27,12 @@
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/RoundedCornerImage" />
 
-        <TextView
-            android:id="@+id/tv_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_edit_text"
+        <ImageView
+            android:id="@+id/iv_edit"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:paddingStart="12dp"
-            android:paddingTop="6dp"
-            android:paddingEnd="12dp"
-            android:paddingBottom="6dp"
-            android:text="编辑"
-            android:textColor="#333333"
-            android:textSize="14sp"
+            android:src="@drawable/ic_edit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_drink_img" />
 
@@ -53,7 +47,7 @@
             android:textColor="#333333"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/tv_edit"
+            app:layout_constraintEnd_toStartOf="@+id/iv_edit"
             app:layout_constraintStart_toEndOf="@id/iv_drink_img"
             app:layout_constraintTop_toTopOf="@id/iv_drink_img"
             tools:text="招牌珍珠奶茶" />
@@ -98,6 +92,23 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_drink_name" />
+
+        <TextView
+            android:id="@+id/tv_drink_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_tv_grey"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:text="已下架"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_drink_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_drink_price"
+            tools:text="已下架" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

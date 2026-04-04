@@ -16,9 +16,15 @@ import com.leben.common.model.bean.DrinkEntity;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
 import com.leben.merchant.contract.GetShopDrinkContract;
+import com.leben.merchant.model.event.RefreshDrinkListEvent;
 import com.leben.merchant.presenter.ShopDrinkPresenter;
 import com.leben.merchant.ui.adapter.DrinkAdapter;
 import com.leben.merchant.util.MerchantUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -42,6 +48,14 @@ public class GoodsFragment extends BaseRecyclerFragment<DrinkEntity> implements 
     @Override
     protected int getLayoutId() {
         return R.layout.merchant_frag_drink;
+    }
+
+    @Override
+    public void onInit() {
+        super.onInit();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
@@ -104,5 +118,18 @@ public class GoodsFragment extends BaseRecyclerFragment<DrinkEntity> implements 
     @Override
     protected boolean isSupportLoadMore() {
         return false;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshDrinkListEvent(RefreshDrinkListEvent event){
+        autoRefresh();
     }
 }

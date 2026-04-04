@@ -96,7 +96,7 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
 
     }
 
-    @SuppressLint("CheckResult")
+    @SuppressLint({"CheckResult", "DefaultLocale"})
     @Override
     public void initListener() {
         RxView.clicks(mBtnRegister)
