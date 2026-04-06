@@ -87,4 +87,9 @@ public interface ApiService {
             @Body MerchantInfoEntity merchantInfoEntity
     );
 
+    @POST("/merchant/update/status")
+    Flowable<CommonEntity<String>> updateShopStatus(
+            @Query("status") Integer status
+    );
+
 }

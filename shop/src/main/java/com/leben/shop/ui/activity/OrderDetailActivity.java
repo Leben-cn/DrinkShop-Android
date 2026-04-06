@@ -31,6 +31,7 @@ public class OrderDetailActivity extends BaseActivity {
     private TextView tvTotalPrice;
     private TextView tvOrderTitle;
     private TextView tvOrderTip;
+    private TextView tvShopName;
 
     @Override
     protected int getLayoutId() {
@@ -61,6 +62,7 @@ public class OrderDetailActivity extends BaseActivity {
         tvTotalPrice=findViewById(R.id.tv_total_price);
         tvOrderTitle=findViewById(R.id.tv_order_status_title);
         tvOrderTip=findViewById(R.id.tv_order_system_tip);
+        tvShopName=findViewById(R.id.tv_shop_name);
 
         if (titleBar != null) {
             titleBar.setTitle("");
@@ -89,6 +91,7 @@ public class OrderDetailActivity extends BaseActivity {
         tvPackingFee.setText("￥"+orderEntity.getPackingFee());
         tvDeliveryFee.setText("￥"+orderEntity.getDeliveryFee());
         tvTotalPrice.setText("￥"+orderEntity.getPayAmount());
+        tvShopName.setText(orderEntity.getShopName());
 
         rvOrderItemList.setLayoutManager(new LinearLayoutManager(this));
 

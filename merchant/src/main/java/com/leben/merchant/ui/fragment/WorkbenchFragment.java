@@ -5,33 +5,39 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.jakewharton.rxbinding2.widget.RxCompoundButton;
+import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.fragment.BaseRefreshFragment;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.SharedPreferencesUtils;
+import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.dialog.CommonDialog;
 import com.leben.common.Constant.CommonConstant;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
+import com.leben.merchant.contract.UpdateShopStatusContract;
 import com.leben.merchant.model.bean.LoginEntity;
 import com.leben.merchant.model.event.RefreshInfoEvent;
+import com.leben.merchant.presenter.UpdateShopStatusPresenter;
 import com.leben.merchant.util.MerchantUtils;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.concurrent.TimeUnit;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
+/**
+ * Created by youjiahui on 2026/4/6.
+ */
+
 @Route(path = CommonConstant.Router.WORK_BENCH)
-public class WorkbenchFragment extends BaseRefreshFragment {
+public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShopStatusContract.View{
 
     private TextView mTvShopName;
     private ImageView mIvShopAvatar;
@@ -41,6 +47,12 @@ public class WorkbenchFragment extends BaseRefreshFragment {
     private LinearLayout llDoneOrder;
     private LinearLayout llPendingOrder;
     private TextView mTvShopSetting;
+    private SwitchMaterial mSwitchStatus;
+    private View mVStatusDot;
+    private TextView mTvShopStatus;
+
+    @InjectPresenter
+    UpdateShopStatusPresenter updateShopStatusPresenter;
 
     @Override
     protected int getLayoutId() {
@@ -65,6 +77,9 @@ public class WorkbenchFragment extends BaseRefreshFragment {
         llDoneOrder=root.findViewById(R.id.ll_done);
         llPendingOrder=root.findViewById(R.id.iv_pending);
         mTvShopSetting=root.findViewById(R.id.tv_shop_setting);
+        mSwitchStatus = root.findViewById(R.id.switch_status);
+        mVStatusDot = root.findViewById(R.id.v_status_dot);
+        mTvShopStatus = root.findViewById(R.id.tv_shop_status);
 
         loadMerchantInfo();
     }
@@ -167,6 +182,8 @@ public class WorkbenchFragment extends BaseRefreshFragment {
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
+
+        setSwitchListener();
     }
 
     @Override
@@ -184,10 +201,19 @@ public class WorkbenchFragment extends BaseRefreshFragment {
 
     }
 
-    private void loadMerchantInfo(){
+    private void loadMerchantInfo() {
         LoginEntity.ShopInfo merchantInfo = MerchantUtils.getMerchantInfo(getContext());
         if (merchantInfo != null) {
             mTvShopName.setText(merchantInfo.getShopName());
+            boolean isOpen = (merchantInfo.getStatus() != null && merchantInfo.getStatus() == 1);
+
+            // 初始化前先解除监听
+            mSwitchStatus.setOnCheckedChangeListener(null);
+            mSwitchStatus.setChecked(isOpen);
+            updateStatusUI(isOpen);
+            // 初始化后再绑定监听
+            setSwitchListener();
+
             Glide.with(requireContext())
                     .load(merchantInfo.getImg())
                     .circleCrop()
@@ -207,4 +233,64 @@ public class WorkbenchFragment extends BaseRefreshFragment {
     public void onRefreshInfoEvent(RefreshInfoEvent event){
         loadMerchantInfo();
     }
+
+    private void updateStatusUI(boolean isOpen) {
+        mTvShopStatus.setText(isOpen ? "营业中" : "打烊中");
+        mVStatusDot.setBackgroundResource(isOpen ?
+                R.drawable.shape_circle_green : R.drawable.shape_circle_grey);
+
+        if (mSwitchStatus.isChecked() != isOpen) {
+            mSwitchStatus.setChecked(isOpen);
+        }
+    }
+
+    @Override
+    public void onUpdateShopStatusSuccess(String data) {
+        ToastUtils.show(getContext(), "切换成功");
+
+        // 1. 获取当前最新的本地缓存
+        LoginEntity.ShopInfo merchantInfo = MerchantUtils.getMerchantInfo(getContext());
+        if (merchantInfo != null) {
+            // 2. 修改内存中的状态 (假设之前请求的是 status)
+            // 这里的 status 可以根据业务逻辑获取，或者从 Presenter 传回来
+            int currentStatus = mSwitchStatus.isChecked() ? 1 : 0;
+            merchantInfo.setStatus(currentStatus);
+
+            // 3. 将修改后的对象重新保存到 SharedPreferences
+            SharedPreferencesUtils.setParam(getContext(),
+                    CommonConstant.Key.MERCHANT_INFO, merchantInfo);
+        }
+
+        // 4. 刷新一次 UI 状态（确保万无一失）
+        updateStatusUI(mSwitchStatus.isChecked());
+    }
+
+    @Override
+    public void onUpdateShopStatusFailed(String errorMsg) {
+        showError(errorMsg);
+        LogUtils.error("切换店铺状态失败："+errorMsg);
+        // 1. 先解绑监听器，防止 setChecked 触发二次请求
+        mSwitchStatus.setOnCheckedChangeListener(null);
+
+        // 2. 执行回弹逻辑 (拨回反方向)
+        boolean backStatus = !mSwitchStatus.isChecked();
+        mSwitchStatus.setChecked(backStatus);
+
+        // 3. 同步 UI 文字和圆点
+        updateStatusUI(backStatus);
+
+        // 4. 重新绑定监听器
+        setSwitchListener();
+    }
+
+    private void setSwitchListener() {
+        mSwitchStatus.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // 物理点击触发
+            int status = isChecked ? 1 : 0;
+            updateShopStatusPresenter.updateShopStatus(status);
+            // 先即时更新 UI
+            updateStatusUI(isChecked);
+        });
+    }
+
 }
