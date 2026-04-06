@@ -334,7 +334,9 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
                     }
 
                     DrinkRequestEntity requestData = new DrinkRequestEntity();
-                    requestData.setId(mDrink.getId());
+                    if(mDrink!=null){
+                        requestData.setId(mDrink.getId());
+                    }
                     requestData.setName(name);
                     requestData.setDescription(desc);
                     requestData.setPrice(priceValue);

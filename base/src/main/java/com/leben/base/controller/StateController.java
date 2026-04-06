@@ -62,6 +62,10 @@ public class StateController implements Lifecycle {
         if(mEmptyView!=null){
             mEmptyView.setVisibility(View.GONE);
         }
+        //解决后端没起时，进入列表页面，出现“出错了”占位图，再次启动后端时，能获取到列表，但是“出错了”占位图没有消失的问题
+        if(mErrorView != null){
+            mErrorView.setVisibility(View.GONE);
+        }
     }
 
     public void showEmpty(){

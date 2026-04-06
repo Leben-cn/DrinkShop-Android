@@ -18,7 +18,12 @@ import com.leben.common.Constant.CommonConstant;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
 import com.leben.merchant.model.bean.LoginEntity;
+import com.leben.merchant.model.event.RefreshInfoEvent;
 import com.leben.merchant.util.MerchantUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,10 +40,19 @@ public class WorkbenchFragment extends BaseRefreshFragment {
     private LinearLayout llCancelOrder;
     private LinearLayout llDoneOrder;
     private LinearLayout llPendingOrder;
+    private TextView mTvShopSetting;
 
     @Override
     protected int getLayoutId() {
         return R.layout.merchant_frag_workbench;
+    }
+
+    @Override
+    public void onInit() {
+        super.onInit();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
@@ -50,6 +64,7 @@ public class WorkbenchFragment extends BaseRefreshFragment {
         llCancelOrder=root.findViewById(R.id.ll_refund);
         llDoneOrder=root.findViewById(R.id.ll_done);
         llPendingOrder=root.findViewById(R.id.iv_pending);
+        mTvShopSetting=root.findViewById(R.id.tv_shop_setting);
 
         loadMerchantInfo();
     }
@@ -141,6 +156,17 @@ public class WorkbenchFragment extends BaseRefreshFragment {
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
+
+        RxView.clicks(mTvShopSetting)
+                .throttleFirst(500,TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result->{
+                    ARouter.getInstance()
+                            .build(MerchantConstant.Router.SETTING)
+                            .navigation();
+                },throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
     }
 
     @Override
@@ -167,5 +193,18 @@ public class WorkbenchFragment extends BaseRefreshFragment {
                     .circleCrop()
                     .into(mIvShopAvatar);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshInfoEvent(RefreshInfoEvent event){
+        loadMerchantInfo();
     }
 }

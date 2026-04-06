@@ -8,6 +8,7 @@ import com.leben.common.model.bean.SpecOptionEntity;
 import com.leben.merchant.model.bean.DrinkRequestEntity;
 import com.leben.merchant.model.bean.LoginEntity;
 import com.leben.merchant.model.bean.MerchantRegisterEntity;
+import com.leben.merchant.model.bean.MerchantInfoEntity;
 
 import java.util.List;
 
@@ -79,6 +80,11 @@ public interface ApiService {
     @POST("/merchant/drink/save")
     Flowable<CommonEntity<String>> saveDrink(
             @Body DrinkRequestEntity entity
+    );
+
+    @POST("/merchant/update/info")
+    Flowable<CommonEntity<String>> updateMerchantInfo(
+            @Body MerchantInfoEntity merchantInfoEntity
     );
 
 }

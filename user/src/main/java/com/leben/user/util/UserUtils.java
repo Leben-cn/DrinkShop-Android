@@ -39,7 +39,7 @@ public class UserUtils {
         return userInfo != null ? userInfo.getId() : null;
     }
     /**
-     * 【新增】更新用户信息到 SharedPreferences
+     * 更新用户信息到 SharedPreferences
      */
     public static void saveUserInfo(Context context, LoginEntity.UserInfo userInfo) {
         if (userInfo == null) return;

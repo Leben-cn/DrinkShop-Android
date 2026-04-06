@@ -11,6 +11,7 @@ public class LoginEntity {
     public static class ShopInfo {
         private Long id;
         private String account;
+        private String password;
         private String shopName;     // 对应实体类的 name
         private String img;          // 店铺头像
         private String description;  // 简介
@@ -22,6 +23,66 @@ public class LoginEntity {
         private Integer status;      // 状态
         private Double longitude;
         private Double latitude;
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public void setAccount(String account) {
+            this.account = account;
+        }
+
+        public void setShopName(String shopName) {
+            this.shopName = shopName;
+        }
+
+        public void setImg(String img) {
+            this.img = img;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public void setMinOrder(BigDecimal minOrder) {
+            this.minOrder = minOrder;
+        }
+
+        public void setDeliveryFee(BigDecimal deliveryFee) {
+            this.deliveryFee = deliveryFee;
+        }
+
+        public void setRating(Double rating) {
+            this.rating = rating;
+        }
+
+        public void setTotalSales(Integer totalSales) {
+            this.totalSales = totalSales;
+        }
+
+        public void setStatus(Integer status) {
+            this.status = status;
+        }
+
+        public void setLongitude(Double longitude) {
+            this.longitude = longitude;
+        }
+
+        public void setLatitude(Double latitude) {
+            this.latitude = latitude;
+        }
 
         public Long getId() {
             return id;

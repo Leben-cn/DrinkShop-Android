@@ -6,9 +6,7 @@ import android.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -26,9 +24,8 @@ import com.leben.user.constant.UserConstant;
 import com.leben.user.contract.SubmitUserInfoContract;
 import com.leben.user.model.bean.UserInfoEntity;
 import com.leben.user.presenter.SubmitUserInfoPresenter;
-import com.leben.user.widget.EditInfoDialog;
+import com.leben.base.widget.dialog.EditInfoDialog;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-
 import java.util.concurrent.TimeUnit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -45,7 +42,7 @@ public class UserInfoActivity extends BaseActivity implements SubmitUserInfoCont
     private ConstraintLayout clLogoutAccount;
 
     private int currentEditType; // 0:头像, 1:昵称, 2:密码, 3:手机号
-    private String pendingContent;
+    private String pendingContent; //为了 success 回调里更新 SP
 
     private ImagePickerHelper imagePickerHelper;
 

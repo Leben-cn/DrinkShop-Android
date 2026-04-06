@@ -39,7 +39,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     private Button mBtnLogin;
     private TextView mTvRegister;
     private TextView mTvMerchantLogin;
-
     private RxPermissions rxPermissions;
 
     @Override

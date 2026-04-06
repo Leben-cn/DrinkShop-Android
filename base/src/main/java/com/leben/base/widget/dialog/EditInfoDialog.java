@@ -1,4 +1,4 @@
-package com.leben.user.widget;
+package com.leben.base.widget.dialog;
 
 import android.os.Bundle;
 import android.text.InputType;
@@ -9,9 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.leben.base.widget.dialog.BaseBottomSheetDialog;
 import com.leben.base.widget.titleBar.TitleBar;
-import com.leben.user.R;
+import com.leben.base.R;
+
+/**
+ * Created by youjiahui on 2026/4/6.
+ */
 
 public class EditInfoDialog extends BaseBottomSheetDialog {
 
@@ -65,7 +68,7 @@ public class EditInfoDialog extends BaseBottomSheetDialog {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.user_dialog_edit_info;
+        return R.layout.dialog_edit_info;
     }
 
     @Override

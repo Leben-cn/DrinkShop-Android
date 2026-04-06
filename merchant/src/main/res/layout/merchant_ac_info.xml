@@ -26,7 +26,6 @@
             android:orientation="vertical"
             android:paddingVertical="5dp">
 
-            <!-- 头像 -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_avatar"
                 android:layout_width="match_parent"
@@ -38,7 +37,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="头像"
+                    android:text="店铺头像"
                     android:textColor="#333333"
                     android:textSize="15sp"
                     android:gravity="center_vertical"
@@ -54,7 +53,7 @@
                     app:layout_constraintEnd_toEndOf="parent" />
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/iv_user_avatar"
+                    android:id="@+id/iv_shop_avatar"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginEnd="8dp"
@@ -67,16 +66,15 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- 用户名 -->
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_username"
+                android:id="@+id/cl_shopName"
                 style="@style/SettingRowStyle"
                 android:paddingHorizontal="15dp">
 
                 <TextView
                     style="@style/SettingLabelStyle"
                     android:layout_height="wrap_content"
-                    android:text="用户名"
+                    android:text="店铺名"
                     android:gravity="center_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -90,7 +88,7 @@
                     app:layout_constraintEnd_toEndOf="parent" />
 
                 <TextView
-                    android:id="@+id/tv_username"
+                    android:id="@+id/tv_shopName"
                     style="@style/SettingValueStyle"
                     android:layout_height="wrap_content"
                     android:text="Leben"
@@ -101,7 +99,38 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- 密码 -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_account"
+                style="@style/SettingRowStyle"
+                android:paddingHorizontal="15dp">
+
+                <TextView
+                    style="@style/SettingLabelStyle"
+                    android:layout_height="wrap_content"
+                    android:text="账号"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageView
+                    android:id="@+id/arrow_3"
+                    style="@style/SettingArrowStyle"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_account"
+                    style="@style/SettingValueStyle"
+                    android:layout_height="wrap_content"
+                    android:text="xicha"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/arrow_3" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_password"
                 style="@style/SettingRowStyle"
@@ -117,7 +146,7 @@
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <ImageView
-                    android:id="@+id/arrow_3"
+                    android:id="@+id/arrow_4"
                     style="@style/SettingArrowStyle"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -130,10 +159,9 @@
                     android:gravity="center_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/arrow_3" />
+                    app:layout_constraintEnd_toStartOf="@id/arrow_4" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- 手机号 -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_phone"
                 style="@style/SettingRowStyle"
@@ -142,14 +170,14 @@
                 <TextView
                     style="@style/SettingLabelStyle"
                     android:layout_height="wrap_content"
-                    android:text="手机号"
+                    android:text="联系电话"
                     android:gravity="center_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <ImageView
-                    android:id="@+id/arrow_4"
+                    android:id="@+id/arrow_5"
                     style="@style/SettingArrowStyle"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -163,10 +191,105 @@
                     android:gravity="center_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/arrow_4" />
+                    app:layout_constraintEnd_toStartOf="@id/arrow_5" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- 注销账号 -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_delivery_fee"
+                style="@style/SettingRowStyle"
+                android:paddingHorizontal="15dp">
+
+                <TextView
+                    style="@style/SettingLabelStyle"
+                    android:layout_height="wrap_content"
+                    android:text="运费"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageView
+                    android:id="@+id/arrow_6"
+                    style="@style/SettingArrowStyle"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_delivery_fee"
+                    style="@style/SettingValueStyle"
+                    android:layout_height="wrap_content"
+                    android:text="2￥"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/arrow_6" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_MinOrder"
+                style="@style/SettingRowStyle"
+                android:paddingHorizontal="15dp">
+
+                <TextView
+                    style="@style/SettingLabelStyle"
+                    android:layout_height="wrap_content"
+                    android:text="起送价"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageView
+                    android:id="@+id/arrow_7"
+                    style="@style/SettingArrowStyle"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_MinOrder"
+                    style="@style/SettingValueStyle"
+                    android:layout_height="wrap_content"
+                    android:text="15￥"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/arrow_7" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_description"
+                style="@style/SettingRowStyle"
+                android:paddingHorizontal="15dp">
+
+                <TextView
+                    style="@style/SettingLabelStyle"
+                    android:layout_height="wrap_content"
+                    android:text="店铺描述"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageView
+                    android:id="@+id/arrow_8"
+                    style="@style/SettingArrowStyle"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_description"
+                    style="@style/SettingValueStyle"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/arrow_8" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_logout_account"
                 style="@style/SettingRowStyle"
@@ -182,7 +305,7 @@
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <ImageView
-                    android:id="@+id/arrow_5"
+                    android:id="@+id/arrow_9"
                     style="@style/SettingArrowStyle"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -195,7 +318,7 @@
                     android:gravity="center_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/arrow_5" />
+                    app:layout_constraintEnd_toStartOf="@id/arrow_9" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
