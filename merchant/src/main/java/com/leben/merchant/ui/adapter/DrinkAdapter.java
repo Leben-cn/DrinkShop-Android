@@ -35,8 +35,7 @@ public class DrinkAdapter extends BaseRecyclerAdapter<DrinkEntity> {
     protected void bindData(BaseViewHolder holder, DrinkEntity data, int position) {
         DecimalFormat df=new DecimalFormat("#.##");
         holder.setImageUrl(R.id.iv_drink_img,data.getImg())
-                .setText(R.id.tv_drink_name,data.getName())
-                .setText(R.id.tv_rating,data.getMark()+"分");
+                .setText(R.id.tv_drink_name,data.getName());
         if (data.getSpecs().isEmpty()) {
             holder.setText(R.id.tv_drink_price,"￥"+df.format(data.getPrice()));
         }else{
@@ -48,6 +47,18 @@ public class DrinkAdapter extends BaseRecyclerAdapter<DrinkEntity> {
         } else {
             holder.setText(R.id.tv_drink_status,"已下架");
             holder.getView(R.id.tv_drink_status).setBackgroundResource(R.drawable.bg_tv_grey);
+        }
+
+        if (data.getSalesVolume() == null) {
+            holder.setText(R.id.tv_sales,"月售0");
+        }else{
+            holder.setText(R.id.tv_sales,"月售"+data.getSalesVolume());
+        }
+
+        if (data.getMark() == null) {
+            holder.setText(R.id.tv_rating,"5.0分");
+        }else{
+            holder.setText(R.id.tv_rating,data.getMark()+"分");
         }
 
         RxView.clicks(holder.getView(R.id.iv_edit))

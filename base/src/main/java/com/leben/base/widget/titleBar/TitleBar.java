@@ -122,10 +122,33 @@ public class TitleBar extends ConstraintLayout {
                 targetParams.leftMargin = dp2px(10);
             }
             // 确保垂直居中
-            targetParams.gravity = Gravity.CENTER_VERTICAL;
+            //targetParams.gravity = Gravity.CENTER_VERTICAL;
 
             mRightContainer.addView(view, targetParams);
         }
+    }
+
+    /**
+     * 设置右侧 View 并指定大小 (单位: dp)
+     */
+    public void addRightView(View view, int widthDp, int heightDp) {
+        if (view == null) return;
+
+        int widthPx = dp2px(widthDp);
+        int heightPx = dp2px(heightDp);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(widthPx, heightPx);
+        // 保持你原有的逻辑：间距和居中
+        params.leftMargin = dp2px(10);
+        params.gravity = Gravity.CENTER_VERTICAL;
+
+        view.setLayoutParams(params);
+
+        if (view instanceof ImageView) {
+            ((ImageView) view).setScaleType(ImageView.ScaleType.FIT_CENTER);
+        }
+
+        addRightView(view); // 调用原有的添加方法
     }
 
     /**

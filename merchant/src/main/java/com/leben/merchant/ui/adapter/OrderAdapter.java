@@ -69,7 +69,7 @@ public class OrderAdapter extends BaseRecyclerAdapter<OrderEntity> {
         switch (data.getStatus()){
             case 0:
                 holder.getView(R.id.tv_action_btn).setVisibility(View.VISIBLE);
-                holder.setText(R.id.tv_action_btn,"已出餐");
+                holder.setText(R.id.tv_action_btn,"确认出餐");
                 break;
             case 1:
                 holder.setText(R.id.tv_status,"已完成");

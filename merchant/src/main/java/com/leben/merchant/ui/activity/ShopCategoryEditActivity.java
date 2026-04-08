@@ -95,6 +95,7 @@ public class ShopCategoryEditActivity extends BaseRecyclerActivity<ShopCategorie
     @SuppressLint("CheckResult")
     @Override
     public void initListener() {
+        // 1. 添加分类逻辑
         RxView.clicks(mIvAddCategory)
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -108,64 +109,34 @@ public class ShopCategoryEditActivity extends BaseRecyclerActivity<ShopCategorie
                                 }
                             })
                             .show(getSupportFragmentManager(), "dialog_InputShopCategory");
-                }, throwable -> {
-                    LogUtils.error("点击事件错误: " + throwable.getMessage());
-                });
+                }, throwable -> LogUtils.error("点击错误: " + throwable.getMessage()));
+
         if (mAdapter instanceof ShopCategoryAdapter) {
-            ShopCategoryAdapter shopCategoryAdapter=(ShopCategoryAdapter) mAdapter;
-            shopCategoryAdapter.setOnItemDeleteListener(new ShopCategoryAdapter.OnItemDeleteListener() {
-                @Override
-                public void onDeleteClick(Long id) {
-                    CommonDialog dialog = new CommonDialog();
-                    dialog.setContent("确认删除此分类吗？");
-                    dialog.setOnConfirmListener(result -> {
-                        deleteShopCategoryPresenter.deleteShopCategory(id);
-                        dialog.dismiss();
-                    });
-                    dialog.setOnCancelListener(result -> dialog.dismiss());
-                    dialog.show(getSupportFragmentManager(), "dialog_history");
+            ShopCategoryAdapter shopCategoryAdapter = (ShopCategoryAdapter) mAdapter;
+
+            // 2. 删除逻辑
+            shopCategoryAdapter.setOnItemDeleteListener(id -> {
+                CommonDialog dialog = new CommonDialog();
+                dialog.setContent("确认删除此分类吗？");
+                dialog.setOnConfirmListener(result -> {
+                    deleteShopCategoryPresenter.deleteShopCategory(id);
+                    dialog.dismiss();
+                });
+                dialog.setOnCancelListener(result -> dialog.dismiss());
+                dialog.show(getSupportFragmentManager(), "dialog_delete");
+            });
+
+            // 3. 列表项点击（选择模式）
+            shopCategoryAdapter.setOnItemClickListener((view, position, entity) -> {
+                if (isSelectMode) {
+                    EventBus.getDefault().post(new SelectShopCategoryEvent(entity));
                 }
+                silentSaveAndExit(); // 静默保存并强制退出
             });
         }
 
-        if(mAdapter instanceof ShopCategoryAdapter){
-            ShopCategoryAdapter shopCategoryAdapter=(ShopCategoryAdapter) mAdapter;
-            shopCategoryAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<ShopCategoriesEntity>() {
-                @Override
-                public void onItemClick(View view, int position, ShopCategoriesEntity entity) {
-                    EventBus.getDefault().post(new SelectShopCategoryEvent(entity));
-                    finish();
-                }
-            });
-        }
-        titleBar.setOnBackListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isOrderChanged) {
-                    CommonDialog dialog = new CommonDialog();
-                    dialog.setTitle("提示");
-                    dialog.setContent("分类顺序已更改，是否保存？");
-                    dialog.setOnConfirmListener(result -> {
-                        // 提取当前的 ID 列表发送给后端
-                        List<Long> ids = new ArrayList<>();
-                        for (ShopCategoriesEntity entity : mAdapter.getList()) {
-                            ids.add(entity.getId());
-                        }
-                        // 调用 Presenter 发起保存排序请求
-                        updateCategorySortPresenter.updateCategorySort(ids);
-                        dialog.dismiss();
-                        finish();
-                    });
-                    dialog.setOnCancelListener(result -> {
-                        dialog.dismiss();
-                        finish(); // 不保存直接退出
-                    });
-                    dialog.show(getSupportFragmentManager(), "dialog_save_sort");
-                } else {
-                    finish();
-                }
-            }
-        });
+        // 4. 标题栏返回键逻辑：显式触发弹窗逻辑
+        titleBar.setOnBackListener(v -> finish());
     }
 
     @Override
@@ -220,7 +191,7 @@ public class ShopCategoryEditActivity extends BaseRecyclerActivity<ShopCategorie
 
     @Override
     public void onDeleteShopCategoryFailed(String errorMsg) {
-        showError("删除店铺分类失败");
+        showError(errorMsg);
         LogUtils.error("删除店铺分类失败："+errorMsg);
     }
 
@@ -284,5 +255,61 @@ public class ShopCategoryEditActivity extends BaseRecyclerActivity<ShopCategorie
     public void onUpdateCategorySortFailed(String errorMsg) {
         showError("顺序更新失败");
         LogUtils.error("顺序更新失败："+errorMsg);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    public void finish() {
+        // 如果没有变动，直接退出
+        if (!isOrderChanged) {
+            super.finish();
+            return;
+        }
+        // 如果有变动且不是通过 silentSaveAndExit 调用的，则弹窗
+        showSaveSortDialog();
+    }
+
+    /**
+     * 提取 ID 并发送请求的通用方法
+     */
+    private void postSortRequest() {
+        List<Long> ids = new ArrayList<>();
+        for (ShopCategoriesEntity entity : mAdapter.getList()) {
+            ids.add(entity.getId());
+        }
+        updateCategorySortPresenter.updateCategorySort(ids);
+        isOrderChanged = false; // 关键：重置标记，防止 finish() 递归
+    }
+
+    /**
+     * 场景：点击分类项时的“静默保存并退出”
+     */
+    private void silentSaveAndExit() {
+        if (isOrderChanged) {
+            postSortRequest();
+        }
+        super.finish(); // 绕过重写的 finish() 弹窗逻辑
+    }
+
+    /**
+     * 场景：返回键触发的“弹窗确认”
+     */
+    private void showSaveSortDialog() {
+        new CommonDialog()
+                .setTitle("提示")
+                .setContent("分类顺序已更改，是否保存并退出？")
+                .setOnConfirmListener(result -> {
+                    postSortRequest();
+                    super.finish();
+                })
+                .setOnCancelListener(result -> {
+                    isOrderChanged = false;
+                    super.finish();
+                })
+                .show(getSupportFragmentManager(), "dialog_save_sort");
     }
 }

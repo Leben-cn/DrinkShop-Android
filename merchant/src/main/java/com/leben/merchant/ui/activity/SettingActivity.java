@@ -104,13 +104,15 @@ public class SettingActivity extends BaseActivity implements SubmitShopInfoContr
             tvMinOrder.setText(df.format(merchantInfo.getMinOrder()) + "￥");
             Glide.with(this)
                     .load(merchantInfo.getImg())
-                    .circleCrop()
+                    .centerCrop()
                     .into(ivShopImg);
         }
 
         imagePickerHelper=new ImagePickerHelper(this,path -> {
 
-            Glide.with(this).load(path).into(ivShopImg);
+            Glide.with(this).load(path)
+                    .centerCrop()
+                    .into(ivShopImg);
             this.currentEditType = 0;
             this.pendingContent = path; // 把路径暂存，为了 success 回调里更新 SP
 
@@ -337,7 +339,7 @@ public class SettingActivity extends BaseActivity implements SubmitShopInfoContr
                     merchantInfo.setImg(pendingContent);
                     Glide.with(this)
                             .load(pendingContent)
-                            .circleCrop()
+                            .centerCrop()
                             .into(ivShopImg);
                     break;
 

@@ -70,7 +70,7 @@
         android:id="@+id/iv_delete"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/pic_delect"
+        android:src="@drawable/pic_delect_drink"
         android:contentDescription="删除分类"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -211,4 +211,8 @@ public class ShopMenuFragment extends BaseFragment implements ShopMenuContract.V
 
     }
 
+    @Override
+    protected int getStatusBarColor() {
+        return com.leben.base.R.color.white;
+    }
 }

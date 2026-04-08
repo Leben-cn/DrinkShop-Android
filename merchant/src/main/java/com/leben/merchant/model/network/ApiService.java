@@ -92,4 +92,9 @@ public interface ApiService {
             @Query("status") Integer status
     );
 
+    @POST("/merchant/delete/drink")
+    Flowable<CommonEntity<String>> delectDrink(
+            @Query("drinkId") Long drinkId
+    );
+
 }

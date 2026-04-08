@@ -74,4 +74,9 @@ public class ShopCommentFragment extends BaseRecyclerFragment<CommentEntity> imp
     protected boolean isSupportLoadMore() {
         return false;
     }
+
+    @Override
+    protected int getStatusBarColor() {
+        return com.leben.base.R.color.white;
+    }
 }

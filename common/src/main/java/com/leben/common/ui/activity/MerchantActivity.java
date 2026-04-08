@@ -54,4 +54,11 @@ public class MerchantActivity extends BaseTabActivity {
     protected boolean isTabTop() {
         return false;
     }
+
+    public void changeTab(int index) {
+        if (mViewPager != null) {
+            // 第二个参数 false 表示切换时不需要平滑滚动动画，直接跳过去
+            mViewPager.setCurrentItem(index, false);
+        }
+    }
 }

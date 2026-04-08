@@ -115,8 +115,8 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
             ivCollect.setImageResource(R.drawable.ic_collect_no);
             ivMessage=new ImageView(this);
             ivMessage.setImageResource(R.drawable.ic_shop_message);
-            titleBar.addRightView(ivCollect);
-            titleBar.addRightView(ivMessage);
+            titleBar.addRightView(ivCollect,26,26);
+            titleBar.addRightView(ivMessage,26,26);
         }
     }
 
@@ -388,4 +388,5 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
         ToastUtils.show(this,"收藏/取消收藏失败");
         LogUtils.error("收藏/取消收藏失败："+errorMsg);
     }
+
 }

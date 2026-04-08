@@ -34,7 +34,7 @@
                 android:layout_height="60dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/pic_no_shop"
-                app:shapeAppearanceOverlay="@style/CircleImageStyle"
+                app:shapeAppearanceOverlay="@style/SquareImageStyle"
                 app:strokeColor="#FFFFFF"
                 app:strokeWidth="2dp" />
 

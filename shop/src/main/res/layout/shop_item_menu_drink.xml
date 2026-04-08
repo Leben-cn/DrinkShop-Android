@@ -14,7 +14,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <ImageView
             android:id="@+id/iv_food_img"
@@ -69,10 +71,10 @@
             android:layout_height="26dp"
             android:background="@drawable/bg_btn_add_spec"
             android:gravity="center"
-            android:paddingHorizontal="12dp"
+            android:paddingHorizontal="8dp"
             android:text="选规格"
             android:textColor="#FFFFFF"
-            android:textSize="12sp"
+            android:textSize="11sp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -89,8 +91,8 @@
 
             <ImageView
                 android:id="@+id/iv_sub"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/pic_sub_drink"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -99,8 +101,7 @@
                 android:id="@+id/tv_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:minWidth="16dp"
+                android:minWidth="20dp"
                 android:gravity="center"
                 android:textColor="#333333"
                 android:textSize="14sp"
@@ -110,8 +111,8 @@
 
             <ImageView
                 android:id="@+id/iv_add"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:src="@drawable/pic_add_drink" />
 
         </LinearLayout>

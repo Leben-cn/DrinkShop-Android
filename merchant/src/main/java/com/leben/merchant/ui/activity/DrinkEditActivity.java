@@ -18,6 +18,7 @@ import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.activity.BaseActivity;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
+import com.leben.base.widget.dialog.CommonDialog;
 import com.leben.base.widget.dialog.ListSelectDialog;
 import com.leben.base.widget.titleBar.TitleBar;
 import com.leben.common.model.bean.DrinkEntity;
@@ -30,11 +31,13 @@ import com.leben.common.util.ListGroupUtils;
 import com.leben.common.util.PermissionDialogHelper;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
+import com.leben.merchant.contract.DelectDrinkContract;
 import com.leben.merchant.contract.GetAllSpecContract;
 import com.leben.merchant.contract.SaveDrinkContract;
 import com.leben.merchant.model.bean.DrinkRequestEntity;
 import com.leben.merchant.model.event.RefreshDrinkListEvent;
 import com.leben.merchant.model.event.SelectShopCategoryEvent;
+import com.leben.merchant.presenter.DelectDrinkPresenter;
 import com.leben.merchant.presenter.GetAllSpecPresenter;
 import com.leben.merchant.presenter.SaveDrinkPresenter;
 import com.leben.merchant.ui.dialog.DrinkSpecDialog;
@@ -53,7 +56,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 @Route(path = MerchantConstant.Router.DRINK_EDIT)
-public class DrinkEditActivity extends BaseActivity implements GetAllSpecContract.View, SaveDrinkContract.View {
+public class DrinkEditActivity extends BaseActivity implements GetAllSpecContract.View, SaveDrinkContract.View , DelectDrinkContract.View {
 
     private String TAG;
 
@@ -81,6 +84,8 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
 
     private TitleBar titleBar;
 
+    private ImageView mIvDelectDrink;
+
     private long categoryId;
     private long shopCategoryId;
 
@@ -91,6 +96,9 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
 
     @InjectPresenter
     SaveDrinkPresenter saveDrinkPresenter;
+
+    @InjectPresenter
+    DelectDrinkPresenter delectDrinkPresenter;
 
     @Override
     protected int getLayoutId() {
@@ -124,6 +132,10 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
         mTvShopCategory = findViewById(R.id.tv_shop_category);
         mTvCategory = findViewById(R.id.tv_category);
         mSwitchStatus = findViewById(R.id.switch_status);
+
+        mIvDelectDrink=new ImageView(this);
+        mIvDelectDrink.setImageResource(R.drawable.pic_delect_drink);
+        titleBar.addRightView(mIvDelectDrink, 24, 24);
 
         if ("DRINK_ADAPTER".equals(TAG)) {
             titleBar.setTitle("编辑商品");
@@ -391,6 +403,22 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
 
+        RxView.clicks(mIvDelectDrink)
+                .throttleFirst(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    CommonDialog dialog = new CommonDialog();
+                    dialog.setContent("确认删除此商品吗？");
+                    dialog.setOnConfirmListener(data -> {
+                        delectDrinkPresenter.delectDrink(mDrink.getId());
+                        dialog.dismiss();
+                    });
+                    dialog.setOnCancelListener(data -> dialog.dismiss());
+                    dialog.show(getSupportFragmentManager(), "dialog_delect_drink");
+                }, throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+
     }
 
     @Override
@@ -488,5 +516,18 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
         hideLoading();
         showError("修改失败");
         LogUtils.error("修改失败"+errorMsg);
+    }
+
+    @Override
+    public void onDelectDrinkSuccess(String data) {
+        ToastUtils.show(this,"删除成功");
+        EventBus.getDefault().post(new RefreshDrinkListEvent());
+        finish();
+    }
+
+    @Override
+    public void onDelectDrinkFailed(String errorMsg) {
+        showError(errorMsg);
+        LogUtils.error("删除商品失败："+errorMsg);
     }
 }

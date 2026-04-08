@@ -18,6 +18,7 @@ import com.leben.base.util.SharedPreferencesUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.dialog.CommonDialog;
 import com.leben.common.Constant.CommonConstant;
+import com.leben.common.ui.activity.MerchantActivity;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
 import com.leben.merchant.contract.UpdateShopStatusContract;
@@ -42,6 +43,7 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
     private TextView mTvShopName;
     private ImageView mIvShopAvatar;
     private TextView mTvLogout;
+    private TextView mTvManagementDrink;
     private LinearLayout llAllOrder;
     private LinearLayout llCancelOrder;
     private LinearLayout llDoneOrder;
@@ -80,6 +82,7 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
         mSwitchStatus = root.findViewById(R.id.switch_status);
         mVStatusDot = root.findViewById(R.id.v_status_dot);
         mTvShopStatus = root.findViewById(R.id.tv_shop_status);
+        mTvManagementDrink=root.findViewById(R.id.tv_goods_mgr);
 
         loadMerchantInfo();
     }
@@ -183,6 +186,18 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
 
+        RxView.clicks(mTvManagementDrink)
+                .throttleFirst(500,TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result->{
+                    // 强转 Activity 并调用切换方法
+                    if (getActivity() instanceof MerchantActivity) {
+                        ((MerchantActivity) getActivity()).changeTab(1); // 1 对应商品 Tab
+                    }
+                },throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+
         setSwitchListener();
     }
 
@@ -216,7 +231,7 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
 
             Glide.with(requireContext())
                     .load(merchantInfo.getImg())
-                    .circleCrop()
+                    .centerCrop()
                     .into(mIvShopAvatar);
         }
     }
