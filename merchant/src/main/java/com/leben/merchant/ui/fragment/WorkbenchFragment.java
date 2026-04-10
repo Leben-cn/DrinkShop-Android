@@ -21,14 +21,18 @@ import com.leben.common.Constant.CommonConstant;
 import com.leben.common.ui.activity.MerchantActivity;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
+import com.leben.merchant.contract.GetShopTodayStatsContract;
 import com.leben.merchant.contract.UpdateShopStatusContract;
 import com.leben.merchant.model.bean.LoginEntity;
 import com.leben.merchant.model.event.RefreshInfoEvent;
+import com.leben.merchant.presenter.GetShopTodayStatsPresenter;
 import com.leben.merchant.presenter.UpdateShopStatusPresenter;
 import com.leben.merchant.util.MerchantUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -38,7 +42,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 
 @Route(path = CommonConstant.Router.WORK_BENCH)
-public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShopStatusContract.View{
+public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShopStatusContract.View, GetShopTodayStatsContract.View {
 
     private TextView mTvShopName;
     private ImageView mIvShopAvatar;
@@ -52,9 +56,14 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
     private SwitchMaterial mSwitchStatus;
     private View mVStatusDot;
     private TextView mTvShopStatus;
+    private TextView mTvShopTodayTurnover;
+    private TextView mTvShopTodayOrder;
 
     @InjectPresenter
     UpdateShopStatusPresenter updateShopStatusPresenter;
+
+    @InjectPresenter
+    GetShopTodayStatsPresenter getShopTodayStatsPresenter;
 
     @Override
     protected int getLayoutId() {
@@ -83,6 +92,8 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
         mVStatusDot = root.findViewById(R.id.v_status_dot);
         mTvShopStatus = root.findViewById(R.id.tv_shop_status);
         mTvManagementDrink=root.findViewById(R.id.tv_goods_mgr);
+        mTvShopTodayTurnover=root.findViewById(R.id.tv_today_turnover);
+        mTvShopTodayOrder=root.findViewById(R.id.tv_today_orders);
 
         loadMerchantInfo();
     }
@@ -203,7 +214,7 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
 
     @Override
     public void initData() {
-
+        getShopTodayStatsPresenter.getShopTodayStats();
     }
 
     @Override
@@ -308,4 +319,43 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
         });
     }
 
+    @Override
+    public void onGetShopTodayStatsSuccess(Map<String, Object> data) {
+        if (data != null) {
+            // 1. 获取营业额 (处理 todayRevenue)
+            Object revenueObj = data.get("todayRevenue");
+            // 如果是 0，我们希望显示 "0.00"，如果是数字则保留两位小数
+            if (revenueObj != null) {
+                try {
+                    double revenue = Double.parseDouble(String.valueOf(revenueObj));
+                    mTvShopTodayTurnover.setText(String.format("%.2f", revenue));
+                } catch (Exception e) {
+                    mTvShopTodayTurnover.setText("0.00");
+                }
+            } else {
+                mTvShopTodayTurnover.setText("0.00");
+            }
+
+            // 2. 获取订单量 (处理 todayOrderCount)
+            Object orderObj = data.get("todayOrderCount");
+            if (orderObj != null) {
+                try {
+                    // 将对象转为字符串再转为整数，防止 Double 类型带小数点
+                    double orderCountDouble = Double.parseDouble(String.valueOf(orderObj));
+                    int orderCount = (int) orderCountDouble;
+                    mTvShopTodayOrder.setText(String.valueOf(orderCount));
+                } catch (Exception e) {
+                    mTvShopTodayOrder.setText("0");
+                }
+            } else {
+                mTvShopTodayOrder.setText("0");
+            }
+        }
+    }
+
+    @Override
+    public void onGetShopTodayStatsFailed(String errorMsg) {
+        showError(errorMsg);
+        LogUtils.error("获取店铺今日数据失败："+errorMsg);
+    }
 }

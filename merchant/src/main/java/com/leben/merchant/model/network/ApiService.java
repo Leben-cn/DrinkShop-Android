@@ -11,6 +11,7 @@ import com.leben.merchant.model.bean.MerchantRegisterEntity;
 import com.leben.merchant.model.bean.MerchantInfoEntity;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Flowable;
 import retrofit2.http.Body;
@@ -95,6 +96,10 @@ public interface ApiService {
     @POST("/merchant/delete/drink")
     Flowable<CommonEntity<String>> delectDrink(
             @Query("drinkId") Long drinkId
+    );
+
+    @GET("/merchant/shop/stats")
+    Flowable<CommonEntity<Map<String, Object>>> getShopTodayStats(
     );
 
 }
