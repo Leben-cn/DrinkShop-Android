@@ -15,7 +15,7 @@
         <LinearLayout
             android:id="@+id/ll_daily_date_picker"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_marginStart="10dp"
             android:gravity="center_vertical"
             android:clickable="true"
@@ -30,7 +30,6 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:layout_marginStart="5dp"
                 android:src="@drawable/pic_pull_down" />
         </LinearLayout>
 

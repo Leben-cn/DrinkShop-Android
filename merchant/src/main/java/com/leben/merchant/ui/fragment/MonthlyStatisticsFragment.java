@@ -17,6 +17,7 @@ import com.leben.merchant.R;
 import com.leben.merchant.contract.GetOrderByDateContract;
 import com.leben.merchant.presenter.GetOrderByDatePresenter;
 import com.leben.merchant.ui.adapter.BillAdapter;
+import com.leben.merchant.util.OrderUtils;
 
 import java.util.Calendar;
 import java.util.List;
@@ -29,6 +30,8 @@ public class MonthlyStatisticsFragment extends BaseRecyclerFragment<OrderEntity>
     private LinearLayout llMonthlyDatePicker;
     private TextView tvCurrentMonthlyDate;
     private String dateStr;
+    private TextView tvTotalCount;
+    private TextView tvTotalAmount;
 
     @InjectPresenter
     GetOrderByDatePresenter getOrderByDatePresenter;
@@ -50,9 +53,12 @@ public class MonthlyStatisticsFragment extends BaseRecyclerFragment<OrderEntity>
 
     @Override
     public void initView(View root) {
+        setDefaultSpace(8);
         super.initView(root);
         llMonthlyDatePicker=root.findViewById(R.id.ll_monthly_date_picker);
         tvCurrentMonthlyDate=root.findViewById(R.id.tv_current_monthly_date);
+        tvTotalCount=root.findViewById(R.id.tv_monthly_total_count);
+        tvTotalAmount=root.findViewById(R.id.tv_monthly_total_amount);
     }
 
     @Override
@@ -102,8 +108,12 @@ public class MonthlyStatisticsFragment extends BaseRecyclerFragment<OrderEntity>
         return R.color.background_green_500;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onGetOrderByDateSuccess(List<OrderEntity> data) {
+        Object[] stats = OrderUtils.getStats(data);
+        tvTotalCount.setText("共收入"+stats[0]+"笔，合计");
+        tvTotalAmount.setText(String.valueOf(stats[1]));
         refreshListSuccess(data);
     }
 

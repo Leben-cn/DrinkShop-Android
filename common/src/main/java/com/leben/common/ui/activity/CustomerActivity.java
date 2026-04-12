@@ -53,15 +53,30 @@ public class CustomerActivity extends BaseTabActivity {
     @Override
     protected List<Integer> getTabIcons() {
         List<Integer> list = new ArrayList<>();
-        list.add(R.drawable.ic_home_page);
-        list.add(R.drawable.ic_order_page);
-        list.add(R.drawable.ic_message_page);
-        list.add(R.drawable.ic_my_page);
+        list.add(R.drawable.tab_home_selector);
+        list.add(R.drawable.tab_order_selector);
+        list.add(R.drawable.tab_message_selector);
+        list.add(R.drawable.tab_me_selector);
         return list;
     }
 
     @Override
     protected boolean isTabTop() {
         return false;
+    }
+
+    @Override
+    protected boolean hideTabIndicator() {
+        return true;
+    }
+
+    @Override
+    protected int getSelectedTextColor() {
+        return R.color.orange_400;
+    }
+
+    @Override
+    protected int getTabIconSize() {
+        return 28;
     }
 }

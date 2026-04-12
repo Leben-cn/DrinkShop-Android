@@ -55,6 +55,10 @@
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
 
+        <activity android:name=".ui.activity.WalletActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+
 
     </application>
 

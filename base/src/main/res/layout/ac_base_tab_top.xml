@@ -16,7 +16,7 @@
         android:id="@+id/base_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabIndicatorFullWidth="false"/>
+        app:tabIndicatorFullWidth="false" />
 
     <View
         android:id="@+id/tab_divider"

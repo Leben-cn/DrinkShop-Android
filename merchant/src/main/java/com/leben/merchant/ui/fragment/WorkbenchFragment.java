@@ -47,7 +47,7 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
     private TextView mTvShopName;
     private ImageView mIvShopAvatar;
     private TextView mTvLogout;
-    private TextView mTvManagementDrink;
+    private TextView mTvWallet;
     private LinearLayout llAllOrder;
     private LinearLayout llCancelOrder;
     private LinearLayout llDoneOrder;
@@ -92,7 +92,7 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
         mSwitchStatus = root.findViewById(R.id.switch_status);
         mVStatusDot = root.findViewById(R.id.v_status_dot);
         mTvShopStatus = root.findViewById(R.id.tv_shop_status);
-        mTvManagementDrink=root.findViewById(R.id.tv_goods_mgr);
+        mTvWallet=root.findViewById(R.id.tv_wallet);
         mTvShopTodayTurnover=root.findViewById(R.id.tv_today_turnover);
         mTvShopTodayOrder=root.findViewById(R.id.tv_today_orders);
         mTvShopStatistics=root.findViewById(R.id.tv_statistics);
@@ -210,11 +210,13 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
 
-        RxView.clicks(mTvManagementDrink)
+        RxView.clicks(mTvWallet)
                 .throttleFirst(500,TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result->{
-                    
+                    ARouter.getInstance()
+                            .build(MerchantConstant.Router.SHOP_WALLET)
+                            .navigation();
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });

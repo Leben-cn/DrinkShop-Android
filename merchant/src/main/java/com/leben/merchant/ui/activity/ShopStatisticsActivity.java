@@ -89,4 +89,9 @@ public class ShopStatisticsActivity extends BaseTabActivity {
     protected boolean hideTitleBar() {
         return false;
     }
+
+    @Override
+    protected int getTitleBarHeight() {
+        return 33; // 设置高度为 56dp
+    }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 public class MerchantActivity extends BaseTabActivity {
     @Override
     protected List<Fragment> getFragments() {
+
         List<Fragment> fragmentList = new ArrayList<>();
         //使用 ARouter 获取实例
         Fragment workBenchFragment = (Fragment) ARouter.getInstance().build(CommonConstant.Router.WORK_BENCH).navigation();
@@ -44,9 +45,9 @@ public class MerchantActivity extends BaseTabActivity {
     @Override
     protected List<Integer> getTabIcons() {
         List<Integer> list = new ArrayList<>();
-        list.add(R.drawable.ic_home_page);
-        list.add(R.drawable.ic_order_page);
-        list.add(R.drawable.ic_message_page);
+        list.add(R.drawable.tab_workbench_selector);
+        list.add(R.drawable.tab_product_selector);
+        list.add(R.drawable.tab_message_selector);
         return list;
     }
 
@@ -55,10 +56,19 @@ public class MerchantActivity extends BaseTabActivity {
         return false;
     }
 
-    public void changeTab(int index) {
-        if (mViewPager != null) {
-            // 第二个参数 false 表示切换时不需要平滑滚动动画，直接跳过去
-            mViewPager.setCurrentItem(index, false);
-        }
+    @Override
+    protected boolean hideTabIndicator() {
+        return true;
     }
+
+    @Override
+    protected int getSelectedTextColor() {
+        return R.color.orange_400;
+    }
+
+    @Override
+    protected int getTabIconSize() {
+        return 28;
+    }
+
 }

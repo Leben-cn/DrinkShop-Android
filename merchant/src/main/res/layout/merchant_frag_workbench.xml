@@ -350,7 +350,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/tv_goods_mgr"
+                        android:id="@+id/tv_wallet"
                         style="@style/MerchantGridButtonStyle"
                         android:text="钱包"
                         android:paddingTop="16dp"

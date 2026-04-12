@@ -10,6 +10,7 @@ import com.leben.merchant.model.bean.LoginEntity;
 import com.leben.merchant.model.bean.MerchantRegisterEntity;
 import com.leben.merchant.model.bean.MerchantInfoEntity;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -107,5 +108,11 @@ public interface ApiService {
     Flowable<CommonEntity<List<OrderEntity>>> getOrderByDate(
             @Query("dateStr") String dateStr
     );
+
+    @GET("/merchant/shop/revenue")
+    Flowable<CommonEntity<BigDecimal>> getShopRevenue(
+    );
+
+
 
 }
