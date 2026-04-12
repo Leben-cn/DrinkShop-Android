@@ -58,6 +58,7 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
     private TextView mTvShopStatus;
     private TextView mTvShopTodayTurnover;
     private TextView mTvShopTodayOrder;
+    private TextView mTvShopStatistics;
 
     @InjectPresenter
     UpdateShopStatusPresenter updateShopStatusPresenter;
@@ -94,6 +95,7 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
         mTvManagementDrink=root.findViewById(R.id.tv_goods_mgr);
         mTvShopTodayTurnover=root.findViewById(R.id.tv_today_turnover);
         mTvShopTodayOrder=root.findViewById(R.id.tv_today_orders);
+        mTvShopStatistics=root.findViewById(R.id.tv_statistics);
 
         loadMerchantInfo();
     }
@@ -197,14 +199,22 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
 
+        RxView.clicks(mTvShopStatistics)
+                .throttleFirst(500,TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result->{
+                    ARouter.getInstance()
+                            .build(MerchantConstant.Router.SHOP_STATISTICS)
+                            .navigation();
+                },throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+
         RxView.clicks(mTvManagementDrink)
                 .throttleFirst(500,TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result->{
-                    // 强转 Activity 并调用切换方法
-                    if (getActivity() instanceof MerchantActivity) {
-                        ((MerchantActivity) getActivity()).changeTab(1); // 1 对应商品 Tab
-                    }
+                    
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });

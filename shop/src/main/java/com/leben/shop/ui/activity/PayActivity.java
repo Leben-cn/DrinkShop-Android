@@ -4,13 +4,13 @@ import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.leben.common.util.UserUtils;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.activity.BaseActivity;
@@ -29,15 +29,13 @@ import com.leben.common.model.bean.ShopEntity;
 import com.leben.shop.presenter.SubmitOrderPresenter;
 import com.leben.shop.ui.adapter.PayAdapter;
 import com.leben.shop.ui.dialog.RemarkDialog;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
+import com.leben.common.model.bean.LoginEntity;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -261,6 +259,11 @@ public class PayActivity extends BaseActivity implements SubmitOrderContract.Vie
             orderEntity.setReceiverName(address.getContactName());
             orderEntity.setReceiverPhone(address.getContactPhone());
             orderEntity.setReceiverAddress(address.getAddressPoi() + address.getAddressDetail());
+            LoginEntity.UserInfo myInfo = UserUtils.getUserInfo(this);
+            if (myInfo != null) {
+                orderEntity.setReceiverImg(myInfo.getAvatar());
+            }
+
 
         }
     }

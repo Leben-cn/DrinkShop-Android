@@ -219,4 +219,13 @@ public class TitleBar extends ConstraintLayout {
             mIvBack.setOnClickListener(listener);
         }
     }
+
+    /**
+     * 修改中间标题的颜色
+     */
+    public void setTitleColor(int color) {
+        if (mTvCenterTitle != null) {
+            mTvCenterTitle.setTextColor(color);
+        }
+    }
 }

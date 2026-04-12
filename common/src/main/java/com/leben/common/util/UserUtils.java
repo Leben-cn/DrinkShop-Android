@@ -1,11 +1,11 @@
-package com.leben.user.util;
+package com.leben.common.util;
 
 import android.content.Context;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.leben.base.util.SharedPreferencesUtils;
 import com.leben.common.Constant.CommonConstant;
-import com.leben.user.model.bean.LoginEntity;
+import com.leben.common.model.bean.LoginEntity;
 
 public class UserUtils {
     /**

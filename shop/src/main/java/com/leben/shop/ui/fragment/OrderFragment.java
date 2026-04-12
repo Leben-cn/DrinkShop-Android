@@ -2,26 +2,20 @@ package com.leben.shop.ui.fragment;
 
 import android.view.View;
 import android.widget.ImageView;
-
 import androidx.fragment.app.Fragment;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.leben.base.ui.fragment.BaseTabFragment;
 import com.leben.base.widget.titleBar.TitleBar;
 import com.leben.common.Constant.CommonConstant;
 import com.leben.shop.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Route(path = CommonConstant.Router.ORDER)
 public class OrderFragment extends BaseTabFragment {
+
     private TitleBar titleBar;
     private ImageView searchIcon;
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.shop_frag_order;
-    }
 
     @Override
     public void initView(View root) {
@@ -29,6 +23,7 @@ public class OrderFragment extends BaseTabFragment {
         titleBar=root.findViewById(R.id.title_bar);
         titleBar.setBackVisible(false);
         titleBar.setTitle("订单");
+        titleBar.setBackgroundResource(R.color.white);
         searchIcon = new ImageView(getContext());
         searchIcon.setImageResource(R.drawable.ic_search);
         titleBar.addRightView(searchIcon);
@@ -63,8 +58,23 @@ public class OrderFragment extends BaseTabFragment {
     }
 
     @Override
-    protected int getStatusBarColor() {
-        return com.leben.base.R.color.white;
+    protected int getTabBackgroundColor() {
+        return R.color.white;
+    }
+
+    @Override
+    protected int getSelectedTextColor() {
+        return R.color.orange_500;
+    }
+
+    @Override
+    protected int getTabIndicatorColor() {
+        return R.color.orange_500;
+    }
+
+    @Override
+    protected int getNormalTextColor() {
+        return R.color.black;
     }
 
 }

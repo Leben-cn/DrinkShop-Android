@@ -1,4 +1,4 @@
-package com.leben.user.model.bean;
+package com.leben.common.model.bean;
 
 public class LoginEntity {
 

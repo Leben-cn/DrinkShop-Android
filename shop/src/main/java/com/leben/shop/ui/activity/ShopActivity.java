@@ -389,4 +389,28 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
         LogUtils.error("收藏/取消收藏失败："+errorMsg);
     }
 
+    @Override
+    protected boolean hideTitleBar() {
+        return false;
+    }
+    @Override
+    protected int getTabBackgroundColor() {
+        return R.color.white;
+    }
+
+    @Override
+    protected int getSelectedTextColor() {
+        return R.color.orange_500;
+    }
+
+    @Override
+    protected int getTabIndicatorColor() {
+        return R.color.orange_500;
+    }
+
+    @Override
+    protected int getNormalTextColor() {
+        return R.color.black;
+    }
+
 }

@@ -12,5 +12,6 @@ public interface MerchantConstant {
         String DRINK_EDIT="/merchant/edit/drink";
         String CATEGORY_EDIT="/merchant/edit/shop/category";
         String SETTING="/merchant/shop/setting";
+        String SHOP_STATISTICS="/merchant/shop/statistics";
     }
 }

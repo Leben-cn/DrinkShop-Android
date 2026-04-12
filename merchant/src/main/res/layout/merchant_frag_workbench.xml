@@ -352,7 +352,7 @@
                     <TextView
                         android:id="@+id/tv_goods_mgr"
                         style="@style/MerchantGridButtonStyle"
-                        android:text="商品管理"
+                        android:text="钱包"
                         android:paddingTop="16dp"
                         android:paddingBottom="16dp"
                         android:drawableTop="@mipmap/ic_order" />

@@ -1,9 +1,7 @@
 package com.leben.shop.ui.fragment;
 
 import android.annotation.SuppressLint;
-
 import androidx.fragment.app.DialogFragment;
-
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
@@ -12,7 +10,6 @@ import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.dialog.CommonDialog;
 import com.leben.common.LocationManager;
-import com.leben.shop.R;
 import com.leben.shop.constant.ShopConstant;
 import com.leben.shop.contract.CancelOrderContract;
 import com.leben.shop.contract.GetAllOrderContract;
@@ -23,6 +20,10 @@ import com.leben.shop.ui.adapter.OrderAdapter;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+
+/**
+ * Created by youjiahui on 2026/4/12.
+ */
 
 public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implements GetAllOrderContract.View,
         CancelOrderContract.View {

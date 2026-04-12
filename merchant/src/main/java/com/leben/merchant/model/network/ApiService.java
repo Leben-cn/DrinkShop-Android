@@ -102,4 +102,10 @@ public interface ApiService {
     Flowable<CommonEntity<Map<String, Object>>> getShopTodayStats(
     );
 
+    //用于店铺经营页面
+    @GET("/merchant/order/list")
+    Flowable<CommonEntity<List<OrderEntity>>> getOrderByDate(
+            @Query("dateStr") String dateStr
+    );
+
 }

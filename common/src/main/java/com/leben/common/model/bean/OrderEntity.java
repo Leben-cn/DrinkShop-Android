@@ -32,6 +32,7 @@ public class OrderEntity implements Serializable {
     private String receiverName;
     private String receiverPhone;
     private String receiverAddress;     // 完整地址 (如: 桐树坞后山)
+    private String receiverImg;
 
     private Boolean isComment;
 
@@ -192,5 +193,13 @@ public class OrderEntity implements Serializable {
 
     public void setComment(Boolean comment) {
         isComment = comment;
+    }
+
+    public String getReceiverImg() {
+        return receiverImg;
+    }
+
+    public void setReceiverImg(String receiverImg) {
+        this.receiverImg = receiverImg;
     }
 }

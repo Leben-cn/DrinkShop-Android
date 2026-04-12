@@ -8,8 +8,11 @@ import com.leben.shop.contract.GetNoCommentOrderContract;
 import com.leben.common.model.bean.OrderEntity;
 import com.leben.shop.presenter.GetNoCommentOrderPresenter;
 import com.leben.shop.ui.adapter.OrderAdapter;
-
 import java.util.List;
+
+/**
+ * Created by youjiahui on 2026/4/12.
+ */
 
 public class OrderNoCommentFragment extends BaseRecyclerFragment<OrderEntity> implements GetNoCommentOrderContract.View {
 
@@ -50,5 +53,21 @@ public class OrderNoCommentFragment extends BaseRecyclerFragment<OrderEntity> im
     public void onGetNoCommentOrderFailed(String errorMsg) {
         refreshListFailed("获取订单失败");
         showError("获取订单失败："+errorMsg);
+    }
+
+    @Override
+    protected int getStatusBarColor() {
+        return com.leben.base.R.color.white;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        autoRefresh();
+    }
+
+    @Override
+    protected boolean shouldAddDefaultSpaceDecoration() {
+        return false;
     }
 }

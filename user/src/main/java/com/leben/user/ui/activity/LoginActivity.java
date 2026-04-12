@@ -20,7 +20,7 @@ import com.leben.common.Constant.CommonConstant;
 import com.leben.user.R;
 import com.leben.user.constant.UserConstant;
 import com.leben.user.contract.LoginContract;
-import com.leben.user.model.bean.LoginEntity;
+import com.leben.common.model.bean.LoginEntity;
 import com.leben.user.presenter.LoginPresenter;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import java.util.ArrayList;

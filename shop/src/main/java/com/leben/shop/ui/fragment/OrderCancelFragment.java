@@ -1,7 +1,6 @@
 package com.leben.shop.ui.fragment;
 
 import android.annotation.SuppressLint;
-
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
@@ -15,8 +14,11 @@ import com.leben.shop.presenter.GetCancelOrderPresenter;
 import com.leben.shop.ui.adapter.OrderAdapter;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
+
+/**
+ * Created by youjiahui on 2026/4/12.
+ */
 
 public class OrderCancelFragment extends BaseRecyclerFragment<OrderEntity> implements GetCancelOrderContract.View {
 
@@ -87,5 +89,21 @@ public class OrderCancelFragment extends BaseRecyclerFragment<OrderEntity> imple
     public void onGetCancelOrderFailed(String errorMsg) {
         refreshListFailed("获取订单失败");
         showError("获取订单失败"+errorMsg);
+    }
+
+    @Override
+    protected int getStatusBarColor() {
+        return com.leben.base.R.color.white;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        autoRefresh();
+    }
+
+    @Override
+    protected boolean shouldAddDefaultSpaceDecoration() {
+        return false;
     }
 }
