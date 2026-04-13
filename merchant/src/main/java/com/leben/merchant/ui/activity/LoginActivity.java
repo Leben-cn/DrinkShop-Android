@@ -15,7 +15,7 @@ import com.leben.base.util.LogUtils;
 import com.leben.base.util.SharedPreferencesUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.titleBar.TitleBar;
-import com.leben.common.Constant.CommonConstant;
+import com.leben.common.constant.CommonConstant;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
 import com.leben.merchant.contract.LoginContract;

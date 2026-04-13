@@ -1,8 +1,13 @@
 package com.leben.base.ui.fragment;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
@@ -15,22 +20,19 @@ import java.util.List;
 
 /**
  * 通用的 Tab + ViewPager Fragment 基类
- * 用于 Fragment 嵌套 Fragment 的场景
+ * Created by youjiahui on 2026/4/12.
  */
 public abstract class BaseTabFragment extends BaseFragment {
 
     protected ViewPager2 mViewPager;
     protected TabLayout mTabLayout;
-    protected TitleBar mTitleBar; // 假设你的 TitleBar 类名是这个
-    protected View mTabDivider; // 定义分割线变量
+    protected TitleBar mTitleBar;
+    protected View mTabDivider;
 
     @Override
     protected int getLayoutId() {
-        if (isTabTop()) {
-            return R.layout.ac_base_tab_top;
-        } else {
-            return R.layout.ac_base_tab_bottom;
-        }
+        // 使用与 Activity 相同的布局资源
+        return isTabTop() ? R.layout.ac_base_tab_top : R.layout.ac_base_tab_bottom;
     }
 
     @Override
@@ -38,178 +40,147 @@ public abstract class BaseTabFragment extends BaseFragment {
         mViewPager = root.findViewById(R.id.base_view_pager);
         mTabLayout = root.findViewById(R.id.base_tab_layout);
         mTitleBar = root.findViewById(R.id.title_bar);
-        mTabDivider = root.findViewById(R.id.tab_divider); // 初始化
+        mTabDivider = root.findViewById(R.id.tab_divider);
 
-        // 控制分割线显示隐藏
         if (mTabDivider != null) {
             mTabDivider.setVisibility(showTabDivider() ? View.VISIBLE : View.GONE);
         }
 
-        // 1. 获取子 Fragment 数据
-        List<Fragment> fragments = getFragments();
-        List<String> titles = getTitles();
-        List<Integer> icons = getTabIcons();
-
         mTabLayout.setBackgroundColor(resolveColor(getTabBackgroundColor()));
-        mTabLayout.setSelectedTabIndicatorColor(resolveColor(getTabIndicatorColor()));
+        mTabLayout.setTabIconTint(null); // 允许图标使用原始颜色
+        mTabLayout.setTabRippleColor(ColorStateList.valueOf(Color.TRANSPARENT)); // 去除点击阴影
 
-        // 文字颜色同理
-        mTabLayout.setTabTextColors(resolveColor(getNormalTextColor()), resolveColor(getSelectedTextColor()));
-
-        // 4. 设置图标着色（如果有图标的话）
-        // mTabLayout.setTabIconTint(ColorStateList.valueOf(getSelectedTextColor()));
-
-        if (isTabCenter()) {
-            // 1. 关键：宽度依然铺满全屏，这样背景色就能铺满全屏
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mTabLayout.getLayoutParams();
-            params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-            mTabLayout.setLayoutParams(params);
-
-            // 2. 设置模式为 FIXED（固定模式，不滚动）
-            mTabLayout.setTabMode(TabLayout.MODE_FIXED);
-
-            // 3. 设置 Gravity 为 CENTER，让 Tab 整体在内部居中，而不是填满
-            mTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
-
-            // 4. (可选) 如果你想让 Tab 之间更紧凑，可以加上：
-            // mTabLayout.setInlineLabel(true); // 图标文字一行显示
+        if (hideTabIndicator()) {
+            mTabLayout.setSelectedTabIndicatorHeight(0);
         } else {
-            // 默认模式：填满全屏
-            mTabLayout.setTabMode(TabLayout.MODE_FIXED);
-            mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            mTabLayout.setSelectedTabIndicatorColor(resolveColor(getTabIndicatorColor()));
         }
 
-        if (fragments == null || fragments.isEmpty()) {
-            return;
-        }
+        setupTabLayoutStyle();
 
-        if (showTitleBar()) {
-            mTitleBar.setVisibility(View.VISIBLE);
-        }
+        setupTitleBar();
 
-        // 2. 设置 Adapter
-        // 传入 'this' (当前Fragment)，而不是 getActivity()
-        CommonFragmentAdapter adapter = new CommonFragmentAdapter(this, fragments);
-        mViewPager.setAdapter(adapter);
+        List<Fragment> fragments = getFragments();
+        if (fragments == null || fragments.isEmpty()) return;
 
-        // 3. 是否允许滑动
+        // 注意：Fragment 嵌套 Fragment 必须使用 this (ChildFragmentManager)
+        mViewPager.setAdapter(new CommonFragmentAdapter(this, fragments));
         mViewPager.setUserInputEnabled(isSwipeEnabled());
-
-        // 4. 预加载策略 (可选，根据需要开启，防止切换时销毁)
         mViewPager.setOffscreenPageLimit(fragments.size());
 
-        // 5. 绑定 TabLayout 和 ViewPager2
         new TabLayoutMediator(mTabLayout, mViewPager, (tab, position) -> {
+            View view = LayoutInflater.from(requireContext()).inflate(R.layout.layout_custom_tab, null);
+            // 修正垂直方向边距
+            view.setPadding(view.getPaddingLeft(), dp2px(8), view.getPaddingRight(), dp2px(8));
+
+            ImageView tabIcon = view.findViewById(R.id.tab_icon);
+            TextView tabText = view.findViewById(R.id.tab_text);
+
             if (getTitles() != null && position < getTitles().size()) {
-                tab.setText(getTitles().get(position));
+                tabText.setText(getTitles().get(position));
             }
-            if (getTabIcons() != null && position < getTabIcons().size()) {
-                tab.setIcon(getTabIcons().get(position));
+            List<Integer> icons = getTabIcons();
+            if (icons != null && position < icons.size() && icons.get(position) != 0) {
+                tabIcon.setVisibility(View.VISIBLE);
+                tabIcon.setImageResource(icons.get(position));
+                // 设置图标大小
+                tabIcon.getLayoutParams().width = dp2px(getTabIconSize());
+                tabIcon.getLayoutParams().height = dp2px(getTabIconSize());
+            } else {
+                tabIcon.setVisibility(View.GONE);
             }
+
+            // 设置文字颜色状态
+            tabText.setTextColor(createTabColorStateList(
+                    resolveColor(getNormalTextColor()),
+                    resolveColor(getSelectedTextColor())
+            ));
+
+            // 设置大小
+            tabText.setTextSize(TypedValue.COMPLEX_UNIT_SP, getTabTextSize());
+            tabIcon.getLayoutParams().width = dp2px(getTabIconSize());
+            tabIcon.getLayoutParams().height = dp2px(getTabIconSize());
+
+            tab.setCustomView(view);
         }).attach();
 
-        // 6. 处理点击动画
         handleTabClickAnimation();
     }
 
-    @Override
-    public void initData() {
+    private void setupTabLayoutStyle() {
+        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+        if (isTabCenter()) {
+            mTabLayout.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
+            mTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+        } else {
+            mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        }
     }
 
-    protected abstract List<Fragment> getFragments();
-
-    protected abstract List<String> getTitles();
-
-    protected List<Integer> getTabIcons() {
-        return null;
-    }
-
-    protected boolean isTabTop() {
-        return true;
-    }
-
-    protected boolean isSwipeEnabled() {
-        return false;
+    private void setupTitleBar() {
+        if (mTitleBar == null) return;
+        int heightValue = getTitleBarHeight();
+        if (heightValue != -2) {
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mTitleBar.getLayoutParams();
+            lp.height = (heightValue == -1) ? -1 : dp2px(heightValue);
+            mTitleBar.setLayoutParams(lp);
+        }
+        mTitleBar.setVisibility(hideTitleBar() ? View.GONE : View.VISIBLE);
     }
 
     private void handleTabClickAnimation() {
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                // 如果需要点击切换无动画，保持 false；若需要平滑滚动，改为 true
                 mViewPager.setCurrentItem(tab.getPosition(), false);
             }
-
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
+            public void onTabUnselected(TabLayout.Tab tab) {}
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
     }
 
-    /**
-     * 是否显示标题栏，子类重写返回 true 即可显示
-     */
-    protected boolean showTitleBar() {
-        return false;
-    }
+    protected abstract List<Fragment> getFragments();
+    protected abstract List<String> getTitles();
+    protected List<Integer> getTabIcons() { return null; }
 
-    /**
-     * 默认 Tab 背景颜色 (默认白色)
-     */
-    protected int getTabBackgroundColor() {
-        return R.color.grey_100;
-    }
+    protected int getTabTextSize() { return 12; }
+    protected int getTabIconSize() { return 24; }
+    protected int getSelectedTextColor() { return Color.parseColor("#1890FF"); }
+    protected int getNormalTextColor() { return Color.parseColor("#666666"); }
+    protected int getTabIndicatorColor() { return Color.parseColor("#1890FF"); }
+    protected int getTabBackgroundColor() { return R.color.white; }
+    protected boolean isTabTop() { return true; }
+    protected boolean isTabCenter() { return false; }
+    protected boolean isSwipeEnabled() { return false; }
+    protected boolean hideTitleBar() { return true; }
+    protected boolean hideTabIndicator() { return false; }
+    protected boolean showTabDivider() { return true; }
+    /** -2: 默认, -1: Match_Parent, >0: dp数值 */
+    protected int getTitleBarHeight() { return -2; }
 
-    /**
-     * 默认指示器颜色 (下划线)
-     */
-    protected int getTabIndicatorColor() {
-        return Color.parseColor("#1890FF"); // 默认蓝色
-    }
-
-    /**
-     * 默认文字未选中颜色
-     */
-    protected int getNormalTextColor() {
-        return Color.parseColor("#666666"); // 默认灰色
-    }
-
-    /**
-     * 默认文字选中颜色
-     */
-    protected int getSelectedTextColor() {
-        return Color.parseColor("#1890FF"); // 默认蓝色
-    }
-
-    /**
-     * 辅助方法：简单判断是 ID 还是 颜色值并返回颜色
-     */
+    // --- 工具方法 ---
     private int resolveColor(int colorOrResId) {
         try {
-            // 尝试当做资源 ID 获取
             return ContextCompat.getColor(requireContext(), colorOrResId);
         } catch (Exception e) {
-            // 如果报错，说明它本身就是一个颜色整数值（如 Color.WHITE）
             return colorOrResId;
         }
     }
 
-    /**
-     * 是否让 Tab 居中且不充满全屏
-     * 子类返回 true 即可切换到居中模式
-     */
-    protected boolean isTabCenter() {
-        return false;
+    protected int dp2px(float dpValue) {
+        float scale = getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
     }
 
-    /**
-     * 是否显示 Tab 下方的分割线
-     * 默认显示，子类重写返回 false 即可隐藏
-     */
-    protected boolean showTabDivider() {
-        return true;
+    private ColorStateList createTabColorStateList(int normal, int selected) {
+        return new ColorStateList(
+                new int[][]{{android.R.attr.state_selected}, {}},
+                new int[]{selected, normal}
+        );
     }
+
+    @Override public void initData() {}
 }

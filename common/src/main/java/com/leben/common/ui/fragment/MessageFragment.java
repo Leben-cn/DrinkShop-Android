@@ -3,7 +3,7 @@ package com.leben.common.ui.fragment;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.ui.fragment.BaseRecyclerFragment;
-import com.leben.common.Constant.CommonConstant;
+import com.leben.common.constant.CommonConstant;
 import com.leben.common.model.bean.MessageEntity;
 
 @Route(path = CommonConstant.Router.MESSAGE)

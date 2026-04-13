@@ -12,7 +12,7 @@ import com.leben.base.ui.fragment.BaseFragment;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.SharedPreferencesUtils;
 import com.leben.base.widget.dialog.CommonDialog;
-import com.leben.common.Constant.CommonConstant;
+import com.leben.common.constant.CommonConstant;
 import com.leben.common.model.bean.LoginEntity;
 import com.leben.common.util.UserUtils;
 import com.leben.user.R;

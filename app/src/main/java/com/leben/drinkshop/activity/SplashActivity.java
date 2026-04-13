@@ -7,7 +7,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.leben.base.ui.activity.BaseActivity;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.SharedPreferencesUtils;
-import com.leben.common.Constant.CommonConstant;
+import com.leben.common.constant.CommonConstant;
 import com.leben.drinkshop.R;
 import com.leben.drinkshop.constant.AppConstant;
 

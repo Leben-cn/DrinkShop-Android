@@ -16,7 +16,7 @@ import com.leben.base.ui.activity.BaseActivity;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.SharedPreferencesUtils;
 import com.leben.base.util.ToastUtils;
-import com.leben.common.Constant.CommonConstant;
+import com.leben.common.constant.CommonConstant;
 import com.leben.user.R;
 import com.leben.user.constant.UserConstant;
 import com.leben.user.contract.LoginContract;

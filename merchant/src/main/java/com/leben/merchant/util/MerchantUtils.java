@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.leben.base.util.SharedPreferencesUtils;
-import com.leben.common.Constant.CommonConstant;
+import com.leben.common.constant.CommonConstant;
 import com.leben.merchant.model.bean.LoginEntity;
 
 public class MerchantUtils {

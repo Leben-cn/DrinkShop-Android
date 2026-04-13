@@ -413,4 +413,5 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
         return R.color.black;
     }
 
+
 }

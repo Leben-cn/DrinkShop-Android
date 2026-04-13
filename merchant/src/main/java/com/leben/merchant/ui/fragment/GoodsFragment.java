@@ -11,7 +11,7 @@ import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.ui.fragment.BaseRecyclerFragment;
 import com.leben.base.util.LogUtils;
 import com.leben.base.widget.titleBar.TitleBar;
-import com.leben.common.Constant.CommonConstant;
+import com.leben.common.constant.CommonConstant;
 import com.leben.common.model.bean.DrinkEntity;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
@@ -60,6 +60,7 @@ public class GoodsFragment extends BaseRecyclerFragment<DrinkEntity> implements 
 
     @Override
     protected void initView(View root) {
+        setDefaultSpace(10);
         super.initView(root);
         TitleBar titleBar=root.findViewById(R.id.title_bar);
         mIvAddDrink=new ImageView(getContext());

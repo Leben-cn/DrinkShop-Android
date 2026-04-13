@@ -12,7 +12,7 @@ import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.ui.fragment.BaseRecyclerFragment;
 import com.leben.base.util.LogUtils;
 import com.leben.base.widget.titleBar.TitleBar;
-import com.leben.common.Constant.CommonConstant;
+import com.leben.common.constant.CommonConstant;
 import com.leben.common.LocationManager;
 import com.leben.shop.R;
 import com.leben.shop.constant.ShopConstant;

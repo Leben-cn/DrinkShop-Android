@@ -10,6 +10,7 @@ import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.dialog.CommonDialog;
 import com.leben.common.LocationManager;
+import com.leben.common.constant.CommonConstant;
 import com.leben.shop.constant.ShopConstant;
 import com.leben.shop.contract.CancelOrderContract;
 import com.leben.shop.contract.GetAllOrderContract;
@@ -71,7 +72,7 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
                 @Override
                 public void onGoToComment(OrderEntity order) {
                     ARouter.getInstance()
-                            .build(ShopConstant.Router.USER_COMMENT)
+                            .build(CommonConstant.Router.USER_COMMENT)
                             .withSerializable("order", order)
                             .navigation();
                 }

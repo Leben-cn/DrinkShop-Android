@@ -83,8 +83,15 @@ public abstract class BaseTabActivity extends BaseActivity {
             if (getTitles() != null && position < getTitles().size()) {
                 tabText.setText(getTitles().get(position));
             }
-            if (getTabIcons() != null && position < getTabIcons().size()) {
-                tabIcon.setImageResource(getTabIcons().get(position));
+            List<Integer> icons = getTabIcons();
+            if (icons != null && position < icons.size() && icons.get(position) != 0) {
+                tabIcon.setVisibility(View.VISIBLE);
+                tabIcon.setImageResource(icons.get(position));
+                // 设置图标大小
+                tabIcon.getLayoutParams().width = dp2px(getTabIconSize());
+                tabIcon.getLayoutParams().height = dp2px(getTabIconSize());
+            } else {
+                tabIcon.setVisibility(View.GONE);
             }
 
             // 设置文字颜色状态

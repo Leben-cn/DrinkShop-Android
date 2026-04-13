@@ -1,4 +1,4 @@
-package com.leben.common.Constant;
+package com.leben.common.constant;
 
 public interface CommonConstant {
     interface Key{
@@ -18,6 +18,7 @@ public interface CommonConstant {
         String GOODS="/merchant/goods";
         String MERCHANT_CENTER="/merchant/center";
         String USER_LOGIN="/user/login";
+        String USER_COMMENT="/user/comment";
     }
 
 }

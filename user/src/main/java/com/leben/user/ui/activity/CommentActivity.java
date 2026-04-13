@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -17,25 +16,24 @@ import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.titleBar.TitleBar;
+import com.leben.common.constant.CommonConstant;
 import com.leben.common.model.bean.OrderEntity;
 import com.leben.common.model.bean.OrderItemEntity;
 import com.leben.common.util.ImagePickerHelper;
 import com.leben.common.util.PermissionDialogHelper;
 import com.leben.user.R;
-import com.leben.user.constant.UserConstant;
 import com.leben.user.contract.SubmitCommentContract;
 import com.leben.user.model.bean.CommentSubmitEntity;
 import com.leben.user.presenter.SubmitCommentPresenter;
 import com.leben.user.ui.adapter.CommentItemAdapter;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-@Route(path = UserConstant.Router.COMMENT)
+@Route(path = CommonConstant.Router.USER_COMMENT)
 public class CommentActivity extends BaseRecyclerActivity<OrderItemEntity> implements SubmitCommentContract.View {
 
     private TitleBar titleBar;
@@ -80,7 +78,7 @@ public class CommentActivity extends BaseRecyclerActivity<OrderItemEntity> imple
         ivSelectedPhoto=findViewById(R.id.iv_selected_photo);
 
         if (titleBar != null) {
-            titleBar.setTitle("");
+            titleBar.setTitle("用餐评价");
         }
 
         imagePickerHelper=new ImagePickerHelper(this,path -> {

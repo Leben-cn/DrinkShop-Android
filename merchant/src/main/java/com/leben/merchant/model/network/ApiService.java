@@ -1,5 +1,6 @@
 package com.leben.merchant.model.network;
 
+import com.leben.common.model.bean.CommentEntity;
 import com.leben.common.model.bean.CommonEntity;
 import com.leben.common.model.bean.DrinkEntity;
 import com.leben.common.model.bean.OrderEntity;
@@ -113,6 +114,9 @@ public interface ApiService {
     Flowable<CommonEntity<BigDecimal>> getShopRevenue(
     );
 
-
+    @GET("/shops/comment/list")
+    Flowable<CommonEntity<List<CommentEntity>>> getShopComment(
+            @Query("shopId") Long shopId
+    );
 
 }

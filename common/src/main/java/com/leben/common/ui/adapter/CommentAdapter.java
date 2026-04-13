@@ -17,6 +17,8 @@ public class CommentAdapter extends BaseRecyclerAdapter<CommentEntity> {
     // 1. 定义页面类型常量
     public static final int TYPE_MY_COMMENT = 1;   // "我的评价"页面 (显示商家信息，可能有删除按钮)
     public static final int TYPE_SHOP_COMMENT = 2; // "商家详情"页面 (显示用户信息)
+    public static final int TYPE_MANAGEMENT_COMMENT=3;//商家管理评价页面
+    public static final int TYPE_WAIT_REVIEW=4;//商家待审核评论
 
     private int pageType;
 
@@ -66,6 +68,9 @@ public class CommentAdapter extends BaseRecyclerAdapter<CommentEntity> {
                     .setAllCornerSizes(ShapeAppearanceModel.PILL) // 或者 setAllCornerSizes(50%)
                     .build();
             ivAvatar.setShapeAppearanceModel(circleModel);
+        }else if(pageType== TYPE_MANAGEMENT_COMMENT){
+            holder.setImageUrl(R.id.iv_avatar, data.getUserAvatar());
+            holder.setText(R.id.tv_user_merchant_name, data.getUserName());
         }
         if(data.getPicture()!=null){
             holder.getView(R.id.iv_comment_pic).setVisibility(View.VISIBLE);

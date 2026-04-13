@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.leben.base.ui.fragment.BaseTabFragment;
 import com.leben.base.widget.titleBar.TitleBar;
-import com.leben.common.Constant.CommonConstant;
+import com.leben.common.constant.CommonConstant;
 import com.leben.shop.R;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,4 +77,18 @@ public class OrderFragment extends BaseTabFragment {
         return R.color.black;
     }
 
+    @Override
+    protected boolean isTabCenter() {
+        return true;
+    }
+
+    @Override
+    protected boolean hideTitleBar() {
+        return false;
+    }
+
+    @Override
+    protected int getTabTextSize() {
+        return 14;
+    }
 }

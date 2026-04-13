@@ -10,15 +10,13 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.bumptech.glide.Glide;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.fragment.BaseRefreshFragment;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.SharedPreferencesUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.dialog.CommonDialog;
-import com.leben.common.Constant.CommonConstant;
-import com.leben.common.ui.activity.MerchantActivity;
+import com.leben.common.constant.CommonConstant;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
 import com.leben.merchant.contract.GetShopTodayStatsContract;
@@ -52,6 +50,7 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
     private LinearLayout llCancelOrder;
     private LinearLayout llDoneOrder;
     private LinearLayout llPendingOrder;
+    private LinearLayout llTodayDate;
     private TextView mTvShopSetting;
     private SwitchMaterial mSwitchStatus;
     private View mVStatusDot;
@@ -59,6 +58,9 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
     private TextView mTvShopTodayTurnover;
     private TextView mTvShopTodayOrder;
     private TextView mTvShopStatistics;
+    private TextView mTvManagementComment;
+
+    private Long shopId;
 
     @InjectPresenter
     UpdateShopStatusPresenter updateShopStatusPresenter;
@@ -96,6 +98,8 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
         mTvShopTodayTurnover=root.findViewById(R.id.tv_today_turnover);
         mTvShopTodayOrder=root.findViewById(R.id.tv_today_orders);
         mTvShopStatistics=root.findViewById(R.id.tv_statistics);
+        mTvManagementComment=root.findViewById(R.id.tv_comment_mgr);
+        llTodayDate=root.findViewById(R.id.ll_today_data);
 
         loadMerchantInfo();
     }
@@ -177,6 +181,18 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
+        RxView.clicks(mTvManagementComment)
+                .throttleFirst(500,TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result->{
+                    ARouter.getInstance()
+                            .build(MerchantConstant.Router.MANAGEMENT_COMMENT)
+                            .withLong("shopId",shopId)
+                            .navigation();
+                },throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+
         RxView.clicks(llPendingOrder)
                 .throttleFirst(500,TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -205,6 +221,39 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
                 .subscribe(result->{
                     ARouter.getInstance()
                             .build(MerchantConstant.Router.SHOP_STATISTICS)
+                            .navigation();
+                },throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+
+        RxView.clicks(llTodayDate)
+                .throttleFirst(500,TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result->{
+                    ARouter.getInstance()
+                            .build(MerchantConstant.Router.SHOP_STATISTICS)
+                            .navigation();
+                },throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+
+        RxView.clicks(mTvShopName)
+                .throttleFirst(500,TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result->{
+                    ARouter.getInstance()
+                            .build(MerchantConstant.Router.SETTING)
+                            .navigation();
+                },throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+
+        RxView.clicks(mIvShopAvatar)
+                .throttleFirst(500,TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result->{
+                    ARouter.getInstance()
+                            .build(MerchantConstant.Router.SETTING)
                             .navigation();
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
@@ -244,7 +293,7 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
         if (merchantInfo != null) {
             mTvShopName.setText(merchantInfo.getShopName());
             boolean isOpen = (merchantInfo.getStatus() != null && merchantInfo.getStatus() == 1);
-
+            shopId=merchantInfo.getId();
             // 初始化前先解除监听
             mSwitchStatus.setOnCheckedChangeListener(null);
             mSwitchStatus.setChecked(isOpen);

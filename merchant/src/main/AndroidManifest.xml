@@ -59,6 +59,13 @@
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
 
+        <activity android:name=".ui.activity.ManagementCommentActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity android:name=".ui.activity.WaitReviewActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
 
     </application>
 

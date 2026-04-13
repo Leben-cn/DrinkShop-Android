@@ -7,6 +7,7 @@ import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.ui.fragment.BaseRecyclerFragment;
 import com.leben.base.util.LogUtils;
 import com.leben.common.LocationManager;
+import com.leben.common.constant.CommonConstant;
 import com.leben.shop.constant.ShopConstant;
 import com.leben.shop.contract.GetCancelOrderContract;
 import com.leben.common.model.bean.OrderEntity;
@@ -53,7 +54,7 @@ public class OrderCancelFragment extends BaseRecyclerFragment<OrderEntity> imple
                 @Override
                 public void onGoToComment(OrderEntity order) {
                     ARouter.getInstance()
-                            .build(ShopConstant.Router.USER_COMMENT)
+                            .build(CommonConstant.Router.USER_COMMENT)
                             .withSerializable("order", order)
                             .navigation();
                 }
