@@ -143,5 +143,25 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseVi
         this.mOnItemClickListener = listener;
     }
 
+    /**
+     * 在集合末尾添加单个数据
+     * 常用于聊天室实时收到新消息
+     */
+    public void addData(T data) {
+        if (data != null) {
+            int position = mList.size(); // 获取插入前的位置
+            mList.add(data);
+            // 通知适配器在内容列表的末尾插入了数据
+            // 注意：如果你有 Footer，新数据是插在 Footer 之前的
+            notifyItemInserted(position);
+        }
+    }
 
+    /**
+     * 清除所有数据
+     */
+    public void clear() {
+        mList.clear();
+        notifyDataSetChanged();
+    }
 }

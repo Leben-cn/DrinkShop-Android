@@ -6,6 +6,11 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.leben.base.ui.activity.BaseTabActivity;
 import com.leben.common.constant.CommonConstant;
 import com.leben.common.R;
+import com.leben.common.model.event.UpdateTabUnreadEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +22,20 @@ import java.util.List;
 public class CustomerActivity extends BaseTabActivity {
 
     @Override
+    public void onInit() {
+        super.onInit();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
     protected List<Fragment> getFragments() {
         List<Fragment> fragmentList = new ArrayList<>();
         //使用 ARouter 获取实例
         Fragment recommendDrinksFragment = (Fragment) ARouter.getInstance().build(CommonConstant.Router.RECOMMEND_DRINKS).navigation();
         Fragment orderFragment = (Fragment) ARouter.getInstance().build(CommonConstant.Router.ORDER).navigation();
-        Fragment messageFragment = (Fragment) ARouter.getInstance().build(CommonConstant.Router.MESSAGE).navigation();
+        Fragment sessionListFragment = (Fragment) ARouter.getInstance().build(CommonConstant.Router.SESSION_LIST).navigation();
         Fragment userCenterFragment = (Fragment) ARouter.getInstance().build(CommonConstant.Router.USER_CENTER).navigation();
 
         if (recommendDrinksFragment != null) {
@@ -31,8 +44,8 @@ public class CustomerActivity extends BaseTabActivity {
         if (orderFragment != null) {
             fragmentList.add(orderFragment);
         }
-        if (messageFragment != null) {
-            fragmentList.add(messageFragment);
+        if (sessionListFragment != null) {
+            fragmentList.add(sessionListFragment);
         }
         if (userCenterFragment != null) {
             fragmentList.add(userCenterFragment);
@@ -78,5 +91,23 @@ public class CustomerActivity extends BaseTabActivity {
     @Override
     protected int getTabIconSize() {
         return 28;
+    }
+
+    /**
+     * Tab 未读数回调
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUnReadMessageEvent(UpdateTabUnreadEvent event) {
+        if (event != null) {
+            setTabUnread(2, event.getUnreadCount());
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 }

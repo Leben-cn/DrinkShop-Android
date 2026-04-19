@@ -19,7 +19,7 @@ import com.leben.merchant.contract.GetShopDrinkContract;
 import com.leben.merchant.model.event.RefreshDrinkListEvent;
 import com.leben.merchant.presenter.ShopDrinkPresenter;
 import com.leben.merchant.ui.adapter.DrinkAdapter;
-import com.leben.merchant.util.MerchantUtils;
+import com.leben.common.util.MerchantUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

@@ -56,4 +56,6 @@ dependencies {
 
     annotationProcessor 'com.alibaba:arouter-compiler:1.5.2'
 
+    implementation 'com.alibaba:fastjson:1.2.83'
+
 }

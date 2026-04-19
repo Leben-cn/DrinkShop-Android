@@ -69,7 +69,7 @@ public abstract class BaseTabFragment extends BaseFragment {
         mViewPager.setOffscreenPageLimit(fragments.size());
 
         new TabLayoutMediator(mTabLayout, mViewPager, (tab, position) -> {
-            View view = LayoutInflater.from(requireContext()).inflate(R.layout.layout_custom_tab, null);
+            View view = LayoutInflater.from(requireContext()).inflate(R.layout.ly_custom_tab, null);
             // 修正垂直方向边距
             view.setPadding(view.getPaddingLeft(), dp2px(8), view.getPaddingRight(), dp2px(8));
 
@@ -183,4 +183,24 @@ public abstract class BaseTabFragment extends BaseFragment {
     }
 
     @Override public void initData() {}
+
+    /**
+     * 设置指定 Tab 的未读数
+     * @param index Tab的索引（从0开始）
+     * @param count 未读数量
+     */
+    public void setTabUnread(int index, int count) {
+        TabLayout.Tab tab = mTabLayout.getTabAt(index);
+        if (tab != null && tab.getCustomView() != null) {
+            TextView tvUnread = tab.getCustomView().findViewById(R.id.tv_tab_unread);
+            if (tvUnread != null) {
+                if (count > 0) {
+                    tvUnread.setVisibility(View.VISIBLE);
+                    tvUnread.setText(count > 99 ? "99+" : String.valueOf(count));
+                } else {
+                    tvUnread.setVisibility(View.GONE);
+                }
+            }
+        }
+    }
 }

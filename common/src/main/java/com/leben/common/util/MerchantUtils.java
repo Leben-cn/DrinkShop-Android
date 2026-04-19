@@ -1,11 +1,11 @@
-package com.leben.merchant.util;
+package com.leben.common.util;
 
 import android.content.Context;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.leben.base.util.SharedPreferencesUtils;
 import com.leben.common.constant.CommonConstant;
-import com.leben.merchant.model.bean.LoginEntity;
+import com.leben.common.model.bean.LoginEntity;
 
 public class MerchantUtils {
     /**

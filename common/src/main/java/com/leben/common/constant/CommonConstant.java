@@ -9,16 +9,20 @@ public interface CommonConstant {
     }
     interface Router{
         String MERCHANT_TAB="/common/merchant/tab";
-        String MESSAGE="/common/message";
+        String SESSION_LIST="/common/session/list";
+        String CHAT_DETAIL="/common/chat/detail";
         String CUSTOMER_TAB="/common/customer/tab";
         String ORDER="/shop/orders";
         String RECOMMEND_DRINKS="/shop/drinks";
         String USER_CENTER="/user/center";
         String WORK_BENCH="/merchant/workbench";
         String GOODS="/merchant/goods";
-        String MERCHANT_CENTER="/merchant/center";
         String USER_LOGIN="/user/login";
         String USER_COMMENT="/user/comment";
+    }
+
+    interface URL{
+        String BASE_URL="192.168.3.101:8080";
     }
 
 }

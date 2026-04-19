@@ -154,4 +154,13 @@ public abstract class BaseRecyclerActivity<T> extends BaseRefreshActivity {
     protected boolean isSupportLoadMore() {
         return true;
     }
+
+    /**
+     * 强制显示内容区域（隐藏空布局/错误布局）
+     */
+    public void showContent() {
+        if (mStateController != null) {
+            mStateController.showContent();
+        }
+    }
 }

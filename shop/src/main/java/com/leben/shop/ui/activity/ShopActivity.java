@@ -18,6 +18,7 @@ import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.titleBar.TitleBar;
 import com.leben.common.LocationManager;
+import com.leben.common.constant.CommonConstant;
 import com.leben.shop.contract.CheckFavoriteContract;
 import com.leben.shop.contract.GetShopInfoContract;
 import com.leben.shop.contract.ToggleFavoriteContract;
@@ -131,20 +132,16 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
                 handleCartVisibility(position);
             }
         });
-        RxView.clicks(cartIcon) // 这里通常绑定整个购物车区域，或者是你的 cartIcon
+        RxView.clicks(cartIcon)
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread()) // 确保在主线程显示 UI
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(unit -> {
 
-                    // 1. 防御性判断：购物车没东西就不弹窗
                     if (CartController.getInstance().getTotalQuantity() <= 0) {
                         ToastUtils.show(this,"购物车空空如也");
                         return;
                     }
 
-                    // 2. 正确的调用方式
-                    // newInstance() 是静态方法，直接用类名调用
-                    // show() 需要传入 FragmentManager
                     CartDialog.newInstance()
                             .show(getSupportFragmentManager(), "dialog_cart");
 
@@ -154,11 +151,27 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
 
         RxView.clicks(submit)
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread()) // 确保在主线程显示 UI
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(unit->{
                     ARouter.getInstance()
                             .build(ShopConstant.Router.SHOP_PAY)
                             .withSerializable("shop",mShop)
+                            .navigation();
+                },throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+
+        RxView.clicks(ivMessage)
+                .throttleFirst(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(unit->{
+                    String roleStr = "MERCHANT";
+                    ARouter.getInstance()
+                            .build(CommonConstant.Router.CHAT_DETAIL)
+                            .withLong("targetId", mShop.getId()) // 注意：这里传的是对方真实的 ID
+                            .withString("targetName", mShop.getName())
+                            .withString("targetRoleStr", roleStr) // 传字符串
+                            .withString("targetIcon", mShop.getImg())
                             .navigation();
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());

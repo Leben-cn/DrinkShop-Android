@@ -1,4 +1,5 @@
 <resources>
+
     <style name="CircleImageStyle">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
@@ -12,5 +13,10 @@
     <style name="RatingBarColor" parent="Theme.AppCompat">
         <item name="colorControlNormal">#CCCCCC</item>
         <item name="colorControlActivated">#FFB800</item>
+    </style>
+
+    <style name="SquareImageStyle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
     </style>
 </resources>

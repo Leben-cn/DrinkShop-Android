@@ -11,5 +11,11 @@
             android:windowSoftInputMode="adjustPan"
             android:exported="true">
         </activity>
+
+        <activity
+            android:name="com.leben.common.ui.activity.ChatDetailActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:exported="true">
+        </activity>
     </application>
 </manifest>

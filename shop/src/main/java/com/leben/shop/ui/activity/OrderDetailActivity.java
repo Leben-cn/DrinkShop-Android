@@ -75,7 +75,7 @@ public class OrderDetailActivity extends BaseActivity {
                 break;
             case 1:
                 tvOrderTitle.setText("订单已完成");
-                tvOrderTip.setText("感谢您对本外卖平台的信任，期待再次光临");
+                tvOrderTip.setText("感谢您对本平台的信任，期待再次光临");
                 break;
             case 2:
                 tvOrderTitle.setText("订单已取消");

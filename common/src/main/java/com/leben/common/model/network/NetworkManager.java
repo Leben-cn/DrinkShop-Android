@@ -1,12 +1,14 @@
-package com.leben.shop.model.network;
+package com.leben.common.model.network;
 
 import android.text.TextUtils;
+
 import com.leben.base.BaseApplication;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.SharedPreferencesUtils;
 import com.leben.common.constant.CommonConstant;
 
 import java.io.IOException;
+
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -36,7 +38,7 @@ public class NetworkManager {
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         // 将日志拦截器添加到 builder
         builder.addInterceptor(loggingInterceptor);
-        // 添加 Token 拦截器
+        // 2. 添加 Token 拦截器
         builder.addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {

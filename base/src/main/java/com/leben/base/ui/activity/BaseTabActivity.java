@@ -15,6 +15,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.leben.base.R;
 import com.leben.base.ui.adapter.CommonFragmentAdapter;
+import com.leben.base.util.LogUtils;
 import com.leben.base.widget.titleBar.TitleBar;
 import java.util.List;
 
@@ -75,7 +76,7 @@ public abstract class BaseTabActivity extends BaseActivity {
 
         // 6. 绑定 TabLayout (使用自定义 View 方案)
         new TabLayoutMediator(mTabLayout, mViewPager, (tab, position) -> {
-            View view = LayoutInflater.from(this).inflate(R.layout.layout_custom_tab, null);
+            View view = LayoutInflater.from(this).inflate(R.layout.ly_custom_tab, null);
             view.setPadding(view.getPaddingLeft(), dp2px(8), view.getPaddingRight(), dp2px(8));
             ImageView tabIcon = view.findViewById(R.id.tab_icon);
             TextView tabText = view.findViewById(R.id.tab_text);
@@ -182,4 +183,20 @@ public abstract class BaseTabActivity extends BaseActivity {
 
     @Override public void initListener() {}
     @Override public void initData() {}
+
+    /**
+     * 设置指定 Tab 的未读数
+     * @param index Tab的索引（从0开始）
+     * @param count 未读数量
+     */
+    public void setTabUnread(int index, int count) {
+        TabLayout.Tab tab = mTabLayout.getTabAt(index);
+        if (tab != null && tab.getCustomView() != null) {
+            TextView tvUnread = tab.getCustomView().findViewById(R.id.tv_tab_unread);
+                if (tvUnread != null) {
+                    tvUnread.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+                    tvUnread.setText(count > 99 ? "99+" : String.valueOf(count));
+                }
+        }
+    }
 }

@@ -3,18 +3,16 @@ package com.leben.merchant.model.network;
 import com.leben.common.model.bean.CommentEntity;
 import com.leben.common.model.bean.CommonEntity;
 import com.leben.common.model.bean.DrinkEntity;
+import com.leben.common.model.bean.LoginEntity;
 import com.leben.common.model.bean.OrderEntity;
 import com.leben.common.model.bean.ShopCategoriesEntity;
 import com.leben.common.model.bean.SpecOptionEntity;
 import com.leben.merchant.model.bean.DrinkRequestEntity;
-import com.leben.merchant.model.bean.LoginEntity;
 import com.leben.merchant.model.bean.MerchantRegisterEntity;
 import com.leben.merchant.model.bean.MerchantInfoEntity;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-
 import io.reactivex.Flowable;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
