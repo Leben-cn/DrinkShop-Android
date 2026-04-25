@@ -15,8 +15,8 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_shop_logo"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:scaleType="centerCrop"
             android:src="@drawable/pic_no_shop"
             app:shapeAppearanceOverlay="@style/RoundedCornerImage"
@@ -54,7 +54,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
             app:layout_constraintStart_toStartOf="@+id/tv_shop_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_shop_name">
@@ -82,13 +82,12 @@
             android:id="@+id/tv_delivery_info"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:text="起送￥20  免配送费"
             android:textColor="#666666"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@+id/tv_shop_name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ll_info_1"/>
+            app:layout_constraintBottom_toBottomOf="@+id/iv_shop_logo" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_horizontal_products"
@@ -97,6 +96,7 @@
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@+id/iv_shop_logo"
+            android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 

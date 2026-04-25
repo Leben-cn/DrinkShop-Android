@@ -68,4 +68,5 @@ dependencies {
     //一行放不下自动换行
     api 'com.google.android.flexbox:flexbox:3.0.0'
 
+
 }

@@ -64,6 +64,7 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
     private TextView shopDes;
     private TextView shopSales;
     private TextView shopDistance;
+    private TextView shopScore;
 
     @InjectPresenter
     CheckFavoritePresenter checkFavoritePresenter;
@@ -104,8 +105,10 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
         shopLogo=findViewById(R.id.iv_shop_logo);
         shopName=findViewById(R.id.tv_shop_name);
         shopDes=findViewById(R.id.tv_shop_des);
+        shopDes.setSelected(true);
         shopSales=findViewById(R.id.tv_shop_sales);
         shopDistance=findViewById(R.id.tv_shop_distance);
+        shopScore=findViewById(R.id.tv_shop_score);
 
         // 初始化时手动获取一次状态，防止页面刚进来是空的
         updateCartUI(CartController.getInstance().getTotalQuantity(),
@@ -226,8 +229,7 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
     private void handleCartVisibility(int position) {
         if (mCartView == null) return;
 
-        // 获取 CoordinatorLayout (或者是你的 ViewPager) 的布局参数
-        View contentContainer = findViewById(R.id.coordinator); // 确保你在xml里给CoordinatorLayout加了这个id
+        View contentContainer = findViewById(R.id.coordinator);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) contentContainer.getLayoutParams();
 
         if (position == 0) {
@@ -244,7 +246,6 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
         contentContainer.setLayoutParams(params);
     }
 
-    // 3. 接收事件 (必须是 public void)
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCartEvent(CartEvent event) {
         updateCartUI(event.getTotalQuantity(), event.getTotalPrice());
@@ -379,6 +380,7 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
         shopDes.setText(mShop.getDescription());
         shopSales.setText(String.valueOf(mShop.getTotalSales()));
         shopDistance.setText(mShop.getDistance());
+        shopScore.setText(String.valueOf(mShop.getRating()));
     }
 
     @Override
@@ -426,5 +428,8 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
         return R.color.black;
     }
 
-
+    @Override
+    protected int getTabTextSize() {
+        return 14;
+    }
 }

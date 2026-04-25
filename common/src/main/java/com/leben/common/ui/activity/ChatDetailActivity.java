@@ -17,6 +17,7 @@ import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.SharedPreferencesUtils;
 import com.leben.base.widget.titleBar.TitleBar;
+import com.leben.common.BuildConfig;
 import com.leben.common.R;
 import com.leben.common.constant.CommonConstant;
 import com.leben.common.contract.GetMessageListContract;
@@ -139,7 +140,7 @@ public class ChatDetailActivity extends BaseRecyclerActivity<ChatMessageEntity> 
         // 这里的 URL 必须以 ws:// 或 wss:// 开头
         // 注意：后端 WS 地址是 /ws/chat?token=xxx
         Request request = new Request.Builder()
-                .url("ws://"+CommonConstant.URL.BASE_URL+"/ws/chat?token=" + token)
+                .url("ws://"+ BuildConfig.SERVER_IP+":8080//ws/chat?token=" + token)
                 .build();
 
         mWebSocket = mClient.newWebSocket(request, new WebSocketListener() {

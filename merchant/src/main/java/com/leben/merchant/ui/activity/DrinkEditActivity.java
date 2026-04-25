@@ -235,10 +235,10 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
         RxView.clicks(mTvDrinkSpec)
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
                 .subscribe(unit -> {
-                    if (allSystemGroups == null || allSystemGroups.isEmpty()) {
-                        ToastUtils.show(this, "规格数据尚未加载完成，请稍后再试");
-                        return;
-                    }
+//                    if (allSystemGroups == null || allSystemGroups.isEmpty()) {
+//                        ToastUtils.show(this, "规格数据尚未加载完成，请稍后再试");
+//                        return;
+//                    }
 
                     DrinkSpecDialog dialog;
                     if (mDrink != null) {
@@ -276,99 +276,61 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
         RxView.clicks(mBtnSubmit)
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(unit -> {
+                .subscribe(unit -> {
+                    // 1. 在 subscribe 内部直接进行表单校验
                     String name = getText(mInputName);
                     String desc = getText(mInputDesc);
                     String price = getText(mInputPrice);
                     String packingFee = getText(mInputPackingFee);
                     String stock = getText(mInputStock);
-                    if (TextUtils.isEmpty(currentPhotoPath)) {
-                        showError("请设置商品照片");
-                        return Observable.error(new Throwable("请设置商品照片"));
-                    }
-                    if (TextUtils.isEmpty(name)) {
-                        showError("请输入商品名称");
-                        return Observable.error(new Throwable("请输入商品名称"));
-                    }
-                    if (TextUtils.isEmpty(desc)) {
-                        showError("请输入商品描述");
-                        return Observable.error(new Throwable("请输入商品描述"));
-                    }
-                    if (TextUtils.isEmpty(price)) {
-                        showError("请输入商品价格");
-                        return Observable.error(new Throwable("请输入商品价格"));
-                    }
-                    if (TextUtils.isEmpty(packingFee)) {
-                        showError("请输入包装费");
-                        return Observable.error(new Throwable("请输入包装费"));
-                    }
-                    if (TextUtils.isEmpty(stock)) {
-                        showError("请输入商品库存");
-                        return Observable.error(new Throwable("请输入商品库存"));
-                    }
-                    if (categoryId <= 0) {
-                        showError("请选择商品分类");
-                        return Observable.error(new Throwable("请选择商品分类"));
-                    }
-                    BigDecimal priceValue;
-                    BigDecimal packingFeeValue;
-                    Integer stockValue;
 
+                    if (TextUtils.isEmpty(currentPhotoPath)) { showError("请设置商品照片"); return; }
+                    if (TextUtils.isEmpty(name)) { showError("请输入商品名称"); return; }
+                    if (TextUtils.isEmpty(desc)) { showError("请输入商品描述"); return; }
+                    if (TextUtils.isEmpty(price)) { showError("请输入商品价格"); return; }
+                    if (TextUtils.isEmpty(packingFee)) { showError("请输入包装费"); return; }
+                    if (TextUtils.isEmpty(stock)) { showError("请输入商品库存"); return; }
+                    if (categoryId <= 0) { showError("请选择商品分类"); return; }
+
+                    // 2. 逻辑转换（BigDecimal 等）
                     try {
-                        priceValue = new BigDecimal(price);
-                    } catch (NumberFormatException e) {
-                        return Observable.error(new Throwable("金额格式错误"));
+                        BigDecimal priceValue = new BigDecimal(price);
+                        BigDecimal packingFeeValue = new BigDecimal(packingFee);
+                        int stockValue = Integer.parseInt(stock);
+
+                        // 3. 构建 RequestEntity
+                        List<com.leben.merchant.model.bean.SpecOptionEntity> merchantSpecs = new ArrayList<>();
+                        for (SpecOptionEntity commonSpec : mSelectedSpecs) {
+                            com.leben.merchant.model.bean.SpecOptionEntity merchantSpec = new com.leben.merchant.model.bean.SpecOptionEntity();
+                            merchantSpec.setSpecOptionId(commonSpec.getOptionId());
+                            merchantSpec.setPriceAdjust(commonSpec.getPrice());
+                            merchantSpec.setIsDefault(0);
+                            merchantSpecs.add(merchantSpec);
+                        }
+
+                        DrinkRequestEntity requestData = new DrinkRequestEntity();
+                        if(mDrink != null) requestData.setId(mDrink.getId());
+                        requestData.setName(name);
+                        requestData.setDescription(desc);
+                        requestData.setPrice(priceValue);
+                        requestData.setPackingFee(packingFeeValue);
+                        requestData.setStock(stockValue);
+                        requestData.setImg(currentPhotoPath);
+                        requestData.setCategoryId(categoryId);
+                        requestData.setShopCategoryId(shopCategoryId);
+                        requestData.setStatus(mSwitchStatus.isChecked() ? 1 : 2);
+                        requestData.setSpecs(merchantSpecs);
+
+                        // 4. 执行保存
+                        showLoading("正在保存...");
+                        saveDrinkPresenter.saveDrink(requestData);
+
+                    } catch (Exception e) {
+                        showError("输入格式错误");
                     }
-
-                    try {
-                        packingFeeValue = new BigDecimal(packingFee);
-                    } catch (NumberFormatException e) {
-                        return Observable.error(new Throwable("包装费格式错误"));
-                    }
-
-                    try {
-                        stockValue = Integer.parseInt(stock);
-                    } catch (NumberFormatException e) {
-                        return Observable.error(new Throwable("库存格式错误"));
-                    }
-
-                    // 转换 mSelectedSpecs 从 common 包到 merchant 包
-                    List<com.leben.merchant.model.bean.SpecOptionEntity> merchantSpecs = new ArrayList<>();
-                    for (SpecOptionEntity commonSpec : mSelectedSpecs) {
-                        com.leben.merchant.model.bean.SpecOptionEntity merchantSpec =
-                                new com.leben.merchant.model.bean.SpecOptionEntity();
-
-                        merchantSpec.setSpecOptionId(commonSpec.getOptionId());
-                        merchantSpec.setPriceAdjust(commonSpec.getPrice());
-                        merchantSpec.setIsDefault(0);
-
-                        merchantSpecs.add(merchantSpec);
-                    }
-
-                    DrinkRequestEntity requestData = new DrinkRequestEntity();
-                    if(mDrink!=null){
-                        requestData.setId(mDrink.getId());
-                    }
-                    requestData.setName(name);
-                    requestData.setDescription(desc);
-                    requestData.setPrice(priceValue);
-                    requestData.setPackingFee(packingFeeValue);
-                    requestData.setStock(stockValue);
-                    requestData.setImg(currentPhotoPath);
-                    requestData.setCategoryId(categoryId);
-                    requestData.setShopCategoryId(shopCategoryId);
-                    requestData.setStatus(mSwitchStatus.isChecked() ? 1 : 2);
-                    requestData.setSpecs(merchantSpecs);
-
-                    return Observable.just(requestData);
-                })
-                .subscribe(requestData -> {
-
-                    showLoading("正在保存...");
-                    saveDrinkPresenter.saveDrink(requestData);
-
                 }, throwable -> {
-                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                    // 这里的 throwable 只有在 View 销毁等极端情况下才会触发
+                    LogUtils.error("点击流发生异常: " + throwable.getMessage());
                 });
 
         RxView.clicks(mTvShopCategory)
@@ -380,7 +342,6 @@ public class DrinkEditActivity extends BaseActivity implements GetAllSpecContrac
                             .build(MerchantConstant.Router.CATEGORY_EDIT)
                             .withBoolean("isSelectMode", true)
                             .navigation();
-
                 }, throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });

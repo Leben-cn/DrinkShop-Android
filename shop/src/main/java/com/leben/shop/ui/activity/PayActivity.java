@@ -3,10 +3,14 @@ package com.leben.shop.ui.activity;
 import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.leben.common.util.PriceUtils;
 import com.leben.common.util.UserUtils;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -49,7 +53,7 @@ public class PayActivity extends BaseActivity implements SubmitOrderContract.Vie
     private PayAdapter mAdapter;
     private ConstraintLayout clAddressCard;
     private TitleBar titleBar;
-    private ImageView ivRemark;
+    private RelativeLayout rl_remark;
     private OrderEntity orderEntity;
     private RemarkDialog dialog;
     private TextView tvPay;
@@ -91,7 +95,7 @@ public class PayActivity extends BaseActivity implements SubmitOrderContract.Vie
         mTvUserInfo = findViewById(R.id.tv_user_info);
         clAddressCard=findViewById(R.id.cl_address_card);
         titleBar=findViewById(R.id.title_bar);
-        ivRemark=findViewById(R.id.iv_remark_arrow);
+        rl_remark=findViewById(R.id.rl_remark);
         tvPay=findViewById(R.id.tv_pay_now);
 
         mRvOrderList.setLayoutManager(new LinearLayoutManager(this));
@@ -111,31 +115,30 @@ public class PayActivity extends BaseActivity implements SubmitOrderContract.Vie
         dialog=new RemarkDialog();
 
         // 填充数据
-        fillData();
+        loadData();
     }
 
     @SuppressLint("SetTextI18n")
-    private void fillData() {
+    private void loadData() {
         if (mShop != null) {
             mTvShopName.setText(mShop.getName());
 
-            DecimalFormat df=new DecimalFormat("#.##");
-
             // 1. 配送费
             BigDecimal deliveryFee = mShop.getDeliveryFee() == null ? BigDecimal.ZERO : mShop.getDeliveryFee();
-            mTvDeliveryFee.setText("¥ " + df.format(deliveryFee));
+            mTvDeliveryFee.setText(PriceUtils.formatPrice(deliveryFee,false,false,true));
 
             // 2. 打包费
             BigDecimal packingFee = CartController.getInstance().getTotalPackingFee();
-            mTvPackingFee.setText("¥ " + df.format(packingFee));
+            mTvPackingFee.setText(PriceUtils.formatPrice(packingFee, false,false,true));
 
             // 3. 商品总价 (纯商品)
             BigDecimal goodsPrice = CartController.getInstance().getTotalPrice();
 
             // 4. 计算合计：商品 + 打包 + 配送
             BigDecimal total = goodsPrice.add(packingFee).add(deliveryFee);
-            //mTvTotalPrice.setText("¥" + total.setScale(2, RoundingMode.HALF_UP));
-            mTvTotalPrice.setText("¥ " + df.format(total));
+            mTvTotalPrice.setText(PriceUtils.formatPrice(total, false,false,true));
+
+            // 5. 设置实体类数据 (保持不变)
             orderEntity.setDeliveryFee(mShop.getDeliveryFee());
             orderEntity.setShopId(mShop.getId());
             orderEntity.setShopName(mShop.getName());
@@ -160,7 +163,7 @@ public class PayActivity extends BaseActivity implements SubmitOrderContract.Vie
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
-        RxView.clicks(ivRemark)
+        RxView.clicks(rl_remark)
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
                 .subscribe(unit->{
                     dialog.setOnConfirmListener(new RemarkDialog.OnConfirmListener() {

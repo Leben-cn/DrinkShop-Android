@@ -1,4 +1,4 @@
-package com.leben.merchant.ui.activity;
+package com.leben.common.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -29,14 +28,16 @@ import com.leben.base.ui.activity.BaseActivity;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.titleBar.TitleBar;
-import com.leben.merchant.R;
-import com.leben.merchant.constant.MerchantConstant;
+import com.leben.common.R;
+import com.leben.common.constant.CommonConstant;
+import com.leben.common.model.event.LocationEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.concurrent.TimeUnit;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-@Route(path = MerchantConstant.Router.ADD_ADDRESS)
+@Route(path = CommonConstant.Router.ADD_ADDRESS)
 public class AddAddressActivity extends BaseActivity implements AMap.OnCameraChangeListener,
         GeocodeSearch.OnGeocodeSearchListener{
 
@@ -60,7 +61,7 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
 
     @Override
     protected int getLayoutId() {
-        return R.layout.merchant_ac_add_address;
+        return R.layout.common_ac_add_address;
     }
 
     @Override
@@ -132,6 +133,8 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
                     if (!TextUtils.isEmpty(address.getDistrict())) {
                         finalAddress = finalAddress.replace(address.getDistrict(), "");
                     }
+
+                    EventBus.getDefault().post(new LocationEvent(currentLat, currentLng, finalAddress));
 
                     // 3. 创建 Intent 回传数据
                     Intent intent = new Intent();

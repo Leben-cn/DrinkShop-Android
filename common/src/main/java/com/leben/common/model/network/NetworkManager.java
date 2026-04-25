@@ -1,14 +1,11 @@
 package com.leben.common.model.network;
 
+import com.leben.common.BuildConfig;
 import android.text.TextUtils;
-
 import com.leben.base.BaseApplication;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.SharedPreferencesUtils;
-import com.leben.common.constant.CommonConstant;
-
 import java.io.IOException;
-
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -61,7 +58,7 @@ public class NetworkManager {
 
         // 4. 配置 Retrofit
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://"+CommonConstant.URL.BASE_URL)
+                .baseUrl("http://" + BuildConfig.SERVER_IP + ":8080/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

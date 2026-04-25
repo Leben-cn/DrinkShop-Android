@@ -23,6 +23,7 @@ android {
             }
         }
 
+
     }
 
     buildTypes {
@@ -39,6 +40,8 @@ android {
         compose true
     }
 }
+
+
 
 dependencies {
     implementation libs.appcompat

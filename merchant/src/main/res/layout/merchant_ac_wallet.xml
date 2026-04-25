@@ -26,6 +26,7 @@
                 android:id="@+id/iv_icon"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
+                android:layout_marginTop="60dp"
                 android:src="@drawable/pic_charge"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

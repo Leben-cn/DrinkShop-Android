@@ -30,7 +30,9 @@ public class AddressAdapter extends BaseRecyclerAdapter<AddressEntity> {
 
     @Override
     protected void bindData(BaseViewHolder holder, AddressEntity data, int position) {
-        holder.setText(R.id.tv_address_full,data.getAddressPoi()+data.getAddressDetail())
+        //把市和区去掉，要不然太长了
+        String formattedPoi = data.getAddressPoi().replaceAll("^.*?市", "").replaceAll("^.*?区", "");
+        holder.setText(R.id.tv_address_full,formattedPoi+data.getAddressDetail())
                 .setText(R.id.tv_user_info,data.getContactName()+"  "+data.getContactPhone());
 
         holder.itemView.setOnClickListener(v -> {

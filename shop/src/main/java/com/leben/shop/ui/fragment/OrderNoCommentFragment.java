@@ -3,11 +3,18 @@ package com.leben.shop.ui.fragment;
 import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.ui.fragment.BaseRecyclerFragment;
+import com.leben.base.util.LogUtils;
 import com.leben.common.LocationManager;
+import com.leben.common.model.event.LocationEvent;
 import com.leben.shop.contract.GetNoCommentOrderContract;
 import com.leben.common.model.bean.OrderEntity;
 import com.leben.shop.presenter.GetNoCommentOrderPresenter;
 import com.leben.shop.ui.adapter.OrderAdapter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 /**
@@ -28,6 +35,14 @@ public class OrderNoCommentFragment extends BaseRecyclerFragment<OrderEntity> im
     }
 
     @Override
+    public void onInit() {
+        super.onInit();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
     public void onRefresh() {
         getNoCommentOrderPresenter.getNoCommentOrder(latitude,longitude);
     }
@@ -39,9 +54,6 @@ public class OrderNoCommentFragment extends BaseRecyclerFragment<OrderEntity> im
 
     @Override
     public void initData() {
-        latitude = LocationManager.getInstance().getLatitude();
-        longitude = LocationManager.getInstance().getLongitude();
-        autoRefresh();
     }
 
     @Override
@@ -52,7 +64,7 @@ public class OrderNoCommentFragment extends BaseRecyclerFragment<OrderEntity> im
     @Override
     public void onGetNoCommentOrderFailed(String errorMsg) {
         refreshListFailed("获取订单失败");
-        showError("获取订单失败："+errorMsg);
+        LogUtils.error("获取订单失败："+errorMsg);
     }
 
     @Override
@@ -69,5 +81,21 @@ public class OrderNoCommentFragment extends BaseRecyclerFragment<OrderEntity> im
     @Override
     protected boolean shouldAddDefaultSpaceDecoration() {
         return false;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLocationChanged(LocationEvent event) {
+        this.latitude = event.latitude;
+        this.longitude = event.longitude;
+        // 拿到位置后再请求订单
+        onRefresh();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 }

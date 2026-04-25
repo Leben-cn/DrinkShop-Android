@@ -66,86 +66,79 @@ public class OrderAdapter extends BaseRecyclerAdapter<OrderEntity> {
     @SuppressLint("CheckResult")
     @Override
     protected void bindData(BaseViewHolder holder, OrderEntity data, int position) {
-        DecimalFormat df=new DecimalFormat("#.##");
+        DecimalFormat df = new DecimalFormat("#.##");
         TextView btnAction = holder.getView(R.id.tv_action_btn);
+        TextView tvPrice = holder.getView(R.id.tv_total_price);
+        TextView tvCount = holder.getView(R.id.tv_total_count);
 
+        // 设置基础数据
         holder.setImageUrl(R.id.iv_shop_logo, data.getShopLogo(), R.drawable.pic_no_drink)
                 .setText(R.id.tv_shop_name, data.getShopName())
-                .setText(R.id.tv_total_price,"￥"+df.format(data.getPayAmount()));
+                .setText(R.id.tv_total_price, "￥" + df.format(data.getPayAmount()))
+                .setText(R.id.tv_total_count,"共"+data.getTotalQuantity()+"件");
 
-
-        switch (data.getStatus()){
+        btnAction.setVisibility(View.GONE);
+        switch (data.getStatus()) {
             case 0:
-                holder.setText(R.id.tv_status,"待制作");
-                holder.getView(R.id.tv_action_btn).setVisibility(View.VISIBLE);
-                holder.setText(R.id.tv_action_btn,"取消订单");
+                holder.setText(R.id.tv_status, "待制作");
+                btnAction.setVisibility(View.VISIBLE);
+                btnAction.setText("取消订单");
                 break;
             case 1:
-                holder.setText(R.id.tv_status,"已完成");
-                if(!data.getComment()){
-                    holder.getView(R.id.tv_action_btn).setVisibility(View.VISIBLE);
-                    holder.setText(R.id.tv_action_btn,"去评价");
-                }else{
-                    holder.getView(R.id.tv_action_btn).setVisibility(View.GONE);
+                holder.setText(R.id.tv_status, "已完成");
+                if (!data.getComment()) {
+                    btnAction.setVisibility(View.VISIBLE);
+                    btnAction.setText("去评价");
                 }
                 break;
             case 2:
-                holder.setText(R.id.tv_status,"已取消");
-                holder.getView(R.id.tv_action_btn).setVisibility(View.GONE);
+                holder.setText(R.id.tv_status, "已取消");
                 break;
-            case 404:holder.setText(R.id.tv_order_info,"已下架");break;
-            case 500:holder.setText(R.id.tv_order_info,"暂停营业");break;
-            case 1000:holder.setText(R.id.tv_order_info,"超出配送范围");break;
+            // ... 其他 case
         }
 
+        // --- 点击事件统一处理 ---
+
+        // 1. 跳转详情流：将所有需要跳转详情的 View 集合起来
+        // 包括：整个 Item、价格、数量
+        Observable.merge(
+                        RxView.clicks(holder.itemView),
+                        RxView.clicks(tvPrice),
+                        RxView.clicks(tvCount)
+                )
+                .throttleFirst(500, TimeUnit.MILLISECONDS)
+                .map(unit -> new OrderClickEvent(data))
+                .subscribe(clickSubject::onNext, throwable -> LogUtils.error(throwable.getMessage()));
+
+        // 2. 内部商品列表点击也跳转详情
         RecyclerView rvProducts = holder.getView(R.id.rv_horizontal_items);
-
-        // 2. 【核心修改】先获取 Adapter 实例，不要直接 setAdapter
         PreviewOrderDrinksAdapter innerAdapter = getPreviewOrderDrinksAdapter(data);
-
-        innerAdapter.setOnItemClickListener((item) -> {
-            // 当点击内部的小商品图时，触发外部的订单点击事件流
-            clickSubject.onNext(new OrderClickEvent(data));
-        });
-
+        innerAdapter.setOnItemClickListener((item) -> clickSubject.onNext(new OrderClickEvent(data)));
         rvProducts.setAdapter(innerAdapter);
 
-
-        // 4. 【建议】同时给整个 CardView (holder.itemView) 也加上点击
-        // 这样点击商品列表旁边的空白处也能跳转
-        RxView.clicks(holder.itemView)
-                .throttleFirst(500, TimeUnit.MILLISECONDS)
-                .map(o -> new OrderClickEvent(data))
-                .subscribe(clickSubject);
-
+        // 3. 进店点击
         RxView.clicks(holder.getView(R.id.tv_right_arrow))
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(unit->{
+                .subscribe(unit -> {
                     ARouter.getInstance()
                             .build(ShopConstant.Router.SHOP)
                             .withLong("shopId", data.getShopId())
                             .navigation();
-                },throwable -> {
-                    LogUtils.error("点击事件流出错: " + throwable.getMessage());
                 });
-        btnAction.setOnClickListener(v -> {
-            if (actionListener == null) {
-                return;
-            }
-            // 根据状态判断执行哪个回调
-            int status = data.getStatus();
 
-            if (status == 0) {
-                // 状态 0: 待制作 -> 执行取消逻辑
-                actionListener.onCancelOrder(data);
-
-            } else if (status == 1) {
-                // 状态 1: 已完成 -> 执行评价逻辑
-                actionListener.onGoToComment(data);
-            }
-        });
-
+        // 4. 底部操作按钮点击 (取消/评价)
+        // 建议使用 RxView 保持一致性，防止重复点击
+        RxView.clicks(btnAction)
+                .throttleFirst(500, TimeUnit.MILLISECONDS)
+                .subscribe(unit -> {
+                    if (actionListener != null) {
+                        if (data.getStatus() == 0) {
+                            actionListener.onCancelOrder(data);
+                        } else if (data.getStatus() == 1) {
+                            actionListener.onGoToComment(data);
+                        }
+                    }
+                });
     }
 
     private static PreviewOrderDrinksAdapter getPreviewOrderDrinksAdapter(OrderEntity data) {

@@ -12,7 +12,7 @@
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ui.activity.AddAddressActivity"
+            android:name="com.leben.common.ui.activity.AddAddressActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
 

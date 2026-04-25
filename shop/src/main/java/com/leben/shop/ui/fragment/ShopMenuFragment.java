@@ -3,6 +3,7 @@ package com.leben.shop.ui.fragment;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
+
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.fragment.BaseFragment;
@@ -22,9 +23,11 @@ import com.leben.shop.ui.adapter.LinkageLeftAdapter;
 import com.leben.shop.ui.adapter.LinkageRightAdapter;
 import com.leben.shop.ui.dialog.ProductSpecDialog;
 import com.leben.common.util.ListGroupUtils;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -117,7 +120,7 @@ public class ShopMenuFragment extends BaseFragment implements ShopMenuContract.V
     }
 
     //定义静态方法实例化 Fragment，并传入参数
-    public static ShopMenuFragment newInstance(long shopId,long drinkId) {
+    public static ShopMenuFragment newInstance(long shopId, long drinkId) {
         ShopMenuFragment fragment = new ShopMenuFragment();
         Bundle args = new Bundle();
         args.putLong("shopId", shopId);
@@ -128,8 +131,8 @@ public class ShopMenuFragment extends BaseFragment implements ShopMenuContract.V
 
     @Override
     public void initData() {
-        Double latitude= LocationManager.getInstance().getLatitude();
-        Double longitude=LocationManager.getInstance().getLongitude();
+        Double latitude = LocationManager.getInstance().getLatitude();
+        Double longitude = LocationManager.getInstance().getLongitude();
         if (getArguments() != null) {
             mShopId = getArguments().getLong("shopId", 0);
             mDrinkId = getArguments().getLong("drinkId", 0);
@@ -141,24 +144,24 @@ public class ShopMenuFragment extends BaseFragment implements ShopMenuContract.V
 
     @Override
     public void onGetShopMenuSuccess(List<DrinkEntity> data) {
-        if(data==null||data.isEmpty()){
+        if (data == null || data.isEmpty()) {
             return;
         }
         //处理扁平化数据
         //既然是按照 ShopCategoriesEntity 对象来分组的（把它作为 Map 的 Key），必须确保 ShopCategoriesEntity 重写了 equals() and hashCode() 方法。
         //否则，即使 ID 相同的两个分类对象，Map 也会认为它们是不同的 Key，导致分组失败（出现重复的分类）。
         List<GroupEntity<ShopCategoriesEntity, DrinkEntity>> groupList = ListGroupUtils.groupList(
-         data,
-         DrinkEntity::getShopCategories,
-         Comparator.comparingInt(ShopCategoriesEntity::getSort)
- );
-        List<Integer> headerPositions=new ArrayList<>();
+                data,
+                DrinkEntity::getShopCategories,
+                Comparator.comparingInt(ShopCategoriesEntity::getSort)
+        );
+        List<Integer> headerPositions = new ArrayList<>();
 
-        int currentPosition=0;
+        int currentPosition = 0;
 
-        for(GroupEntity<ShopCategoriesEntity, DrinkEntity> group:groupList){
-            ShopCategoriesEntity shopCategory=group.getHeader();
-            List<DrinkEntity> drinks=group.getChildren();
+        for (GroupEntity<ShopCategoriesEntity, DrinkEntity> group : groupList) {
+            ShopCategoriesEntity shopCategory = group.getHeader();
+            List<DrinkEntity> drinks = group.getChildren();
 
             leftList.add(shopCategory);
             headerPositions.add(currentPosition);
@@ -168,7 +171,7 @@ public class ShopMenuFragment extends BaseFragment implements ShopMenuContract.V
             currentPosition++;
 
             // 填充右侧列表（内容）
-            for(DrinkEntity drink:drinks){
+            for (DrinkEntity drink : drinks) {
                 rightList.add(new LinkageRightEntity(drink));
                 currentPosition++;
             }

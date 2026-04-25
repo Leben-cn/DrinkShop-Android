@@ -3,6 +3,7 @@ package com.leben.merchant.ui.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
+import android.widget.TextView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -10,6 +11,7 @@ import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.ui.adapter.holder.BaseViewHolder;
 import com.leben.base.util.LogUtils;
 import com.leben.common.model.bean.DrinkEntity;
+import com.leben.common.util.PriceUtils;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
 import java.text.DecimalFormat;
@@ -33,14 +35,12 @@ public class DrinkAdapter extends BaseRecyclerAdapter<DrinkEntity> {
     @SuppressLint("CheckResult")
     @Override
     protected void bindData(BaseViewHolder holder, DrinkEntity data, int position) {
-        DecimalFormat df=new DecimalFormat("#.##");
         holder.setImageUrl(R.id.iv_drink_img,data.getImg())
                 .setText(R.id.tv_drink_name,data.getName());
-        if (data.getSpecs().isEmpty()) {
-            holder.setText(R.id.tv_drink_price,"￥"+df.format(data.getPrice()));
-        }else{
-            holder.setText(R.id.tv_drink_price,"￥"+df.format(data.getPrice())+" 起");
-        }
+
+        TextView tvPrice = holder.getView(R.id.tv_drink_price);
+        tvPrice.setText(PriceUtils.formatPrice(data.getPrice(),!data.getSpecs().isEmpty(),true));
+
         if (data.getStatus() == 1) {
             holder.setText(R.id.tv_drink_status,"已上架");
             holder.getView(R.id.tv_drink_status).setBackgroundResource(R.drawable.bg_tv_green); // 绿色背景表示正常

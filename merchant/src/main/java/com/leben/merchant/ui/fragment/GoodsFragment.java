@@ -60,7 +60,7 @@ public class GoodsFragment extends BaseRecyclerFragment<DrinkEntity> implements 
 
     @Override
     protected void initView(View root) {
-        setDefaultSpace(10);
+
         super.initView(root);
         TitleBar titleBar=root.findViewById(R.id.title_bar);
         mIvAddDrink=new ImageView(getContext());

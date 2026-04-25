@@ -3,6 +3,7 @@ package com.leben.shop.ui.fragment;
 import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -11,9 +12,11 @@ import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.ui.fragment.BaseRecyclerFragment;
 import com.leben.base.util.LogUtils;
+import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.titleBar.TitleBar;
 import com.leben.common.constant.CommonConstant;
 import com.leben.common.LocationManager;
+import com.leben.common.model.event.LocationEvent;
 import com.leben.shop.R;
 import com.leben.shop.constant.ShopConstant;
 import com.leben.shop.contract.RecommendShopsContract;
@@ -22,9 +25,15 @@ import com.leben.common.model.bean.ShopEntity;
 import com.leben.shop.presenter.RecommendShopsPresenter;
 import com.leben.shop.ui.adapter.RecommendShopsAdapter;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import javax.sql.CommonDataSource;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -46,6 +55,7 @@ public class RecommendDrinksFragment extends BaseRecyclerFragment<ShopEntity> im
     private LinearLayout llFruitTea;
     private LinearLayout llJuice;
     private LinearLayout llCoffee;
+    private TextView tvLocationName;
 
     @Override
     protected BaseRecyclerAdapter<ShopEntity> createAdapter() {
@@ -58,6 +68,14 @@ public class RecommendDrinksFragment extends BaseRecyclerFragment<ShopEntity> im
     }
 
     @Override
+    public void onInit() {
+        super.onInit();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
     public void initView(View root) {
         super.initView(root);
         titleBar = root.findViewById(R.id.title_bar);
@@ -65,13 +83,14 @@ public class RecommendDrinksFragment extends BaseRecyclerFragment<ShopEntity> im
         llFruitTea=root.findViewById(R.id.ll_cat_fruit_tea);
         llJuice=root.findViewById(R.id.ll_cat_juice);
         llCoffee=root.findViewById(R.id.ll_cat_coffee);
+        tvLocationName=root.findViewById(R.id.tv_location_name);
 
         if (titleBar != null) {
             List<String> hints = new ArrayList<>();
             hints.add("搜索好喝的奶茶");
             hints.add("低卡果茶推荐");
             titleBar.setSearchHints(hints);
-
+            titleBar.setBackgroundResource(R.color.color_theme_yellow);
             // 开启轮播
             titleBar.startRoll();
             titleBar.setBackVisible(false);
@@ -111,6 +130,17 @@ public class RecommendDrinksFragment extends BaseRecyclerFragment<ShopEntity> im
                 .subscribe(unit->{
                     ARouter.getInstance()
                             .build(ShopConstant.Router.SEARCH_DRINK)
+                            .navigation();
+                },throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+
+        RxView.clicks(tvLocationName)
+                .throttleFirst(500,TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(unit->{
+                    ARouter.getInstance()
+                            .build(CommonConstant.Router.ADD_ADDRESS)
                             .navigation();
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
@@ -167,8 +197,18 @@ public class RecommendDrinksFragment extends BaseRecyclerFragment<ShopEntity> im
 
     @Override
     public void initData() {
-        LocationManager.getInstance().updateLocation(latitude, longitude);
-        autoRefresh();
+        // 1. 检查是否有缓存位置，如果有，直接用缓存位置请求一次
+        Double cachedLat = LocationManager.getInstance().getLatitude();
+        Double cachedLon = LocationManager.getInstance().getLongitude();
+
+        if (cachedLat != null && cachedLat != 0) {
+            this.latitude = cachedLat;
+            this.longitude = cachedLon;
+            // 有缓存位置，可以直接开始刷新
+            autoRefresh();
+        } else {
+            LocationManager.getInstance().startSingleLocation(requireContext());
+        }
     }
 
     @Override
@@ -181,15 +221,19 @@ public class RecommendDrinksFragment extends BaseRecyclerFragment<ShopEntity> im
     @Override
     public void onRecommendShopsSuccess(PageEntity<ShopEntity> pageData) {
         List<ShopEntity> list = pageData.getContent();
-        boolean hasMore = !pageData.isLast();
+        if(pageData.getContent().isEmpty()){
+            ToastUtils.show(requireContext(),"附近10公里没有店铺！");
+        }
+        // 区分 2：滑到底了
+        boolean isLast = pageData.isLast(); // 后端 Page 对象自带 last 属性
         if (page == 0) {
-            // 下拉刷新成功时，记得重置 LoadMore 状态
-            mLoadMoreController.reset();
-            //直接调用父类 BaseRecyclerActivity 的方法
-            //它内部会自动调用 refreshComplete()和 setList()
             refreshListSuccess(list);
         } else {
-            loadMoreSuccess(list, hasMore);
+            loadMoreSuccess(list, !isLast); // 如果是最后一页，!isLast 为 false，前端停止上拉
+        }
+
+        if (isLast && page > 0) {
+            // 可以在这里提示“没有更多数据了”
         }
     }
 
@@ -230,16 +274,31 @@ public class RecommendDrinksFragment extends BaseRecyclerFragment<ShopEntity> im
         if (mRecommendShopsPresenter != null) {
             mRecommendShopsPresenter.detachView();
         }
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     @Override
     protected View getTitleBarView() {
-        return mRootView.findViewById(R.id.title_bar);
+        return mRootView.findViewById(R.id.cl_location_bar);
     }
 
     @Override
     protected int getStatusBarColor() {
-        return com.leben.base.R.color.white;
+        return R.color.color_theme_yellow;
+    }
+
+    //处理地址更新
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLocationChanged(LocationEvent event) {
+        // 只有当位置真的发生变化时才请求
+        this.latitude = event.latitude;
+        this.longitude = event.longitude;
+        this.tvLocationName.setText(event.address);
+
+        // 定位成功后，如果是第一次加载数据（page=0），触发刷新
+        onRefresh();
     }
 
 }

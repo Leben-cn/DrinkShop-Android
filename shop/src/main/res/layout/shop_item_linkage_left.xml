@@ -22,10 +22,14 @@
         android:layout_height="wrap_content"
         android:textColor="#666666"
         android:textSize="12sp"
+        android:gravity="center"
+        android:maxWidth="70dp"
+        android:maxLines="2"
+        android:ellipsize="end"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="招牌推荐" />
+        tools:text="招牌推荐很长五个字" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

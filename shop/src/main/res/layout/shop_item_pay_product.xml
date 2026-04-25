@@ -2,16 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingTop="8dp"
     android:paddingBottom="8dp">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_product_img"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="#F5F5F5"
+        app:shapeAppearanceOverlay="@style/RoundedCornerImage"
         android:scaleType="centerCrop" />
 
     <LinearLayout

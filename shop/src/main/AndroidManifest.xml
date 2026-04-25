@@ -28,7 +28,8 @@
         <activity
             android:name=".ui.activity.PlatFormClassifyActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize|stateVisible"/>
+            android:windowSoftInputMode="adjustPan"
+            />
 
     </application>
 

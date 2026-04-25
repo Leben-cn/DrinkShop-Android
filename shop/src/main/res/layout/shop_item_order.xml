@@ -17,8 +17,8 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_shop_logo"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:scaleType="centerCrop"
             android:src="@drawable/pic_no_shop"
             app:shapeAppearanceOverlay="@style/RoundedCornerImage"
@@ -31,7 +31,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginTop="6dp"
             android:text="悸动(上饶广丰霞峰镇店)"
             android:textColor="#333333"
             android:textSize="16sp"
@@ -66,7 +65,7 @@
             android:id="@+id/tv_order_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="2dp"
             android:background="@drawable/bg_tv_grey"
             android:textColor="@color/white"
             android:textSize="14sp"
@@ -75,44 +74,64 @@
 
         <TextView
             android:id="@+id/tv_total_price"
-            android:layout_width="70dp"
-            android:layout_height="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="¥25.5"
             android:textColor="#333333"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginStart="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/rv_horizontal_items"
-            app:layout_constraintBottom_toTopOf="@+id/tv_action_btn"
-            app:layout_constraintVertical_weight="1"/>
+            app:layout_constraintBottom_toTopOf="@+id/tv_total_count"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/tv_total_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="共3件"
+            android:textColor="#999999"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_total_price"
+            app:layout_constraintStart_toStartOf="@+id/tv_total_price"
+            app:layout_constraintTop_toBottomOf="@+id/tv_total_price"
+            app:layout_constraintBottom_toTopOf="@+id/tv_action_btn" />
+
         <TextView
             android:id="@+id/tv_action_btn"
-            android:layout_width="72dp"
-            android:layout_height="28dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="去评价"
             android:textColor="#333333"
             android:textSize="14sp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
             android:gravity="center"
-            android:visibility="gone"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/bg_btn_yellow"
+            android:background="@drawable/bg_btn_yellow_square"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_total_price"
-            app:layout_constraintBottom_toBottomOf="@+id/rv_horizontal_items"
-            app:layout_constraintVertical_weight="1"/>
+            app:layout_constraintBottom_toBottomOf="@+id/rv_horizontal_items" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="start"
+            app:constraint_referenced_ids="tv_total_price,tv_action_btn" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_horizontal_items"
             android:layout_width="0dp"
             android:layout_height="110dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="12dp"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toStartOf="@+id/tv_total_price"
             app:layout_constraintStart_toStartOf="@+id/iv_shop_logo"
+            app:layout_constraintEnd_toStartOf="@+id/barrier_right"
             app:layout_constraintTop_toBottomOf="@+id/tv_order_info" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

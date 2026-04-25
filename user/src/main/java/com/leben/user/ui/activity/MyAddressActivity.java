@@ -54,6 +54,7 @@ public class MyAddressActivity extends BaseRecyclerActivity<AddressEntity> imple
 
         if (titleBar != null) {
             titleBar.setTitle("我的收货地址");
+            titleBar.setBackgroundResource(R.color.white);
             tvAddAddress = new TextView(this);
             tvAddAddress.setText("新增地址");
             tvAddAddress.setTextColor(Color.parseColor("#333333")); // 深灰色
@@ -124,6 +125,11 @@ public class MyAddressActivity extends BaseRecyclerActivity<AddressEntity> imple
     @Override
     protected View getTitleBarView() {
         return findViewById(R.id.title_bar);
+    }
+
+    @Override
+    protected int getStatusBarColor() {
+        return R.color.white;
     }
 
     @Override

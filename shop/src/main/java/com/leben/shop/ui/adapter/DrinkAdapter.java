@@ -15,20 +15,20 @@ public class DrinkAdapter extends BaseRecyclerAdapter<DrinkEntity> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.shop_item_drink;
+        return R.layout.shop_item_display_drink;
     }
 
     @Override
     protected void bindData(BaseViewHolder holder, DrinkEntity data, int position) {
         DecimalFormat df=new DecimalFormat("#.##");
-        holder.setImageUrl(R.id.iv_drink_img,data.getImg())
-                .setText(R.id.tv_drink_name,data.getName())
-                .setText(R.id.tv_rating,data.getMark()+"分")
-                .setText(R.id.tv_distance,data.getDistance());
+        holder.setImageUrl(R.id.iv_display_drink_img,data.getImg())
+                .setText(R.id.tv_display_drink_name,data.getName())
+                .setText(R.id.tv_display_rating,data.getMark()+"分")
+                .setText(R.id.tv_display_distance,data.getDistance());
         if (data.getSpecs().isEmpty()) {
-            holder.setText(R.id.tv_drink_price,"￥"+df.format(data.getPrice()));
+            holder.setText(R.id.tv_display_drink_price,"￥"+df.format(data.getPrice()));
         }else{
-            holder.setText(R.id.tv_drink_price,"￥"+df.format(data.getPrice())+" 起");
+            holder.setText(R.id.tv_display_drink_price,"￥"+df.format(data.getPrice())+" 起");
         }
     }
 }

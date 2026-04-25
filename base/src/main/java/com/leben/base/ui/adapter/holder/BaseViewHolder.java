@@ -107,5 +107,41 @@ public class BaseViewHolder extends RecyclerView.ViewHolder{
         return this; // 返回自己，支持链式调用
     }
 
+    /**
+     * 设置 View 的可见性 (VISIBLE 或 GONE)
+     * @param viewId 控件ID
+     * @param visible true 为 VISIBLE, false 为 GONE
+     */
+    public BaseViewHolder setVisible(@IdRes int viewId, boolean visible) {
+        View view = getView(viewId);
+        if (view != null) {
+            view.setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
+        return this;
+    }
+
+    /**
+     * 设置 View 的可见性 (VISIBLE 或 INVISIBLE)
+     * 有时候需要保留占位空间，可以用这个
+     */
+    public BaseViewHolder setInVisible(@IdRes int viewId, boolean invisible) {
+        View view = getView(viewId);
+        if (view != null) {
+            view.setVisibility(invisible ? View.INVISIBLE : View.VISIBLE);
+        }
+        return this;
+    }
+
+    /**
+     * 专门的隐藏方法 (强制设置成 GONE)
+     */
+    public BaseViewHolder setGone(@IdRes int viewId, boolean isGone) {
+        View view = getView(viewId);
+        if (view != null) {
+            view.setVisibility(isGone ? View.GONE : View.VISIBLE);
+        }
+        return this;
+    }
+
 
 }

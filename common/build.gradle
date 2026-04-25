@@ -9,6 +9,10 @@ android {
         version = release(36)
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         minSdk 24
 
@@ -20,6 +24,9 @@ android {
                 arguments = [AROUTER_MODULE_NAME: "common"]
             }
         }
+        //在 App 中自动找到电脑的 IP
+        buildConfigField "String", "SERVER_IP", "\"${getHostIP()}\""
+        println ">>> 当前获取到的电脑 IP 是: ${getHostIP()}"
     }
 
     buildTypes {
@@ -34,12 +41,33 @@ android {
     }
 }
 
+//在 App 中自动找到电脑的 IP
+def getHostIP() {
+    String ip = "127.0.0.1"
+    Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces()
+    while (en.hasMoreElements()) {
+        NetworkInterface intf = en.nextElement()
+        Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses()
+        while (enumIpAddr.hasMoreElements()) {
+            InetAddress inetAddress = enumIpAddr.nextElement()
+            if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
+                // 排除热点或其他虚拟网卡（根据你的网段调整，通常是 192.168 或 172.）
+                if (inetAddress.getHostAddress().startsWith("192.168") || inetAddress.getHostAddress().startsWith("172.")) {
+                    return inetAddress.getHostAddress()
+                }
+            }
+        }
+    }
+    return ip
+}
+
 dependencies {
     implementation libs.appcompat
     implementation libs.material
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+
 
     api project(':base')
 

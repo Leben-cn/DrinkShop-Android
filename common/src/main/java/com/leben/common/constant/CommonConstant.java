@@ -19,10 +19,12 @@ public interface CommonConstant {
         String GOODS="/merchant/goods";
         String USER_LOGIN="/user/login";
         String USER_COMMENT="/user/comment";
+
+        String ADD_ADDRESS="/add/address";
     }
 
     interface URL{
-        String BASE_URL="192.168.3.101:8080";
+        String BASE_URL="172.16.40.125:8080";
     }
 
 }

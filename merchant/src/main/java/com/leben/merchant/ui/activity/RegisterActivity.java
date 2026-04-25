@@ -20,6 +20,7 @@ import com.leben.base.ui.activity.BaseActivity;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.titleBar.TitleBar;
+import com.leben.common.constant.CommonConstant;
 import com.leben.common.util.ImagePickerHelper;
 import com.leben.common.util.PermissionDialogHelper;
 import com.leben.merchant.R;
@@ -214,7 +215,7 @@ public class RegisterActivity extends BaseActivity implements RegisterContract.V
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result->{
                     ARouter.getInstance()
-                            .build(MerchantConstant.Router.ADD_ADDRESS)
+                            .build(CommonConstant.Router.ADD_ADDRESS)
                             .navigation(this,REQUEST_CODE_ADDRESS);
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());

@@ -59,5 +59,10 @@ public abstract class LinkageLeftAdapter<T extends ILinkageCategory, VH extends 
 
     public int getCheckedPosition() { return mSelectedPosition; }
 
-
+    public T getItem(int position) {
+        if (position >= 0 && position < mData.size()) {
+            return mData.get(position);
+        }
+        return null;
+    }
 }

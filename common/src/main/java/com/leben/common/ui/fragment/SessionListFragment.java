@@ -52,7 +52,7 @@ public class SessionListFragment extends BaseRecyclerFragment<SessionEntity> imp
 
     @Override
     public void initView(View root) {
-        setDefaultSpace(8);
+        setDefaultSpace(0);
         super.initView(root);
         TitleBar titleBar=root.findViewById(R.id.title_bar);
         titleBar.setTitle("消息中心");

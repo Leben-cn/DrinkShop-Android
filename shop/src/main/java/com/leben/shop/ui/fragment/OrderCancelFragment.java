@@ -8,11 +8,17 @@ import com.leben.base.ui.fragment.BaseRecyclerFragment;
 import com.leben.base.util.LogUtils;
 import com.leben.common.LocationManager;
 import com.leben.common.constant.CommonConstant;
+import com.leben.common.model.event.LocationEvent;
 import com.leben.shop.constant.ShopConstant;
 import com.leben.shop.contract.GetCancelOrderContract;
 import com.leben.common.model.bean.OrderEntity;
 import com.leben.shop.presenter.GetCancelOrderPresenter;
 import com.leben.shop.ui.adapter.OrderAdapter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -37,6 +43,14 @@ public class OrderCancelFragment extends BaseRecyclerFragment<OrderEntity> imple
     @Override
     public void onRefresh() {
         getCancelOrderPresenter.getCancelOrder(latitude,longitude);
+    }
+
+    @Override
+    public void onInit() {
+        super.onInit();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @SuppressLint("CheckResult")
@@ -76,20 +90,18 @@ public class OrderCancelFragment extends BaseRecyclerFragment<OrderEntity> imple
 
     @Override
     public void initData() {
-        latitude = LocationManager.getInstance().getLatitude();
-        longitude = LocationManager.getInstance().getLongitude();
-        autoRefresh();
     }
 
     @Override
     public void onGetCancelOrderSuccess(List<OrderEntity> data) {
         refreshListSuccess(data);
+        onLoadMore();
     }
 
     @Override
     public void onGetCancelOrderFailed(String errorMsg) {
         refreshListFailed("获取订单失败");
-        showError("获取订单失败"+errorMsg);
+        LogUtils.error("获取订单失败："+errorMsg);
     }
 
     @Override
@@ -106,5 +118,21 @@ public class OrderCancelFragment extends BaseRecyclerFragment<OrderEntity> imple
     @Override
     protected boolean shouldAddDefaultSpaceDecoration() {
         return false;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLocationChanged(LocationEvent event) {
+        this.latitude = event.latitude;
+        this.longitude = event.longitude;
+        // 拿到位置后再请求订单
+        onRefresh();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 }

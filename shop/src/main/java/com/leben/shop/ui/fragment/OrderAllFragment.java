@@ -9,8 +9,8 @@ import com.leben.base.ui.fragment.BaseRecyclerFragment;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.dialog.CommonDialog;
-import com.leben.common.LocationManager;
 import com.leben.common.constant.CommonConstant;
+import com.leben.common.model.event.LocationEvent;
 import com.leben.shop.constant.ShopConstant;
 import com.leben.shop.contract.CancelOrderContract;
 import com.leben.shop.contract.GetAllOrderContract;
@@ -18,6 +18,9 @@ import com.leben.common.model.bean.OrderEntity;
 import com.leben.shop.presenter.CancelOrderPresenter;
 import com.leben.shop.presenter.GetAllOrderPresenter;
 import com.leben.shop.ui.adapter.OrderAdapter;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -41,6 +44,14 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
     @Override
     protected BaseRecyclerAdapter<OrderEntity> createAdapter() {
         return new OrderAdapter(getContext());
+    }
+
+    @Override
+    public void onInit() {
+        super.onInit();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
@@ -77,7 +88,7 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
                             .navigation();
                 }
             });
-            
+
             orderAdapter.observableClicks()
                     .throttleFirst(500, TimeUnit.MILLISECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -94,9 +105,6 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
 
     @Override
     public void initData() {
-        latitude = LocationManager.getInstance().getLatitude();
-        longitude = LocationManager.getInstance().getLongitude();
-        autoRefresh();
     }
 
     @Override
@@ -124,7 +132,9 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
     @Override
     public void onResume() {
         super.onResume();
-        autoRefresh();
+        if (latitude != null) {
+            autoRefresh();
+        }
     }
 
     @Override
@@ -142,5 +152,21 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
     @Override
     protected int getStatusBarColor() {
         return com.leben.base.R.color.white;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLocationChanged(LocationEvent event) {
+        this.latitude = event.latitude;
+        this.longitude = event.longitude;
+        // 拿到位置后再请求订单
+        onRefresh();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 }
