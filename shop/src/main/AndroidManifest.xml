@@ -15,7 +15,7 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".ui.activity.OrderDetailActivity"
+            android:name="com.leben.common.ui.activity.OrderDetailActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
 

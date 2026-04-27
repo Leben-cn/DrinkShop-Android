@@ -32,8 +32,10 @@ public class OrderAdapter extends BaseRecyclerAdapter<OrderEntity> {
 
     // 1. 定义接口
     public interface OnOrderActionClickListener {
-        void onCancelOrder(OrderEntity order);   // 点击取消订单
-        void onGoToComment(OrderEntity order);   // 点击去评价
+        void onCancelOrder(OrderEntity order);     // 取消订单
+        void onGoToComment(OrderEntity order);     // 去评价
+        void onConfirmReceipt(OrderEntity order);  // 确认收货
+        void onContactShop(OrderEntity order);     // 联系商家
     }
 
     // 2. 暴露设置监听的方法
@@ -67,78 +69,93 @@ public class OrderAdapter extends BaseRecyclerAdapter<OrderEntity> {
     @Override
     protected void bindData(BaseViewHolder holder, OrderEntity data, int position) {
         DecimalFormat df = new DecimalFormat("#.##");
-        TextView btnAction = holder.getView(R.id.tv_action_btn);
+        TextView btnAction = holder.getView(R.id.tv_action_btn); // 主操作按钮
+        TextView btnContact = holder.getView(R.id.tv_contact_btn); // 联系商家按钮
         TextView tvPrice = holder.getView(R.id.tv_total_price);
         TextView tvCount = holder.getView(R.id.tv_total_count);
+        TextView tvShopState = holder.getView(R.id.tv_order_info);
+
+        // 店铺状态控制
+        tvShopState.setVisibility(View.GONE);
+        if ("暂停营业".equals(data.getShopState())) {
+            tvShopState.setVisibility(View.VISIBLE);
+            tvShopState.setText("暂停营业");
+        }
 
         // 设置基础数据
-        holder.setImageUrl(R.id.iv_shop_logo, data.getShopLogo(), R.drawable.pic_no_drink)
+        holder.setImageUrl(R.id.iv_shop_logo, data.getShopLogo(), R.drawable.pic_no_shop)
                 .setText(R.id.tv_shop_name, data.getShopName())
                 .setText(R.id.tv_total_price, "￥" + df.format(data.getPayAmount()))
-                .setText(R.id.tv_total_count,"共"+data.getTotalQuantity()+"件");
+                .setText(R.id.tv_total_count, "共" + data.getTotalQuantity() + "件");
 
+        // 状态机处理
         btnAction.setVisibility(View.GONE);
         switch (data.getStatus()) {
-            case 0:
+            case 0: // 待制作
                 holder.setText(R.id.tv_status, "待制作");
                 btnAction.setVisibility(View.VISIBLE);
                 btnAction.setText("取消订单");
                 break;
-            case 1:
+            case 1: // 待收货 (根据你的 case 1 修改)
+                holder.setText(R.id.tv_status, "待收货");
+                btnAction.setVisibility(View.VISIBLE);
+                btnAction.setText("确认收货");
+                break;
+            case 3: // 已完成
                 holder.setText(R.id.tv_status, "已完成");
                 if (!data.getComment()) {
                     btnAction.setVisibility(View.VISIBLE);
                     btnAction.setText("去评价");
                 }
                 break;
-            case 2:
+            case 2: // 已取消
                 holder.setText(R.id.tv_status, "已取消");
                 break;
-            // ... 其他 case
         }
 
-        // --- 点击事件统一处理 ---
-
-        // 1. 跳转详情流：将所有需要跳转详情的 View 集合起来
-        // 包括：整个 Item、价格、数量
+        // 1. 进店点击 (Logo, 名字, 箭头)
         Observable.merge(
-                        RxView.clicks(holder.itemView),
-                        RxView.clicks(tvPrice),
-                        RxView.clicks(tvCount)
-                )
-                .throttleFirst(500, TimeUnit.MILLISECONDS)
-                .map(unit -> new OrderClickEvent(data))
-                .subscribe(clickSubject::onNext, throwable -> LogUtils.error(throwable.getMessage()));
+                        RxView.clicks(holder.getView(R.id.iv_shop_logo)),
+                        RxView.clicks(holder.getView(R.id.tv_shop_name)),
+                        RxView.clicks(holder.getView(R.id.tv_right_arrow))
+                ).throttleFirst(500, TimeUnit.MILLISECONDS)
+                .subscribe(unit -> ARouter.getInstance().build(ShopConstant.Router.SHOP)
+                        .withLong("shopId", data.getShopId()).navigation());
 
-        // 2. 内部商品列表点击也跳转详情
+        // 2. 联系商家点击
+        RxView.clicks(btnContact)
+                .throttleFirst(500, TimeUnit.MILLISECONDS)
+                .subscribe(unit -> {
+                    if (actionListener != null) actionListener.onContactShop(data);
+                });
+
+        // 3. 主操作按钮点击逻辑切换
+        RxView.clicks(btnAction)
+                .throttleFirst(500, TimeUnit.MILLISECONDS)
+                .subscribe(unit -> {
+                    if (actionListener == null) return;
+                    switch (data.getStatus()) {
+                        case 0:
+                            actionListener.onCancelOrder(data);
+                            break;
+                        case 1:
+                            actionListener.onConfirmReceipt(data);
+                            break;
+                        case 3:
+                            actionListener.onGoToComment(data);
+                            break;
+                    }
+                });
+
+        // 4. 跳转详情流 (Item整体及内部列表)
+        Observable.merge(RxView.clicks(holder.itemView), RxView.clicks(tvPrice), RxView.clicks(tvCount))
+                .throttleFirst(500, TimeUnit.MILLISECONDS)
+                .subscribe(unit -> clickSubject.onNext(new OrderClickEvent(data)));
+
         RecyclerView rvProducts = holder.getView(R.id.rv_horizontal_items);
         PreviewOrderDrinksAdapter innerAdapter = getPreviewOrderDrinksAdapter(data);
         innerAdapter.setOnItemClickListener((item) -> clickSubject.onNext(new OrderClickEvent(data)));
         rvProducts.setAdapter(innerAdapter);
-
-        // 3. 进店点击
-        RxView.clicks(holder.getView(R.id.tv_right_arrow))
-                .throttleFirst(500, TimeUnit.MILLISECONDS)
-                .subscribe(unit -> {
-                    ARouter.getInstance()
-                            .build(ShopConstant.Router.SHOP)
-                            .withLong("shopId", data.getShopId())
-                            .navigation();
-                });
-
-        // 4. 底部操作按钮点击 (取消/评价)
-        // 建议使用 RxView 保持一致性，防止重复点击
-        RxView.clicks(btnAction)
-                .throttleFirst(500, TimeUnit.MILLISECONDS)
-                .subscribe(unit -> {
-                    if (actionListener != null) {
-                        if (data.getStatus() == 0) {
-                            actionListener.onCancelOrder(data);
-                        } else if (data.getStatus() == 1) {
-                            actionListener.onGoToComment(data);
-                        }
-                    }
-                });
     }
 
     private static PreviewOrderDrinksAdapter getPreviewOrderDrinksAdapter(OrderEntity data) {

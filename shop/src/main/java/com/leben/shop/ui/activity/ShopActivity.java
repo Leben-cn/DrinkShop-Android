@@ -58,13 +58,13 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
     private TitleBar titleBar;
     private ImageView ivCollect,ivMessage;
     private boolean isCollected = false;
-
     private ImageView shopLogo;
     private TextView shopName;
     private TextView shopDes;
     private TextView shopSales;
     private TextView shopDistance;
     private TextView shopScore;
+    private View mRestMask;
 
     @InjectPresenter
     CheckFavoritePresenter checkFavoritePresenter;
@@ -101,7 +101,7 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
         deliveryFee=findViewById(R.id.tv_delivery_fee);
         cartIcon=findViewById(R.id.rl_cart_icon_container);
         titleBar=findViewById(R.id.title_bar);
-
+        mRestMask = findViewById(R.id.rl_rest_mask);
         shopLogo=findViewById(R.id.iv_shop_logo);
         shopName=findViewById(R.id.tv_shop_name);
         shopDes=findViewById(R.id.tv_shop_des);
@@ -375,6 +375,15 @@ public class ShopActivity extends BaseTabActivity implements CheckFavoriteContra
     @Override
     public void onGetShopInfoSuccess(ShopEntity data) {
         mShop=data;
+        if (mRestMask != null) {
+            if (mShop.getStatus() != null && mShop.getStatus() == 0) {
+                // 状态为0：显示遮罩
+                mRestMask.setVisibility(View.VISIBLE);
+            } else {
+                // 状态正常：隐藏遮罩
+                mRestMask.setVisibility(View.GONE);
+            }
+        }
         Glide.with(this).load(mShop.getImg()).into(shopLogo);
         shopName.setText(mShop.getName());
         shopDes.setText(mShop.getDescription());

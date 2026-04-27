@@ -19,8 +19,8 @@ public interface CommonConstant {
         String GOODS="/merchant/goods";
         String USER_LOGIN="/user/login";
         String USER_COMMENT="/user/comment";
-
         String ADD_ADDRESS="/add/address";
+        String ORDER_DETAIL="/order/details";
     }
 
     interface URL{

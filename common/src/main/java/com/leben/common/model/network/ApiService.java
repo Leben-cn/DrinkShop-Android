@@ -6,6 +6,7 @@ import com.leben.common.model.bean.SessionEntity;
 import java.util.List;
 import io.reactivex.Flowable;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface ApiService {
@@ -18,5 +19,12 @@ public interface ApiService {
     Flowable<CommonEntity<List<ChatMessageEntity>>> getMessageList(
             @Query("targetId") Long targetId,
             @Query("targetRole") String targetRole
+    );
+
+    // 修改订单状态
+    @POST("/merchant/order/updateStatus")
+    Flowable<CommonEntity<String>> updateOrderStatus(
+            @Query("orderId") Long orderId,
+            @Query("status") Integer status
     );
 }

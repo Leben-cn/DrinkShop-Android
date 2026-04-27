@@ -48,8 +48,8 @@ public class RecommendDrinksFragment extends BaseRecyclerFragment<ShopEntity> im
     private final int SIZE = 10;//分页大小
     private long currentSeed = 0; // 记录当前的随机种子,用于每次刷新后展示不同的数据
 
-    private Double latitude = 30.29;
-    private Double longitude = 120.15;
+    private Double latitude ;
+    private Double longitude;
 
     private LinearLayout llMilkTea;
     private LinearLayout llFruitTea;

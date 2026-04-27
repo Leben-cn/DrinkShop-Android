@@ -4,9 +4,8 @@ import android.content.Context;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.ui.adapter.holder.BaseViewHolder;
 import com.leben.common.util.PriceUtils;
-import com.leben.shop.R;
+import com.leben.common.R;
 import com.leben.shop.model.bean.CartEntity;
-
 import java.text.DecimalFormat;
 
 public class PayAdapter extends BaseRecyclerAdapter<CartEntity> {
@@ -17,7 +16,7 @@ public class PayAdapter extends BaseRecyclerAdapter<CartEntity> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.shop_item_pay_product;
+        return R.layout.common_item_pay_product;
     }
 
     @Override

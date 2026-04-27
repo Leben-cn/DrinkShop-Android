@@ -336,4 +336,30 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_rest_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_bar"
+        android:background="#77000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:src="@drawable/pic_close_shop"
+                android:tint="@color/white"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
 </RelativeLayout>

@@ -4,13 +4,17 @@ import android.annotation.SuppressLint;
 import androidx.fragment.app.DialogFragment;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.leben.base.annotation.InjectPresenter;
+import com.leben.base.model.event.RefreshEvent;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.ui.fragment.BaseRecyclerFragment;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.dialog.CommonDialog;
+import com.leben.common.LocationManager;
 import com.leben.common.constant.CommonConstant;
+import com.leben.common.contract.UpdateOrderStateContract;
 import com.leben.common.model.event.LocationEvent;
+import com.leben.common.presenter.UpdateOrderStatePresenter;
 import com.leben.shop.constant.ShopConstant;
 import com.leben.shop.contract.CancelOrderContract;
 import com.leben.shop.contract.GetAllOrderContract;
@@ -30,13 +34,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 
 public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implements GetAllOrderContract.View,
-        CancelOrderContract.View {
+        CancelOrderContract.View , UpdateOrderStateContract.View {
 
     @InjectPresenter
     GetAllOrderPresenter getAllOrderPresenter;
 
     @InjectPresenter
     CancelOrderPresenter cancelOrderPresenter;
+
+    @InjectPresenter
+    UpdateOrderStatePresenter updateOrderStatePresenter;
 
     private Double latitude;
     private Double longitude;
@@ -56,7 +63,7 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
 
     @Override
     public void onRefresh() {
-        getAllOrderPresenter.getAllOrder(latitude,longitude);
+        getAllOrderPresenter.getAllOrder(latitude, longitude);
     }
 
     @SuppressLint("CheckResult")
@@ -87,6 +94,32 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
                             .withSerializable("order", order)
                             .navigation();
                 }
+
+                @Override
+                public void onConfirmReceipt(OrderEntity order) {
+                    CommonDialog dialog = CommonDialog.newInstance()
+                            .setTitle("确认收货")
+                            .setContent("确定商品完整无破损？");
+                    dialog.setOnCancelListener(DialogFragment::dismiss);
+
+                    dialog.setOnConfirmListener(d -> {
+                        updateOrderStatePresenter.updateOrderState(order.getId(),3);
+                    });
+
+                    dialog.show(getParentFragmentManager(), "dialog_confirmOrder");
+                }
+
+                @Override
+                public void onContactShop(OrderEntity order) {
+                    String roleStr = "MERCHANT";
+                    ARouter.getInstance()
+                            .build(CommonConstant.Router.CHAT_DETAIL)
+                            .withLong("targetId", order.getShopId()) // 注意：这里传的是对方真实的 ID
+                            .withString("targetName", order.getShopName())
+                            .withString("targetRoleStr", roleStr) // 传字符串
+                            .withString("targetIcon", order.getShopLogo())
+                            .navigation();
+                }
             });
 
             orderAdapter.observableClicks()
@@ -94,7 +127,7 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(event->{
                         ARouter.getInstance()
-                                .build(ShopConstant.Router.ORDER_DETAIL)
+                                .build(CommonConstant.Router.ORDER_DETAIL)
                                 .withSerializable("order", event.order)
                                 .navigation();
                     },throwable -> {
@@ -105,6 +138,18 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
 
     @Override
     public void initData() {
+        // 1. 检查是否有缓存位置，如果有，直接用缓存位置请求一次
+        Double cachedLat = LocationManager.getInstance().getLatitude();
+        Double cachedLon = LocationManager.getInstance().getLongitude();
+
+        if (cachedLat != null && cachedLat != 0) {
+            this.latitude = cachedLat;
+            this.longitude = cachedLon;
+            // 有缓存位置，可以直接开始刷新
+            autoRefresh();
+        } else {
+            LocationManager.getInstance().startSingleLocation(requireContext());
+        }
     }
 
     @Override
@@ -168,5 +213,18 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    @Override
+    public void onUpdateOrderStateSuccess(String data) {
+        ToastUtils.show(requireContext(),data);
+        EventBus.getDefault().post(new RefreshEvent());
+        onRefresh();
+    }
+
+    @Override
+    public void onUpdateOrderStateFailed(String errorMsg) {
+        ToastUtils.show(requireContext(),errorMsg);
+        LogUtils.error(errorMsg);
     }
 }

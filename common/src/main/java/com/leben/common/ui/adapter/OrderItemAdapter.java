@@ -1,10 +1,10 @@
-package com.leben.shop.ui.adapter;
+package com.leben.common.ui.adapter;
 
 import android.content.Context;
 
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.ui.adapter.holder.BaseViewHolder;
-import com.leben.shop.R;
+import com.leben.common.R;
 import com.leben.common.model.bean.OrderItemEntity;
 
 import java.text.DecimalFormat;
@@ -17,7 +17,7 @@ public class OrderItemAdapter extends BaseRecyclerAdapter<OrderItemEntity> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.shop_item_pay_product;
+        return R.layout.common_item_pay_product;
     }
 
     @Override

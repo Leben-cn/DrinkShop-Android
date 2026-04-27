@@ -1,25 +1,41 @@
 package com.leben.merchant.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.view.View;
+
+import androidx.fragment.app.DialogFragment;
+
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.leben.base.annotation.InjectPresenter;
 import com.leben.base.ui.activity.BaseRecyclerActivity;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.util.LogUtils;
+import com.leben.base.util.ToastUtils;
+import com.leben.base.widget.dialog.CommonDialog;
 import com.leben.base.widget.titleBar.TitleBar;
+import com.leben.common.constant.CommonConstant;
+import com.leben.common.contract.UpdateOrderStateContract;
 import com.leben.common.model.bean.OrderEntity;
+import com.leben.common.presenter.UpdateOrderStatePresenter;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
 import com.leben.merchant.contract.GetCancelOrderContract;
 import com.leben.merchant.presenter.GetCancelOrderPresenter;
 import com.leben.merchant.ui.adapter.OrderAdapter;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 @Route(path = MerchantConstant.Router.ORDER_CANCEL)
-public class OrderCancelActivity extends BaseRecyclerActivity<OrderEntity> implements GetCancelOrderContract.View {
+public class OrderCancelActivity extends BaseRecyclerActivity<OrderEntity> implements GetCancelOrderContract.View , UpdateOrderStateContract.View{
 
     @InjectPresenter
     GetCancelOrderPresenter getCancelOrderPresenter;
+
+    @InjectPresenter
+    UpdateOrderStatePresenter updateOrderStatePresenter;
 
     @Override
     protected BaseRecyclerAdapter<OrderEntity> createAdapter() {
@@ -38,9 +54,65 @@ public class OrderCancelActivity extends BaseRecyclerActivity<OrderEntity> imple
         titleBar.setTitle("已取消订单");
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void initListener() {
+        if (mAdapter instanceof OrderAdapter) {
+            OrderAdapter orderAdapter = (OrderAdapter) mAdapter;
 
+            orderAdapter.setOnOrderActionClickListener(new OrderAdapter.OnOrderActionClickListener() {
+                @Override
+                public void onCancelOrder(OrderEntity order) {
+                    CommonDialog dialog = CommonDialog.newInstance()
+                            .setTitle("取消订单")
+                            .setContent("确定要取消当前订单吗？");
+                    dialog.setOnCancelListener(DialogFragment::dismiss);
+
+                    dialog.setOnConfirmListener(d -> {
+                        updateOrderStatePresenter.updateOrderState(order.getId(),2);
+                    });
+
+                    dialog.show(getSupportFragmentManager(), "dialog_cancelOrder");
+                }
+
+                @Override
+                public void onCompleteOrder(OrderEntity order) {
+                    CommonDialog dialog = CommonDialog.newInstance()
+                            .setTitle("确认出餐")
+                            .setContent("确认已完成用户所有商品？");
+                    dialog.setOnCancelListener(DialogFragment::dismiss);
+
+                    dialog.setOnConfirmListener(d -> {
+                        updateOrderStatePresenter.updateOrderState(order.getId(),1);
+                    });
+
+                    dialog.show(getSupportFragmentManager(), "dialog_completeOrder");
+                }
+                @Override
+                public void onContactUser(OrderEntity order) {
+                    String roleStr = "USER";
+                    ARouter.getInstance()
+                            .build(CommonConstant.Router.CHAT_DETAIL)
+                            .withLong("targetId", order.getUserId()) // 注意：这里传的是对方真实的 ID
+                            .withString("targetName", order.getReceiverName())
+                            .withString("targetRoleStr", roleStr) // 传字符串
+                            .withString("targetIcon", order.getReceiverImg())
+                            .navigation();
+                }
+            });
+
+            orderAdapter.observableClicks()
+                    .throttleFirst(500, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(event->{
+                        ARouter.getInstance()
+                                .build(CommonConstant.Router.ORDER_DETAIL)
+                                .withSerializable("order", event.order)
+                                .navigation();
+                    },throwable -> {
+                        LogUtils.error("点击事件流出错: " + throwable.getMessage());
+                    });
+        }
     }
 
     @Override
@@ -84,5 +156,16 @@ public class OrderCancelActivity extends BaseRecyclerActivity<OrderEntity> imple
     public void onGetCancelOrderFailed(String errorMsg) {
         refreshListFailed("获取订单失败");
         LogUtils.error("获取订单失败："+errorMsg);
+    }
+
+    @Override
+    public void onUpdateOrderStateSuccess(String data) {
+        ToastUtils.show(this,"已取消订单");
+    }
+
+    @Override
+    public void onUpdateOrderStateFailed(String errorMsg) {
+        ToastUtils.show(this,"取消订单失败");
+        LogUtils.error(errorMsg);
     }
 }

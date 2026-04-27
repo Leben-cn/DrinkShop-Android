@@ -7,7 +7,6 @@ public interface ShopConstant {
         String SHOP_COMMENT="/shop/comment";
         String SHOP_PAY="/shop/payment";
         String ADDRESS="/user/address";
-        String ORDER_DETAIL="/order/details";
 
         String SEARCH_DRINK="/shop/search/drinks";
         String PLATFORM_CLASSIFY="/shop/classify";

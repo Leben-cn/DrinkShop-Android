@@ -72,6 +72,22 @@ public class OrderCancelFragment extends BaseRecyclerFragment<OrderEntity> imple
                             .withSerializable("order", order)
                             .navigation();
                 }
+                @Override
+                public void onConfirmReceipt(OrderEntity order) {
+
+                }
+
+                @Override
+                public void onContactShop(OrderEntity order) {
+                    String roleStr = "MERCHANT";
+                    ARouter.getInstance()
+                            .build(CommonConstant.Router.CHAT_DETAIL)
+                            .withLong("targetId", order.getShopId()) // 注意：这里传的是对方真实的 ID
+                            .withString("targetName", order.getShopName())
+                            .withString("targetRoleStr", roleStr) // 传字符串
+                            .withString("targetIcon", order.getShopLogo())
+                            .navigation();
+                }
             });
 
             orderAdapter.observableClicks()
@@ -79,7 +95,7 @@ public class OrderCancelFragment extends BaseRecyclerFragment<OrderEntity> imple
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(event->{
                         ARouter.getInstance()
-                                .build(ShopConstant.Router.ORDER_DETAIL)
+                                .build(CommonConstant.Router.ORDER_DETAIL)
                                 .withSerializable("order", event.order)
                                 .navigation();
                     },throwable -> {
@@ -90,6 +106,18 @@ public class OrderCancelFragment extends BaseRecyclerFragment<OrderEntity> imple
 
     @Override
     public void initData() {
+        // 1. 检查是否有缓存位置，如果有，直接用缓存位置请求一次
+        Double cachedLat = LocationManager.getInstance().getLatitude();
+        Double cachedLon = LocationManager.getInstance().getLongitude();
+
+        if (cachedLat != null && cachedLat != 0) {
+            this.latitude = cachedLat;
+            this.longitude = cachedLon;
+            // 有缓存位置，可以直接开始刷新
+            autoRefresh();
+        } else {
+            LocationManager.getInstance().startSingleLocation(requireContext());
+        }
     }
 
     @Override
@@ -120,19 +148,23 @@ public class OrderCancelFragment extends BaseRecyclerFragment<OrderEntity> imple
         return false;
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onLocationChanged(LocationEvent event) {
-        this.latitude = event.latitude;
-        this.longitude = event.longitude;
-        // 拿到位置后再请求订单
-        onRefresh();
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLocationChanged(LocationEvent event) {
+        this.latitude = event.latitude;
+        this.longitude = event.longitude;
+        onRefresh();
+    }
+
+    @Override
+    protected boolean isSupportLoadMore() {
+        return false;
     }
 }

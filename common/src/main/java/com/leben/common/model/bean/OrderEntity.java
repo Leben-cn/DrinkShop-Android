@@ -30,9 +30,11 @@ public class OrderEntity implements Serializable {
     // --- 4. 收货人信息 (快照) ---
     // 即使主要地址改了，历史订单的地址也不应该变
     private String receiverName;
+    private Long userId;
     private String receiverPhone;
     private String receiverAddress;     // 完整地址 (如: 桐树坞后山)
     private String receiverImg;
+    private String shopState;
 
     private Boolean isComment;
 
@@ -201,5 +203,21 @@ public class OrderEntity implements Serializable {
 
     public void setReceiverImg(String receiverImg) {
         this.receiverImg = receiverImg;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getShopState() {
+        return shopState;
+    }
+
+    public void setShopState(String shopState) {
+        this.shopState = shopState;
     }
 }

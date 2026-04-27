@@ -2,6 +2,7 @@ package com.leben.merchant.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.leben.base.annotation.InjectPresenter;
+import com.leben.base.model.event.RefreshEvent;
 import com.leben.base.ui.fragment.BaseRefreshFragment;
 import com.leben.base.util.LogUtils;
 import com.leben.base.util.SharedPreferencesUtils;
@@ -18,11 +20,15 @@ import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.dialog.CommonDialog;
 import com.leben.common.constant.CommonConstant;
 import com.leben.common.model.bean.LoginEntity;
+import com.leben.common.model.bean.OrderEntity;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
+import com.leben.merchant.contract.GetPendingOrderContract;
 import com.leben.merchant.contract.GetShopTodayStatsContract;
 import com.leben.merchant.contract.UpdateShopStatusContract;
+import com.leben.merchant.model.event.OrderPendingCountEvent;
 import com.leben.merchant.model.event.RefreshInfoEvent;
+import com.leben.merchant.presenter.GetPendingOrderPresenter;
 import com.leben.merchant.presenter.GetShopTodayStatsPresenter;
 import com.leben.merchant.presenter.UpdateShopStatusPresenter;
 import com.leben.common.util.MerchantUtils;
@@ -30,6 +36,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
@@ -40,7 +47,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 
 @Route(path = CommonConstant.Router.WORK_BENCH)
-public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShopStatusContract.View, GetShopTodayStatsContract.View {
+public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShopStatusContract.View,
+        GetShopTodayStatsContract.View , GetPendingOrderContract.View {
 
     private TextView mTvShopName;
     private ImageView mIvShopAvatar;
@@ -49,7 +57,7 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
     private LinearLayout llAllOrder;
     private LinearLayout llCancelOrder;
     private LinearLayout llDoneOrder;
-    private LinearLayout llPendingOrder;
+    private FrameLayout flPendingOrder;
     private LinearLayout llTodayDate;
     private TextView mTvShopSetting;
     private SwitchMaterial mSwitchStatus;
@@ -67,6 +75,9 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
 
     @InjectPresenter
     GetShopTodayStatsPresenter getShopTodayStatsPresenter;
+
+    @InjectPresenter
+    GetPendingOrderPresenter getPendingOrderPresenter;
 
     @Override
     protected int getLayoutId() {
@@ -89,7 +100,7 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
         llAllOrder=root.findViewById(R.id.iv_all_order);
         llCancelOrder=root.findViewById(R.id.ll_refund);
         llDoneOrder=root.findViewById(R.id.ll_done);
-        llPendingOrder=root.findViewById(R.id.iv_pending);
+        flPendingOrder=root.findViewById(R.id.iv_pending);
         mTvShopSetting=root.findViewById(R.id.tv_shop_setting);
         mSwitchStatus = root.findViewById(R.id.switch_status);
         mVStatusDot = root.findViewById(R.id.v_status_dot);
@@ -193,7 +204,7 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
 
-        RxView.clicks(llPendingOrder)
+        RxView.clicks(flPendingOrder)
                 .throttleFirst(500,TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result->{
@@ -276,6 +287,7 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
     @Override
     public void initData() {
         getShopTodayStatsPresenter.getShopTodayStats();
+        getPendingOrderPresenter.getPendingOrder();
     }
 
     @Override
@@ -285,7 +297,7 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
 
     @Override
     public void onRefresh() {
-
+        getShopTodayStatsPresenter.getShopTodayStats();
     }
 
     private void loadMerchantInfo() {
@@ -418,5 +430,39 @@ public class WorkbenchFragment extends BaseRefreshFragment implements UpdateShop
     public void onGetShopTodayStatsFailed(String errorMsg) {
         showError(errorMsg);
         LogUtils.error("获取店铺今日数据失败："+errorMsg);
+    }
+
+    // 订阅事件
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onOrderCountUpdate(OrderPendingCountEvent event) {
+        TextView tvCount = mRootView.findViewById(R.id.tv_pending_count);
+        if (event.pendingCount > 0) {
+            tvCount.setVisibility(View.VISIBLE);
+            tvCount.setText(event.pendingCount > 99 ? "99+" : String.valueOf(event.pendingCount));
+        } else {
+            tvCount.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onGetPendingOrderSuccess(List<OrderEntity> data) {
+        int count = (data == null) ? 0 : data.size();
+        TextView tvCount = mRootView.findViewById(R.id.tv_pending_count);
+        if (count> 0) {
+            tvCount.setVisibility(View.VISIBLE);
+            tvCount.setText(count > 99 ? "99+" : String.valueOf(count));
+        } else {
+            tvCount.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onGetPendingOrderFailed(String errorMsg) {
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshEvent(RefreshEvent event) {
+        onRefresh();
     }
 }
