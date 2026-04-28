@@ -60,8 +60,10 @@ public abstract class BaseSearchActivity<T> extends BaseRecyclerActivity<T> {
         initHistoryView();
 
         // 3. 设置列表点击事件 (父类 mAdapter 已经初始化好了)
+        // 3. 设置列表点击事件
         if (mAdapter != null) {
-            mAdapter.setOnItemClickListener((view, position, entity) -> {
+            mAdapter.setOnItemClickListener((view, viewId, position, entity) -> {
+                // 这里的 entity 类型就是 T
                 onSearchResultClick(entity, position);
             });
         }
@@ -139,12 +141,14 @@ public abstract class BaseSearchActivity<T> extends BaseRecyclerActivity<T> {
         }
 
         // 历史记录点击
-        historyAdapter.setOnItemClickListener((view, position, entity) -> {
+        historyAdapter.setOnItemClickListener((view, viewId, position, entity) -> {
+            // 这里的 entity 就会正确推断为 String
             if (TextUtils.isEmpty(entity)) return;
+
             hideKeyboard();
             hideHistoryView();
             etSearch.setText(entity);
-            etSearch.setSelection(entity.length()); // 光标移到末尾
+            etSearch.setSelection(entity.length());
 
             mCurrentKeyword = entity;
             autoRefresh();

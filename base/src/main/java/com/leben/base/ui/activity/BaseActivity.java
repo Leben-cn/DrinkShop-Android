@@ -209,6 +209,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
                 .statusBarColor(getStatusBarColor())
                 .statusBarDarkFont(isStatusBarDarkFont())
                 .titleBar(getTitleBarView())
+                .keyboardEnable(true)
                 .init();
     }
 

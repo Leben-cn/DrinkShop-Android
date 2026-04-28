@@ -82,7 +82,7 @@ public abstract class BaseRecyclerFragment<T> extends BaseRefreshFragment {
      */
     @Override
     protected int getLayoutId() {
-        return R.layout.ly_base_recycler;
+        return R.layout.layout_base_recycler;
     }
 
     /**

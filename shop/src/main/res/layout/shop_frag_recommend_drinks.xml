@@ -165,13 +165,13 @@
                     android:id="@+id/emptyStub"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout="@layout/ly_empty_page" />
+                    android:layout="@layout/layout_empty_page" />
 
                 <ViewStub
                     android:id="@+id/errorStub"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout="@layout/ly_error_page" />
+                    android:layout="@layout/layout_error_page" />
 
             </FrameLayout>
 

@@ -20,9 +20,13 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseVi
     protected Context mContext;
     protected List<T> mList;
     protected OnItemClickListener<T> mOnItemClickListener;
+    protected OnItemLongClickListener<T> mOnItemLongClickListener;
     public static final int TYPE_CONTENT=0;
     public static final int TYPE_FOOTER=1;
     private View mFooterView;//底部布局
+
+    // 用于防抖处理
+    private long lastClickTime = 0;
 
     public BaseRecyclerAdapter(Context context) {
         this.mContext = context;
@@ -80,11 +84,19 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseVi
 
         final T item = getItem(position);
 
-        // 统一处理点击事件
+        // 1. 整行点击：传递当前 itemView 的 ID
         holder.itemView.setOnClickListener(v -> {
-            if (mOnItemClickListener != null) {
-                mOnItemClickListener.onItemClick(v, position, item);
+            if (mOnItemClickListener != null)
+                mOnItemClickListener.onItemClick(v, v.getId(), position, item);
+        });
+
+        // 2. 整行长按
+        holder.itemView.setOnLongClickListener(v -> {
+            if (mOnItemLongClickListener != null) {
+                mOnItemLongClickListener.onItemLongClick(v, position, item);
+                return true;
             }
+            return false;
         });
         bindData(holder, item, position);
     }
@@ -136,7 +148,8 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseVi
     protected abstract void bindData(BaseViewHolder holder, T data, int position);
 
     public interface OnItemClickListener<T> {
-        void onItemClick(View view, int position, T entity);
+        // 核心改动：增加 viewId 参数
+        void onItemClick(View view, int viewId, int position, T data);
     }
 
     public void setOnItemClickListener(OnItemClickListener<T> listener) {
@@ -163,5 +176,13 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseVi
     public void clear() {
         mList.clear();
         notifyDataSetChanged();
+    }
+
+    public interface OnItemLongClickListener<T> {
+        void onItemLongClick(View view, int position, T entity);
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener<T> listener) {
+        this.mOnItemLongClickListener = listener;
     }
 }

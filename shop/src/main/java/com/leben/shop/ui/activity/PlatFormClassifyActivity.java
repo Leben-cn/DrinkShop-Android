@@ -58,15 +58,12 @@ public class PlatFormClassifyActivity extends BaseRecyclerActivity<DrinkEntity> 
 
     @Override
     public void initListener() {
-        mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<DrinkEntity>() {
-            @Override
-            public void onItemClick(View view, int position, DrinkEntity entity) {
-                ARouter.getInstance()
-                        .build(ShopConstant.Router.SHOP)
-                        .withLong("shopId", entity.getShopCategories().getShopId())
-                        .withLong("drinkId", entity.getId())
-                        .navigation();
-            }
+        mAdapter.setOnItemClickListener((view, viewId, position, data) -> {
+            ARouter.getInstance()
+                    .build(ShopConstant.Router.SHOP)
+                    .withLong("shopId", data.getShopCategories().getShopId())
+                    .withLong("drinkId", data.getId())
+                    .navigation();
         });
     }
 

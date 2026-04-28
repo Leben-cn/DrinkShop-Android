@@ -5,9 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.alibaba.fastjson.JSON;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.leben.base.annotation.InjectPresenter;
@@ -23,19 +21,15 @@ import com.leben.common.constant.CommonConstant;
 import com.leben.common.contract.GetMessageListContract;
 import com.leben.common.model.bean.ChatMessageEntity;
 import com.leben.common.model.bean.LoginEntity;
-import com.leben.common.model.event.UpdateTabUnreadEvent;
 import com.leben.common.presenter.GetMessageListPresenter;
 import com.leben.common.ui.adapter.ChatAdapter;
 import com.leben.common.util.MerchantUtils;
 import com.leben.common.util.UserUtils;
-
 import org.greenrobot.eventbus.EventBus;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -31,7 +32,9 @@ import com.leben.user.constant.UserConstant;
 import com.leben.user.contract.SaveAddressContract;
 import com.leben.common.model.bean.AddressEntity;
 import com.leben.user.presenter.SaveAddressPresenter;
+
 import java.util.concurrent.TimeUnit;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 @Route(path = UserConstant.Router.ADD_ADDRESS)
@@ -58,6 +61,9 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
     private double currentLng = 0.0;
     private String currentPoiAddress = "";
 
+    private AddressEntity mEditData; // 用于存储传进来的编辑数据
+    private boolean isEditMode = false; // 标记位
+
     @Override
     protected int getLayoutId() {
         return R.layout.user_ac_add_address;
@@ -67,8 +73,8 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
     public void onInit() {
         super.onInit();
         // 管地图显示和搜索
-        MapsInitializer.updatePrivacyShow(this,true,true);
-        MapsInitializer.updatePrivacyAgree(this,true);
+        MapsInitializer.updatePrivacyShow(this, true, true);
+        MapsInitializer.updatePrivacyAgree(this, true);
 
         // 管 AMapLocationClient
         try {
@@ -76,6 +82,11 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
             AMapLocationClient.updatePrivacyAgree(this, true);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        mEditData = (AddressEntity) getIntent().getSerializableExtra("address");
+        if (mEditData != null) {
+            isEditMode = true;
         }
 
     }
@@ -94,6 +105,25 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
 
         if (aMap == null) {
             aMap = mMapView.getMap();
+        }
+
+        if (isEditMode) {
+            // 修改标题（如果你有 TitleBar 的话）
+            // titleBar.setTitle("编辑收货地址");
+
+            // 回回显文字信息
+            etName.setText(mEditData.getContactName());
+            etPhone.setText(mEditData.getContactPhone());
+            etDetail.setText(mEditData.getAddressDetail());
+            mTvPoiAddress.setText(mEditData.getAddressPoi());
+
+            // 保存坐标，防止用户没挪动地图就点保存
+            currentLat = mEditData.getLatitude();
+            currentLng = mEditData.getLongitude();
+            currentPoiAddress = mEditData.getAddressPoi();
+
+            // 标记：如果处于编辑模式，initData 里的“首次自动定位”就不应该跑了
+            isFirstLocate = false;
         }
 
         // 初始化搜索模块 (用于 坐标转地址)
@@ -141,19 +171,19 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
                     return true; // 校验通过，放行
                 })
                 .subscribe(unit -> {
-                    // --- 校验通过，执行业务逻辑 ---
-                    // 1. 构造实体对象
                     AddressEntity data = new AddressEntity();
                     data.setContactName(etName.getText().toString().trim());
                     data.setContactPhone(etPhone.getText().toString().trim());
                     data.setAddressDetail(etDetail.getText().toString().trim());
-                    data.setAddressPoi(currentPoiAddress); // 此时已有值
+                    data.setAddressPoi(currentPoiAddress);
                     data.setLatitude(currentLat);
                     data.setLongitude(currentLng);
 
-                    // 2. 调用 Presenter 发起异步请求
-                    // 这里不需要关心它是异步还是同步，结果会通过 onSaveAddressSuccess 回调回来
-                        saveAddressPresenter.saveAddress(data);
+                    if (isEditMode) {
+                        data.setId(mEditData.getId());
+                    }
+
+                    saveAddressPresenter.saveAddress(data);
 
                 }, throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
@@ -162,39 +192,47 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
 
     @Override
     public void initData() {
-        try {
-            mLocationClient = new AMapLocationClient(getApplicationContext());
-            AMapLocationClientOption option = new AMapLocationClientOption();
-            // 设置高精度定位模式
-            option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-            option.setOnceLocation(true); // 只定位一次
-            mLocationClient.setLocationOption(option);
 
-            mLocationClient.setLocationListener(location -> {
-                if (location != null && location.getErrorCode() == 0) {
-                    currentLat = location.getLatitude();
-                    currentLng = location.getLongitude();
+        if (isEditMode) {
+            // 编辑模式：直接把地图移动到地址所在的经纬度
+            LatLng latLng = new LatLng(mEditData.getLatitude(), mEditData.getLongitude());
+            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f));
+        } else {
+            try {
+                mLocationClient = new AMapLocationClient(getApplicationContext());
+                AMapLocationClientOption option = new AMapLocationClientOption();
+                // 设置高精度定位模式
+                option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+                option.setOnceLocation(true); // 只定位一次
+                mLocationClient.setLocationOption(option);
 
-                    // 首次定位，把地图移过去，并放大
-                    if (isFirstLocate) {
-                        isFirstLocate = false;
-                        LatLng latLng = new LatLng(currentLat, currentLng);
-                        // 缩放级别 17
-                        aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f));
+                mLocationClient.setLocationListener(location -> {
+                    if (location != null && location.getErrorCode() == 0) {
+                        currentLat = location.getLatitude();
+                        currentLng = location.getLongitude();
 
-                        // 主动查一次地址
-                        searchAddressByLatlng(currentLat, currentLng);
+                        // 首次定位，把地图移过去，并放大
+                        if (isFirstLocate) {
+                            isFirstLocate = false;
+                            LatLng latLng = new LatLng(currentLat, currentLng);
+                            // 缩放级别 17
+                            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f));
+
+                            // 主动查一次地址
+                            searchAddressByLatlng(currentLat, currentLng);
+                        }
+                    } else {
+                        LogUtils.error("定位失败: " + (location != null ? location.getErrorInfo() : "null"));
+                        mTvPoiAddress.setText("定位失败，请检查权限");
                     }
-                } else {
-                    LogUtils.error("定位失败: " + (location != null ? location.getErrorInfo() : "null"));
-                    mTvPoiAddress.setText("定位失败，请检查权限");
-                }
-            });
+                });
 
-            mLocationClient.startLocation();
-        } catch (Exception e) {
-            e.printStackTrace();
+                mLocationClient.startLocation();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
     @Override
@@ -256,26 +294,26 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
     @Override
     public void onResume() {
         super.onResume();
-        if(mMapView != null) mMapView.onResume();
+        if (mMapView != null) mMapView.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if(mMapView != null) mMapView.onPause();
+        if (mMapView != null) mMapView.onPause();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(mMapView != null) mMapView.onSaveInstanceState(outState);
+        if (mMapView != null) mMapView.onSaveInstanceState(outState);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mLocationClient != null) mLocationClient.onDestroy();
-        if(mMapView != null) mMapView.onDestroy();
+        if (mLocationClient != null) mLocationClient.onDestroy();
+        if (mMapView != null) mMapView.onDestroy();
     }
 
 
@@ -287,7 +325,7 @@ public class AddAddressActivity extends BaseActivity implements AMap.OnCameraCha
 
     @Override
     public void onSaveAddressFailed(String errorMsg) {
-        ToastUtils.show(this,"保存地址失败");
+        ToastUtils.show(this, "保存地址失败");
         LogUtils.error(errorMsg);
     }
 }

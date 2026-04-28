@@ -19,7 +19,6 @@ import com.leben.common.ui.adapter.SessionListAdapter;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.List;
 
 /**
@@ -66,21 +65,15 @@ public class SessionListFragment extends BaseRecyclerFragment<SessionEntity> imp
 
     @Override
     public void initListener() {
-        mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<SessionEntity>() {
-            @Override
-            public void onItemClick(View view, int position, SessionEntity entity) {
-                String roleStr = "USER";
-                if (entity.targetRole == 1) roleStr = "MERCHANT";
-                else if (entity.targetRole == 2) roleStr = "ADMIN";
-
-                ARouter.getInstance()
-                        .build(CommonConstant.Router.CHAT_DETAIL)
-                        .withLong("targetId", entity.getTargetId()) // 注意：这里传的是对方真实的 ID
-                        .withString("targetName", entity.getTargetName())
-                        .withString("targetRoleStr", roleStr) // 传字符串
-                        .withString("targetIcon", entity.getTargetIcon())
-                        .navigation();
-            }
+        mAdapter.setOnItemClickListener((v, vId, pos, data) -> {
+            String roleStr = (data.targetRole == 1) ? "MERCHANT" : (data.targetRole == 2 ? "ADMIN" : "USER");
+            ARouter.getInstance()
+                    .build(CommonConstant.Router.CHAT_DETAIL)
+                    .withLong("targetId", data.getTargetId())
+                    .withString("targetName", data.getTargetName())
+                    .withString("targetRoleStr", roleStr)
+                    .withString("targetIcon", data.getTargetIcon())
+                    .navigation();
         });
     }
 

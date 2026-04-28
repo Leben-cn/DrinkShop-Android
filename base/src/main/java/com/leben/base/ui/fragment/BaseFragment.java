@@ -262,6 +262,7 @@ public abstract class BaseFragment extends Fragment implements IBaseView, Lifecy
                 .statusBarColor(getStatusBarColor())
                 .statusBarDarkFont(isStatusBarDarkFont())
                 .titleBar(getTitleBarView())
+                .keyboardEnable(true)
                 .init();
     }
 

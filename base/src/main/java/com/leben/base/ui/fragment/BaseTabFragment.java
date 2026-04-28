@@ -69,7 +69,7 @@ public abstract class BaseTabFragment extends BaseFragment {
         mViewPager.setOffscreenPageLimit(fragments.size());
 
         new TabLayoutMediator(mTabLayout, mViewPager, (tab, position) -> {
-            View view = LayoutInflater.from(requireContext()).inflate(R.layout.ly_custom_tab, null);
+            View view = LayoutInflater.from(requireContext()).inflate(R.layout.layout_custom_tab, null);
             // 修正垂直方向边距
             view.setPadding(view.getPaddingLeft(), dp2px(8), view.getPaddingRight(), dp2px(8));
 

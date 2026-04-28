@@ -15,7 +15,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.leben.base.R;
 import com.leben.base.ui.adapter.CommonFragmentAdapter;
-import com.leben.base.util.LogUtils;
 import com.leben.base.widget.titleBar.TitleBar;
 import java.util.List;
 
@@ -76,7 +75,7 @@ public abstract class BaseTabActivity extends BaseActivity {
 
         // 6. 绑定 TabLayout (使用自定义 View 方案)
         new TabLayoutMediator(mTabLayout, mViewPager, (tab, position) -> {
-            View view = LayoutInflater.from(this).inflate(R.layout.ly_custom_tab, null);
+            View view = LayoutInflater.from(this).inflate(R.layout.layout_custom_tab, null);
             view.setPadding(view.getPaddingLeft(), dp2px(8), view.getPaddingRight(), dp2px(8));
             ImageView tabIcon = view.findViewById(R.id.tab_icon);
             TextView tabText = view.findViewById(R.id.tab_text);

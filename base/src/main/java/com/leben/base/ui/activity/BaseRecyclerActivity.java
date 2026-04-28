@@ -122,7 +122,7 @@ public abstract class BaseRecyclerActivity<T> extends BaseRefreshActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.ly_base_recycler;
+        return R.layout.layout_base_recycler;
     }
 
     public void loadMoreSuccess(List<T> list, boolean hasMore) {

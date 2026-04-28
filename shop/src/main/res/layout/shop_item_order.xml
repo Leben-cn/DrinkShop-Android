@@ -27,39 +27,45 @@
 
         <TextView
             android:id="@+id/tv_shop_name"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:text="悸动(上饶广丰霞峰镇店)"
+            android:text="店名"
             android:textColor="#333333"
             android:textSize="16sp"
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@+id/iv_shop_logo"
             app:layout_constraintEnd_toStartOf="@+id/tv_right_arrow"
-            app:layout_constraintTop_toTopOf="@+id/iv_shop_logo"/>
+            app:layout_constraintTop_toTopOf="@+id/iv_shop_logo" />
 
-        <TextView
+        <ImageView
             android:id="@+id/tv_right_arrow"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:textColor="#999999"
-            android:background="@drawable/ic_right_arrow"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_right_arrow"
+            android:scaleType="fitCenter"
+            app:layout_constraintStart_toEndOf="@id/tv_shop_name"
             app:layout_constraintEnd_toStartOf="@+id/tv_status"
-            app:layout_constraintBaseline_toBaselineOf="@+id/tv_shop_name"/>
+            app:layout_constraintTop_toTopOf="@+id/tv_shop_name"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_shop_name" />
 
         <TextView
             android:id="@+id/tv_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="已完成"
             android:textColor="#999999"
             android:textSize="14sp"
-            android:paddingStart="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBaseline_toBaselineOf="@+id/tv_right_arrow"/>
+            app:layout_constraintTop_toTopOf="@+id/tv_shop_name"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_shop_name" />
 
         <TextView
             android:id="@+id/tv_order_info"

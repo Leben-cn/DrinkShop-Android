@@ -99,11 +99,9 @@ public class ShopCategoryEditActivity extends BaseRecyclerActivity<ShopCategorie
     @SuppressLint("CheckResult")
     @Override
     public void initListener() {
-        // 1. 添加分类逻辑
         RxView.clicks(mIvAddCategory)
                 .throttleFirst(500, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(entity -> {
+                .subscribe(unit -> {
                     InputDialog.newInstance()
                             .setTitle("添加店铺内分类")
                             .setHint("输入新分类名称")
@@ -113,33 +111,26 @@ public class ShopCategoryEditActivity extends BaseRecyclerActivity<ShopCategorie
                                 }
                             })
                             .show(getSupportFragmentManager(), "dialog_InputShopCategory");
-                }, throwable -> LogUtils.error("点击错误: " + throwable.getMessage()));
+                });
 
-        if (mAdapter instanceof ShopCategoryAdapter) {
-            ShopCategoryAdapter shopCategoryAdapter = (ShopCategoryAdapter) mAdapter;
-
-            // 2. 删除逻辑
-            shopCategoryAdapter.setOnItemDeleteListener(id -> {
+        mAdapter.setOnItemClickListener((view, viewId, position, entity) -> {
+            if (viewId == R.id.iv_delete) {
                 CommonDialog dialog = new CommonDialog();
                 dialog.setContent("确认删除此分类吗？");
                 dialog.setOnConfirmListener(result -> {
-                    deleteShopCategoryPresenter.deleteShopCategory(id);
+                    deleteShopCategoryPresenter.deleteShopCategory(entity.getId());
                     dialog.dismiss();
                 });
-                dialog.setOnCancelListener(result -> dialog.dismiss());
                 dialog.show(getSupportFragmentManager(), "dialog_delete");
-            });
 
-            // 3. 列表项点击（选择模式）
-            shopCategoryAdapter.setOnItemClickListener((view, position, entity) -> {
+            } else {
+                // 逻辑 B：整行点击（选择模式）
                 if (isSelectMode) {
                     EventBus.getDefault().post(new SelectShopCategoryEvent(entity));
                 }
-                silentSaveAndExit(); // 静默保存并强制退出
-            });
-        }
-
-        // 4. 标题栏返回键逻辑：显式触发弹窗逻辑
+                silentSaveAndExit();
+            }
+        });
         titleBar.setOnBackListener(v -> finish());
     }
 

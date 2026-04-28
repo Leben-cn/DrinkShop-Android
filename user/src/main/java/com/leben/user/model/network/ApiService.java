@@ -24,7 +24,7 @@ public interface ApiService {
             @Query("password") String password
     );
 
-    @POST("/users/save")
+    @POST("/users/save/address")
     Flowable<CommonEntity<String>> saveAddress(
             @Body AddressEntity addressEntity
     );
@@ -56,6 +56,11 @@ public interface ApiService {
     @POST("/users/update/info")
     Flowable<CommonEntity<String>> updateUserInfo(
             @Body UserInfoEntity userInfoEntity
+    );
+
+    @POST("/users/delete/address")
+    Flowable<CommonEntity<String>> deleteAddress(
+            @Query("id") Long id
     );
 
 }
