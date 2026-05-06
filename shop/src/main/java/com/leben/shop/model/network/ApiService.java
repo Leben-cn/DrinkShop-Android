@@ -5,7 +5,7 @@ import com.leben.common.model.bean.CommonEntity;
 import com.leben.common.model.bean.DrinkEntity;
 import com.leben.common.model.bean.OrderEntity;
 import com.leben.shop.model.bean.DrinkQueryEntity;
-import com.leben.shop.model.bean.PageEntity;
+import com.leben.common.model.bean.PageEntity;
 import com.leben.common.model.bean.ShopEntity;
 import java.util.List;
 import io.reactivex.Flowable;

@@ -25,8 +25,8 @@ public class OrderFragment extends BaseTabFragment {
         titleBar.setTitle("订单");
         titleBar.setBackgroundResource(R.color.white);
         searchIcon = new ImageView(getContext());
-        searchIcon.setImageResource(R.drawable.ic_search);
-        titleBar.addRightView(searchIcon);
+        searchIcon.setImageResource(R.drawable.pic_search);
+        titleBar.addRightView(searchIcon,30,30);
     }
 
     @Override

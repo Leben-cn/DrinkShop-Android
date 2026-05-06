@@ -1,24 +1,34 @@
 package com.leben.merchant.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.leben.base.annotation.InjectPresenter;
+import com.leben.base.model.bean.PopupEntity;
 import com.leben.base.ui.activity.BaseRecyclerActivity;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.util.LogUtils;
+import com.leben.base.util.ToastUtils;
+import com.leben.base.widget.dialog.CommonDialog;
+import com.leben.base.widget.popup.DefaultPopup;
 import com.leben.base.widget.titleBar.TitleBar;
+import com.leben.common.contract.UpdateCommentStatusContract;
 import com.leben.common.model.bean.CommentEntity;
+import com.leben.common.presenter.UpdateCommentStatusPresenter;
 import com.leben.common.ui.adapter.CommentAdapter;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
 import com.leben.merchant.contract.GetShopCommentContract;
 import com.leben.merchant.presenter.GetShopCommentPresenter;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -29,13 +39,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 
 @Route(path = MerchantConstant.Router.MANAGEMENT_COMMENT)
-public class ManagementCommentActivity extends BaseRecyclerActivity<CommentEntity> implements GetShopCommentContract.View {
+public class ManagementCommentActivity extends BaseRecyclerActivity<CommentEntity> implements GetShopCommentContract.View , UpdateCommentStatusContract.View {
 
     private Long shopId;
     private TextView tvWaitReview;
 
     @InjectPresenter
     GetShopCommentPresenter getShopCommentPresenter;
+
+    @InjectPresenter
+    UpdateCommentStatusPresenter updateCommentStatusPresenter;
 
     @Override
     protected BaseRecyclerAdapter<CommentEntity> createAdapter() {
@@ -70,6 +83,7 @@ public class ManagementCommentActivity extends BaseRecyclerActivity<CommentEntit
         }
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void initListener() {
         RxView.clicks(tvWaitReview)
@@ -82,18 +96,30 @@ public class ManagementCommentActivity extends BaseRecyclerActivity<CommentEntit
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
+        mAdapter.setOnItemLongClickListener((view, position, entity) -> {
+            List<PopupEntity> items=new ArrayList<>();
+            items.add(new PopupEntity(1,"删除评论"));
+            new DefaultPopup(this,items)
+                    .setOnItemClickListener(item -> {
+                        CommonDialog dialog=new CommonDialog();
+                        dialog.setContent("确定要删除此评论吗？将由管理员介入审核");
+                        dialog.setOnConfirmListener(result->{
+                            updateCommentStatusPresenter.updateCommentStatus(entity.getOrderId(),3);
+                        });
+                        dialog.setOnCancelListener(result->dialog.dismiss());
+                        dialog.show(getSupportFragmentManager(),"dialog_delete_comment");
+                    }).showAsDropDown(view,view.getWidth()/2,-view.getHeight()/2);
+        });
     }
 
     @Override
     public void initData() {
-        if (shopId != 0) {
-            getShopCommentPresenter.getShopComment(shopId);
-        }
+        onRefresh();
     }
 
     @Override
     public void onRefresh() {
-
+        getShopCommentPresenter.getShopComment(1);
     }
 
     @Override
@@ -115,5 +141,23 @@ public class ManagementCommentActivity extends BaseRecyclerActivity<CommentEntit
     @Override
     protected View getTitleBarView() {
         return findViewById(R.id.title_bar);
+    }
+
+    @Override
+    public void onUpdateCommentStatusSuccess(String data) {
+        ToastUtils.show(this,"管理员已介入，评论审核中");
+        onRefresh();
+    }
+
+    @Override
+    public void onUpdateCommentStatusFailed(String errorMsg) {
+        refreshListFailed("删除评价失败");
+        LogUtils.error("删除评价失败："+errorMsg);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        onRefresh();
     }
 }

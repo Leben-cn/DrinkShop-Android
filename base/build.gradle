@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    id 'maven-publish'
 }
 
 android {
@@ -22,6 +23,12 @@ android {
 
     }
 
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -31,6 +38,19 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.findByName('release') ?: components.release
+                groupId = 'com.leben.drinkshop'
+                artifactId = 'base-library'
+                version = '1.0.0'
+            }
+        }
     }
 }
 
@@ -55,6 +75,7 @@ dependencies {
     api 'com.geyifeng.immersionbar:immersionbar:3.2.2'
     //ARouter
     api 'com.alibaba:arouter-api:1.5.2'
+
     annotationProcessor 'com.alibaba:arouter-compiler:1.5.2'
     // SwipeRefreshLayout
     api "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"

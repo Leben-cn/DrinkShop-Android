@@ -11,6 +11,6 @@ public interface GetShopCommentContract {
         void onGetShopCommentFailed(String errorMsg);
     }
     interface Presenter {
-        void getShopComment(Long shopId);
+        void getShopComment(Integer status);
     }
 }

@@ -20,7 +20,7 @@ import com.leben.common.model.event.LocationEvent;
 import com.leben.shop.R;
 import com.leben.shop.constant.ShopConstant;
 import com.leben.shop.contract.RecommendShopsContract;
-import com.leben.shop.model.bean.PageEntity;
+import com.leben.common.model.bean.PageEntity;
 import com.leben.common.model.bean.ShopEntity;
 import com.leben.shop.presenter.RecommendShopsPresenter;
 import com.leben.shop.ui.adapter.RecommendShopsAdapter;
@@ -32,8 +32,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import javax.sql.CommonDataSource;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 

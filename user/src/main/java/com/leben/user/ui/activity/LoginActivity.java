@@ -95,6 +95,17 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());
                 });
+
+        RxView.clicks(mTvRegister)
+                .throttleFirst(500,TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result->{
+                    ARouter.getInstance()
+                            .build(UserConstant.Router.USER_REGISTER)
+                            .navigation();
+                },throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
     }
 
     @SuppressLint("CheckResult")
@@ -165,7 +176,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public void onLoginFailed(String errorMsg) {
         hideLoading();
-        showError("登录失败");
+        showError("用户名或密码错误");
         LogUtils.error("登录失败："+errorMsg);
     }
 

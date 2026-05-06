@@ -2,23 +2,24 @@ package com.leben.merchant.presenter;
 
 import com.leben.base.presenter.BasePresenter;
 import com.leben.common.util.RxUtils;
-import com.leben.merchant.contract.GetShopCommentContract;
+import com.leben.merchant.contract.QueryDrinkContract;
+import com.leben.merchant.model.bean.DrinkQueryEntity;
 import com.leben.merchant.model.network.ApiService;
 import com.leben.merchant.model.network.NetworkManager;
 
-public class GetShopCommentPresenter extends BasePresenter<GetShopCommentContract.View>implements GetShopCommentContract.Presenter {
+public class QueryDrinkPresenter extends BasePresenter<QueryDrinkContract.View> implements QueryDrinkContract.Presenter {
     @Override
-    public void getShopComment(Integer status) {
+    public void queryDrink(DrinkQueryEntity entity,int page,int size) {
         mCompositeDisposable.add(NetworkManager.getInstance().create(ApiService.class)
-                .getShopComment(status)
+                .queryDrink(entity,page,size)
                 .compose(RxUtils.rxSchedulerHelper())
                 .subscribe(data->{
                     if (getView() != null) {
-                        getView().onGetShopCommentSuccess(data);
+                        getView().onQueryDrinkSuccess(data);
                     }
                 },throwable -> {
                     if (getView() != null) {
-                        getView().onGetShopCommentFailed(throwable.getMessage());
+                        getView().onQueryDrinkFailed(throwable.getMessage());
                     }
                 }));
     }

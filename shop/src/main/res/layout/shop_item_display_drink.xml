@@ -37,7 +37,7 @@
             android:textColor="#333333"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/tv_distance"
+            app:layout_constraintEnd_toStartOf="@+id/tv_display_distance"
             app:layout_constraintStart_toEndOf="@id/iv_display_drink_img"
             app:layout_constraintTop_toTopOf="@id/iv_display_drink_img"
             tools:text="招牌珍珠奶茶" />
@@ -83,17 +83,31 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tv_display_shop_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="#414141"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_display_drink_name"
+            app:layout_constraintTop_toBottomOf="@id/ll_info"
+            tools:text="蜜雪冰城（人民路店）" />
+
+        <TextView
             android:id="@+id/tv_display_drink_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="2dp"
             android:text="¥ 28.00"
             android:textColor="#FF0000"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_display_drink_name"
-            app:layout_constraintTop_toBottomOf="@id/ll_info"
+            app:layout_constraintTop_toBottomOf="@id/tv_display_shop_name"
             app:layout_constraintVertical_bias="1.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

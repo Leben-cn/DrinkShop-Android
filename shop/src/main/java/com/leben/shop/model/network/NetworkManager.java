@@ -60,7 +60,7 @@ public class NetworkManager {
 
         // 4. 配置 Retrofit
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://"+ BuildConfig.SERVER_IP+":8080/")
+                .baseUrl("http://"+ BuildConfig.SERVER_IP+":8081/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

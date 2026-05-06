@@ -1,4 +1,4 @@
-package com.leben.shop.ui.activity;
+package com.leben.merchant.ui.activity;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -7,16 +7,16 @@ import com.leben.base.ui.activity.BaseSearchActivity;
 import com.leben.base.ui.adapter.BaseRecyclerAdapter;
 import com.leben.base.util.LogUtils;
 import com.leben.common.LocationManager;
-import com.leben.shop.constant.ShopConstant;
-import com.leben.shop.contract.QueryDrinkContract;
 import com.leben.common.model.bean.DrinkEntity;
-import com.leben.shop.model.bean.DrinkQueryEntity;
+import com.leben.merchant.constant.MerchantConstant;
+import com.leben.merchant.contract.QueryDrinkContract;
+import com.leben.merchant.model.bean.DrinkQueryEntity;
 import com.leben.common.model.bean.PageEntity;
-import com.leben.shop.presenter.QueryDrinkPresenter;
-import com.leben.shop.ui.adapter.DrinkAdapter;
+import com.leben.merchant.presenter.QueryDrinkPresenter;
+import com.leben.merchant.ui.adapter.DrinkAdapter;
 import java.util.List;
 
-@Route(path = ShopConstant.Router.SEARCH_DRINK)
+@Route(path = MerchantConstant.Router.DRINK_SEARCH)
 public class DrinksSearchActivity extends BaseSearchActivity<DrinkEntity> implements QueryDrinkContract.View {
 
     private int page=0;
@@ -24,6 +24,7 @@ public class DrinksSearchActivity extends BaseSearchActivity<DrinkEntity> implem
 
     Double userLat;
     Double userLon;
+    private Long shopId;
 
     @InjectPresenter
     QueryDrinkPresenter queryDrinkPresenter;
@@ -36,6 +37,7 @@ public class DrinksSearchActivity extends BaseSearchActivity<DrinkEntity> implem
     @Override
     public void onInit() {
         super.onInit();
+        shopId = getIntent().getLongExtra("shopId", -1L);
         userLat= LocationManager.getInstance().getLatitude();
         userLon=LocationManager.getInstance().getLongitude();
     }
@@ -45,7 +47,8 @@ public class DrinksSearchActivity extends BaseSearchActivity<DrinkEntity> implem
         page = 0;
 
         DrinkQueryEntity entity = new DrinkQueryEntity();
-        entity.setName(keyword);
+        entity.setName(keyword);      // 名字模糊搜索
+        entity.setShopId(shopId);      // 锁定当前店铺 ID
         entity.setUserLat(userLat);
         entity.setUserLon(userLon);
         // 发起请求
@@ -53,11 +56,10 @@ public class DrinksSearchActivity extends BaseSearchActivity<DrinkEntity> implem
     }
     @Override
     protected void onSearchResultClick(DrinkEntity item, int position) {
-        ARouter.getInstance()
-                .build(ShopConstant.Router.SHOP)
-                .withLong("shopId", item.getShopCategories().getShopId())
-                .withLong("drinkId", item.getId())
-                .navigation();
+//        ARouter.getInstance()
+//                .build(MerchantConstant.Router.DRINK_EDIT)
+//                .withSerializable("drink", item)
+//                .navigation();
     }
 
     @Override
@@ -97,6 +99,7 @@ public class DrinksSearchActivity extends BaseSearchActivity<DrinkEntity> implem
         page++;
         DrinkQueryEntity entity = new DrinkQueryEntity();
         entity.setName(keyword);
+        entity.setShopId(shopId);
         entity.setUserLat(userLat);
         entity.setUserLon(userLon);
         queryDrinkPresenter.queryDrink(entity,page,size);
@@ -104,6 +107,6 @@ public class DrinksSearchActivity extends BaseSearchActivity<DrinkEntity> implem
 
     @Override
     protected String getHistoryKey() {
-        return "drink_search_history";
+        return "shop_drink_search_history"+shopId;
     }
 }

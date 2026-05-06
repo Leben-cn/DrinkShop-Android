@@ -134,7 +134,7 @@ public class ChatDetailActivity extends BaseRecyclerActivity<ChatMessageEntity> 
         // 这里的 URL 必须以 ws:// 或 wss:// 开头
         // 注意：后端 WS 地址是 /ws/chat?token=xxx
         Request request = new Request.Builder()
-                .url("ws://"+ BuildConfig.SERVER_IP+":8080//ws/chat?token=" + token)
+                .url("ws://"+ BuildConfig.SERVER_IP+":8081//ws/chat?token=" + token)
                 .build();
 
         mWebSocket = mClient.newWebSocket(request, new WebSocketListener() {

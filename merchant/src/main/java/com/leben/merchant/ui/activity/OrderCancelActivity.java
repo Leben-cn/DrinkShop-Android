@@ -15,9 +15,9 @@ import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.dialog.CommonDialog;
 import com.leben.base.widget.titleBar.TitleBar;
 import com.leben.common.constant.CommonConstant;
-import com.leben.common.contract.UpdateOrderStateContract;
+import com.leben.common.contract.UpdateOrderStatusContract;
 import com.leben.common.model.bean.OrderEntity;
-import com.leben.common.presenter.UpdateOrderStatePresenter;
+import com.leben.common.presenter.UpdateOrderStatusPresenter;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
 import com.leben.merchant.contract.GetCancelOrderContract;
@@ -29,13 +29,13 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 @Route(path = MerchantConstant.Router.ORDER_CANCEL)
-public class OrderCancelActivity extends BaseRecyclerActivity<OrderEntity> implements GetCancelOrderContract.View , UpdateOrderStateContract.View{
+public class OrderCancelActivity extends BaseRecyclerActivity<OrderEntity> implements GetCancelOrderContract.View , UpdateOrderStatusContract.View{
 
     @InjectPresenter
     GetCancelOrderPresenter getCancelOrderPresenter;
 
     @InjectPresenter
-    UpdateOrderStatePresenter updateOrderStatePresenter;
+    UpdateOrderStatusPresenter updateOrderStatePresenter;
 
     @Override
     protected BaseRecyclerAdapter<OrderEntity> createAdapter() {
@@ -69,7 +69,7 @@ public class OrderCancelActivity extends BaseRecyclerActivity<OrderEntity> imple
                     dialog.setOnCancelListener(DialogFragment::dismiss);
 
                     dialog.setOnConfirmListener(d -> {
-                        updateOrderStatePresenter.updateOrderState(order.getId(),2);
+                        updateOrderStatePresenter.updateOrderStatus(order.getId(),2);
                     });
 
                     dialog.show(getSupportFragmentManager(), "dialog_cancelOrder");
@@ -83,7 +83,7 @@ public class OrderCancelActivity extends BaseRecyclerActivity<OrderEntity> imple
                     dialog.setOnCancelListener(DialogFragment::dismiss);
 
                     dialog.setOnConfirmListener(d -> {
-                        updateOrderStatePresenter.updateOrderState(order.getId(),1);
+                        updateOrderStatePresenter.updateOrderStatus(order.getId(),1);
                     });
 
                     dialog.show(getSupportFragmentManager(), "dialog_completeOrder");
@@ -159,12 +159,12 @@ public class OrderCancelActivity extends BaseRecyclerActivity<OrderEntity> imple
     }
 
     @Override
-    public void onUpdateOrderStateSuccess(String data) {
+    public void onUpdateOrderStatusSuccess(String data) {
         ToastUtils.show(this,"已取消订单");
     }
 
     @Override
-    public void onUpdateOrderStateFailed(String errorMsg) {
+    public void onUpdateOrderStatusFailed(String errorMsg) {
         ToastUtils.show(this,"取消订单失败");
         LogUtils.error(errorMsg);
     }

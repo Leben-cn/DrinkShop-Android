@@ -18,6 +18,8 @@ public class DrinkEntity implements Serializable {
 
     private String description;
 
+    private String shopName;
+
     private String img;
 
     private Double mark;
@@ -161,5 +163,13 @@ public class DrinkEntity implements Serializable {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 }

@@ -7,6 +7,7 @@ import com.leben.common.model.bean.ShopEntity;
 import com.leben.user.model.bean.BillEntity;
 import com.leben.user.model.bean.CommentSubmitEntity;
 import com.leben.common.model.bean.LoginEntity;
+import com.leben.user.model.bean.RegisterEntity;
 import com.leben.user.model.bean.UserInfoEntity;
 
 import java.util.List;
@@ -33,14 +34,19 @@ public interface ApiService {
     Flowable<CommonEntity<List<AddressEntity>>> getMyAddress(
     );
 
-    // 2. 提交评价
     @POST("/users/submit/comment")
     Flowable<CommonEntity<String>> submitComment(
             @Body CommentSubmitEntity request
     );
 
-    @GET("/users/comment/list")
+    @GET("/comment/user/list")
     Flowable<CommonEntity<List<CommentEntity>>> getMyComment(
+            @Query("status") Integer status
+    );
+
+    @POST("/users/register")
+    Flowable<CommonEntity<String>> register(
+            @Body RegisterEntity registerEntity
     );
 
     @GET("/users/bill/list")

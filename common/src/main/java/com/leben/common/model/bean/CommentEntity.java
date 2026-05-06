@@ -2,6 +2,7 @@ package com.leben.common.model.bean;
 
 public class CommentEntity {
 
+    private Long id;
     private String userName;
     private String userAvatar;
     private String merchantName;
@@ -12,6 +13,8 @@ public class CommentEntity {
     private String content;
     private String picture;
     private String createTime;
+
+    private Long status;
 
     public String getUserName() {
         return userName;
@@ -51,5 +54,13 @@ public class CommentEntity {
 
     public String getCreateTime() {
         return createTime;
+    }
+
+    public Long getStatus() {
+        return status;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

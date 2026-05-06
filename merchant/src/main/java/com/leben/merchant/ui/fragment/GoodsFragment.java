@@ -25,6 +25,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -36,6 +37,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 public class GoodsFragment extends BaseRecyclerFragment<DrinkEntity> implements GetShopDrinkContract.View {
 
     private ImageView mIvAddDrink;
+    private TitleBar titleBar;
+    private Long shopId;
 
     @InjectPresenter
     ShopDrinkPresenter shopDrinkPresenter;
@@ -56,22 +59,28 @@ public class GoodsFragment extends BaseRecyclerFragment<DrinkEntity> implements 
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+        shopId=MerchantUtils.getMerchantId(getContext());
     }
 
     @Override
     protected void initView(View root) {
 
         super.initView(root);
-        TitleBar titleBar=root.findViewById(R.id.title_bar);
+        titleBar=root.findViewById(R.id.title_bar);
         mIvAddDrink=new ImageView(getContext());
         mIvAddDrink.setImageResource(R.drawable.ic_add_circle);
-        titleBar.addRightView(mIvAddDrink);
+        titleBar.addRightView(mIvAddDrink,30,30);
         titleBar.setBackVisible(false);
+        if (titleBar != null) {
+            List<String> hints=new ArrayList<>();
+            hints.add("搜索商品名称");
+            titleBar.setSearchHints(hints);
+        }
     }
 
     @Override
     public void onRefresh() {
-        shopDrinkPresenter.getShopDrinks(MerchantUtils.getMerchantId(getContext()));
+        shopDrinkPresenter.getShopDrinks(shopId);
     }
 
     @SuppressLint("CheckResult")
@@ -84,6 +93,18 @@ public class GoodsFragment extends BaseRecyclerFragment<DrinkEntity> implements 
                     ARouter.getInstance()
                             .build(MerchantConstant.Router.DRINK_EDIT)
                             .withString("TAG","GOOS_FRAGMENT")
+                            .navigation();
+                },throwable -> {
+                    LogUtils.error("点击事件错误: " + throwable.getMessage());
+                });
+
+        RxView.clicks(titleBar)
+                .throttleFirst(500,TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(unit->{
+                    ARouter.getInstance()
+                            .build(MerchantConstant.Router.DRINK_SEARCH)
+                            .withLong("shopId",shopId)
                             .navigation();
                 },throwable -> {
                     LogUtils.error("点击事件错误: " + throwable.getMessage());

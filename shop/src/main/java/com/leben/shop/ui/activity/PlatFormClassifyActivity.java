@@ -14,7 +14,7 @@ import com.leben.shop.constant.ShopConstant;
 import com.leben.shop.contract.QueryDrinkContract;
 import com.leben.common.model.bean.DrinkEntity;
 import com.leben.shop.model.bean.DrinkQueryEntity;
-import com.leben.shop.model.bean.PageEntity;
+import com.leben.common.model.bean.PageEntity;
 import com.leben.shop.presenter.QueryDrinkPresenter;
 import com.leben.shop.ui.adapter.DrinkAdapter;
 
@@ -52,7 +52,17 @@ public class PlatFormClassifyActivity extends BaseRecyclerActivity<DrinkEntity> 
         super.initView();
         TitleBar titleBar=findViewById(R.id.title_bar);
         if (titleBar != null) {
-            titleBar.setTitle("热销推荐");
+            if (classifyId == 1) {
+                titleBar.setTitle("奶茶推荐");
+            } else if (classifyId == 2) {
+                titleBar.setTitle("果茶推荐");
+            } else if (classifyId == 3) {
+                titleBar.setTitle("果汁推荐");
+            } else if (classifyId == 4) {
+                titleBar.setTitle("咖啡推荐");
+            }else{
+                titleBar.setTitle("热销推荐");
+            }
         }
     }
 

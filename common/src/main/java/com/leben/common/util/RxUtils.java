@@ -1,7 +1,6 @@
 package com.leben.common.util;
 
 import com.leben.common.model.bean.CommonEntity;
-
 import io.reactivex.FlowableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;

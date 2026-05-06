@@ -10,6 +10,6 @@ public interface GetMyCommentContract {
         void onGetMyCommentFailed(String errorMsg);
     }
     interface Presenter {
-        void getMyComment();
+        void getMyComment(Integer status);
     }
 }

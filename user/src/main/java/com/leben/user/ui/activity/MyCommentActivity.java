@@ -57,7 +57,7 @@ public class MyCommentActivity extends BaseRecyclerActivity<CommentEntity> imple
 
     @Override
     public void onRefresh() {
-        getMyCommentPresenter.getMyComment();
+        getMyCommentPresenter.getMyComment(1);
     }
 
     @Override

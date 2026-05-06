@@ -48,7 +48,7 @@ public class SplashActivity extends BaseActivity {
                     .navigation();
         } else {
             LogUtils.info("有Token："+token);
-            // 这里需要你在登录成功时，额外存一个字段标识身份
+            // 这里需要在登录成功时，额外存一个字段标识身份
             String role = SharedPreferencesUtils.getParam(this,AppConstant.Key.ROLE, "");
 
             if ("MERCHANT".equals(role)) {

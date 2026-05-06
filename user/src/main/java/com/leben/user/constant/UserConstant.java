@@ -10,6 +10,7 @@ public interface UserConstant {
         String BILL="/user/bill";
         String FAVORITE="/user/favorite";
         String USER_INFO="/user/info";
+        String USER_REGISTER="/user/register";
         String MERCHANT_LOGIN="/merchant/login";
     }
 

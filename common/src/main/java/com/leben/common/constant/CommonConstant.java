@@ -10,6 +10,7 @@ public interface CommonConstant {
     interface Router{
         String MERCHANT_TAB="/common/merchant/tab";
         String SESSION_LIST="/common/session/list";
+
         String CHAT_DETAIL="/common/chat/detail";
         String CUSTOMER_TAB="/common/customer/tab";
         String ORDER="/shop/orders";
@@ -21,10 +22,6 @@ public interface CommonConstant {
         String USER_COMMENT="/user/comment";
         String ADD_ADDRESS="/add/address";
         String ORDER_DETAIL="/order/details";
-    }
-
-    interface URL{
-        String BASE_URL="172.16.40.125:8080";
     }
 
 }

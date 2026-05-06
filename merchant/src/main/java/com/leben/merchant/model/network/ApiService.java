@@ -7,6 +7,7 @@ import com.leben.common.model.bean.LoginEntity;
 import com.leben.common.model.bean.OrderEntity;
 import com.leben.common.model.bean.ShopCategoriesEntity;
 import com.leben.common.model.bean.SpecOptionEntity;
+import com.leben.merchant.model.bean.DrinkQueryEntity;
 import com.leben.merchant.model.bean.DrinkRequestEntity;
 import com.leben.merchant.model.bean.MerchantRegisterEntity;
 import com.leben.merchant.model.bean.MerchantInfoEntity;
@@ -20,6 +21,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import com.leben.common.model.bean.PageEntity;
 
 public interface ApiService {
 
@@ -112,9 +114,16 @@ public interface ApiService {
     Flowable<CommonEntity<BigDecimal>> getShopRevenue(
     );
 
-    @GET("/shops/comment/list")
+    @GET("/comment/shop/list")
     Flowable<CommonEntity<List<CommentEntity>>> getShopComment(
-            @Query("shopId") Long shopId
+            @Query("status") Integer status
+    );
+
+    @POST("/drinks/search")
+    Flowable<CommonEntity<PageEntity<DrinkEntity>>> queryDrink(
+            @Body DrinkQueryEntity entity,
+            @Query("page") int page,
+            @Query("size") int size
     );
 
 }

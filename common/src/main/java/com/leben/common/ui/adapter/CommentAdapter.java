@@ -1,7 +1,9 @@
 package com.leben.common.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.shape.CornerFamily;
@@ -42,7 +44,15 @@ public class CommentAdapter extends BaseRecyclerAdapter<CommentEntity> {
 
             // 1. 显示商家头像和名称
             holder.setImageUrl(R.id.iv_avatar, data.getMerchantAvatar());
-            holder.setText(R.id.tv_user_merchant_name, data.getMerchantName()); // 复用 username 位置显示商家名
+            holder.setText(R.id.tv_user_merchant_name, data.getMerchantName());
+
+            TextView tvStatus=holder.getView(R.id.tv_status);
+            tvStatus.setVisibility(View.GONE);
+
+            if (data.getStatus() == 0) {
+                holder.getView(R.id.tv_status).setVisibility(View.VISIBLE);
+                holder.getView(R.id.tv_status).setBackgroundResource(R.drawable.bg_status_warning);
+            }
 
             // 2. 特殊逻辑：比如我的评价可以删除
             // holder.getView(R.id.btn_delete).setVisibility(View.VISIBLE);
@@ -57,6 +67,9 @@ public class CommentAdapter extends BaseRecyclerAdapter<CommentEntity> {
             // === 场景B：在“商家详情”下面的评价列表 ===
             // 应该显示：【哪个用户】评价了本商家
 
+            TextView tvStatus=holder.getView(R.id.tv_status);
+            tvStatus.setVisibility(View.GONE);
+
             // 1. 显示用户头像和名称
             holder.setImageUrl(R.id.iv_avatar, data.getUserAvatar());
             holder.setText(R.id.tv_user_merchant_name, data.getUserName());
@@ -68,18 +81,38 @@ public class CommentAdapter extends BaseRecyclerAdapter<CommentEntity> {
                     .setAllCornerSizes(ShapeAppearanceModel.PILL) // 或者 setAllCornerSizes(50%)
                     .build();
             ivAvatar.setShapeAppearanceModel(circleModel);
+
         }else if(pageType== TYPE_MANAGEMENT_COMMENT){
+            TextView tvStatus=holder.getView(R.id.tv_status);
+            tvStatus.setVisibility(View.GONE);
             holder.setImageUrl(R.id.iv_avatar, data.getUserAvatar());
             holder.setText(R.id.tv_user_merchant_name, data.getUserName());
+
+        } else if (pageType==TYPE_WAIT_REVIEW) {
+            holder.setImageUrl(R.id.iv_avatar, data.getUserAvatar());
+            holder.setText(R.id.tv_user_merchant_name, data.getUserName());
+            if (data.getStatus() == 3) {
+                TextView tvStatus=holder.getView(R.id.tv_status);
+                tvStatus.setVisibility(View.VISIBLE);
+                tvStatus.setText("审核中");
+                tvStatus.setBackgroundResource(R.drawable.bg_status_warning);
+            }
         }
+
+
         if(data.getPicture()!=null){
             holder.getView(R.id.iv_comment_pic).setVisibility(View.VISIBLE);
             holder.setImageUrl(R.id.iv_comment_pic,data.getPicture());
         }else{
             holder.getView(R.id.iv_comment_pic).setVisibility(View.GONE);
         }
+        String fullDate = data.getCreateTime();
+        String shortDate = "";
+        if (fullDate != null && fullDate.length() >= 10) {
+            shortDate = fullDate.substring(0, 10);
+        }
         holder.setText(R.id.tv_content,data.getContent())
-                .setText(R.id.tv_date,data.getCreateTime())
+                .setText(R.id.tv_date,shortDate)
                 .setText(R.id.tv_product_names,data.getProductName())
                 .setRating(R.id.rb_score, data.getScore());
     }

@@ -14,9 +14,9 @@ import com.leben.base.util.LogUtils;
 import com.leben.base.widget.dialog.CommonDialog;
 import com.leben.base.widget.titleBar.TitleBar;
 import com.leben.common.constant.CommonConstant;
-import com.leben.common.contract.UpdateOrderStateContract;
+import com.leben.common.contract.UpdateOrderStatusContract;
 import com.leben.common.model.bean.OrderEntity;
-import com.leben.common.presenter.UpdateOrderStatePresenter;
+import com.leben.common.presenter.UpdateOrderStatusPresenter;
 import com.leben.merchant.R;
 import com.leben.merchant.constant.MerchantConstant;
 import com.leben.merchant.contract.GetDoneOrderContract;
@@ -28,13 +28,13 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 @Route(path = MerchantConstant.Router.ORDER_DONE)
-public class OrderDoneActivity extends BaseRecyclerActivity<OrderEntity> implements GetDoneOrderContract.View , UpdateOrderStateContract.View{
+public class OrderDoneActivity extends BaseRecyclerActivity<OrderEntity> implements GetDoneOrderContract.View , UpdateOrderStatusContract.View{
 
     @InjectPresenter
     GetDoneOrderPresenter getDoneOrderPresenter;
 
     @InjectPresenter
-    UpdateOrderStatePresenter updateOrderStatePresenter;
+    UpdateOrderStatusPresenter updateOrderStatePresenter;
 
     @Override
     protected BaseRecyclerAdapter<OrderEntity> createAdapter() {
@@ -68,7 +68,7 @@ public class OrderDoneActivity extends BaseRecyclerActivity<OrderEntity> impleme
                     dialog.setOnCancelListener(DialogFragment::dismiss);
 
                     dialog.setOnConfirmListener(d -> {
-                        updateOrderStatePresenter.updateOrderState(order.getId(),2);
+                        updateOrderStatePresenter.updateOrderStatus(order.getId(),2);
                     });
 
                     dialog.show(getSupportFragmentManager(), "dialog_cancelOrder");
@@ -82,7 +82,7 @@ public class OrderDoneActivity extends BaseRecyclerActivity<OrderEntity> impleme
                     dialog.setOnCancelListener(DialogFragment::dismiss);
 
                     dialog.setOnConfirmListener(d -> {
-                        updateOrderStatePresenter.updateOrderState(order.getId(),1);
+                        updateOrderStatePresenter.updateOrderStatus(order.getId(),1);
                     });
 
                     dialog.show(getSupportFragmentManager(), "dialog_completeOrder");
@@ -158,12 +158,12 @@ public class OrderDoneActivity extends BaseRecyclerActivity<OrderEntity> impleme
     }
 
     @Override
-    public void onUpdateOrderStateSuccess(String data) {
+    public void onUpdateOrderStatusSuccess(String data) {
 
     }
 
     @Override
-    public void onUpdateOrderStateFailed(String errorMsg) {
+    public void onUpdateOrderStatusFailed(String errorMsg) {
 
     }
 }

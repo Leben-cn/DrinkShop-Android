@@ -1,7 +1,7 @@
 package com.leben.shop.contract;
 
 import com.leben.base.contract.IBaseView;
-import com.leben.shop.model.bean.PageEntity;
+import com.leben.common.model.bean.PageEntity;
 import com.leben.common.model.bean.ShopEntity;
 
 public interface RecommendShopsContract {

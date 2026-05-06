@@ -16,5 +16,6 @@ public interface MerchantConstant {
         String SHOP_WALLET="/merchant/shop/wallet";
         String MANAGEMENT_COMMENT="/merchant/management/comment";
         String WAIT_REVIEW="/merchant/wait/review";
+        String DRINK_SEARCH="/merchant/drink/search";
     }
 }

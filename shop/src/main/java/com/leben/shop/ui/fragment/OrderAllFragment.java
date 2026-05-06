@@ -12,10 +12,9 @@ import com.leben.base.util.ToastUtils;
 import com.leben.base.widget.dialog.CommonDialog;
 import com.leben.common.LocationManager;
 import com.leben.common.constant.CommonConstant;
-import com.leben.common.contract.UpdateOrderStateContract;
+import com.leben.common.contract.UpdateOrderStatusContract;
 import com.leben.common.model.event.LocationEvent;
-import com.leben.common.presenter.UpdateOrderStatePresenter;
-import com.leben.shop.constant.ShopConstant;
+import com.leben.common.presenter.UpdateOrderStatusPresenter;
 import com.leben.shop.contract.CancelOrderContract;
 import com.leben.shop.contract.GetAllOrderContract;
 import com.leben.common.model.bean.OrderEntity;
@@ -34,7 +33,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 
 public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implements GetAllOrderContract.View,
-        CancelOrderContract.View , UpdateOrderStateContract.View {
+        CancelOrderContract.View , UpdateOrderStatusContract.View {
 
     @InjectPresenter
     GetAllOrderPresenter getAllOrderPresenter;
@@ -43,7 +42,7 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
     CancelOrderPresenter cancelOrderPresenter;
 
     @InjectPresenter
-    UpdateOrderStatePresenter updateOrderStatePresenter;
+    UpdateOrderStatusPresenter updateOrderStatePresenter;
 
     private Double latitude;
     private Double longitude;
@@ -103,7 +102,7 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
                     dialog.setOnCancelListener(DialogFragment::dismiss);
 
                     dialog.setOnConfirmListener(d -> {
-                        updateOrderStatePresenter.updateOrderState(order.getId(),3);
+                        updateOrderStatePresenter.updateOrderStatus(order.getId(),3);
                     });
 
                     dialog.show(getParentFragmentManager(), "dialog_confirmOrder");
@@ -216,14 +215,14 @@ public class OrderAllFragment extends BaseRecyclerFragment<OrderEntity> implemen
     }
 
     @Override
-    public void onUpdateOrderStateSuccess(String data) {
+    public void onUpdateOrderStatusSuccess(String data) {
         ToastUtils.show(requireContext(),data);
         EventBus.getDefault().post(new RefreshEvent());
         onRefresh();
     }
 
     @Override
-    public void onUpdateOrderStateFailed(String errorMsg) {
+    public void onUpdateOrderStatusFailed(String errorMsg) {
         ToastUtils.show(requireContext(),errorMsg);
         LogUtils.error(errorMsg);
     }

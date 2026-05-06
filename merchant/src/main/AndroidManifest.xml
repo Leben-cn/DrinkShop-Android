@@ -67,6 +67,10 @@
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
 
+        <activity android:name=".ui.activity.DrinksSearchActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+
     </application>
 
 </manifest>

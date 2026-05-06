@@ -1,24 +1,24 @@
 package com.leben.common.presenter;
 
 import com.leben.base.presenter.BasePresenter;
-import com.leben.common.contract.UpdateOrderStateContract;
+import com.leben.common.contract.UpdateCommentStatusContract;
 import com.leben.common.model.network.ApiService;
 import com.leben.common.model.network.NetworkManager;
 import com.leben.common.util.RxUtils;
 
-public class UpdateOrderStatePresenter extends BasePresenter<UpdateOrderStateContract.View> implements UpdateOrderStateContract.Presenter{
+public class UpdateCommentStatusPresenter extends BasePresenter<UpdateCommentStatusContract.View> implements UpdateCommentStatusContract.Presenter{
     @Override
-    public void updateOrderState(Long orderId, Integer status) {
+    public void updateCommentStatus(Long orderId, Integer status) {
         mCompositeDisposable.add(NetworkManager.getInstance().create(ApiService.class)
-                .updateOrderStatus(orderId,status)
+                .updateCommentStatus(orderId,status)
                 .compose(RxUtils.rxSchedulerHelper())
                 .subscribe(data->{
                     if (getView() != null) {
-                        getView().onUpdateOrderStateSuccess(data);
+                        getView().onUpdateCommentStatusSuccess(data);
                     }
                 },throwable -> {
                     if (getView() != null) {
-                        getView().onUpdateOrderStateFailed(throwable.getMessage());
+                        getView().onUpdateCommentStatusFailed(throwable.getMessage());
                     }
                 }));
     }
